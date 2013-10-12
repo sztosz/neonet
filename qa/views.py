@@ -17,7 +17,7 @@ class AbstractView():
     def __init__(self, request, template=None, output='html'):
         self.request = request
         if template is None:
-            self.template = 'qa/' + self.__class__.__name__.lower() \
+            self.template = __package__ + '/' + self.__class__.__name__.lower() \
                             + '.html'
         else:
             self.template = template
@@ -53,9 +53,6 @@ class Index(AbstractView):
     pass
 
 class CommodityImport(AbstractView):
-    def _view(self):
-        pass
-
     def _import(self):
         pass
 
