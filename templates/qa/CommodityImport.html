@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/html">
+<head>
+    <title>Commodity Import</title>
+    <link type="text/css" rel="stylesheet" href="{{ STATIC_URL }}base.css" />
+</head>
+<body>
+<div id="main_container">
+{#    {% include 'qa/header.html' %}#}
+    {% include 'qa/common_communication.html' %}
+{#    {% include 'qa/menu.html' %}#}
+    <div id="content">
+        <form method="post" action="{% url 'qa:commodity_import' %}">
+            {% csrf_token %}
+            <h4>Add new Commodity:</h4>
+            <div class="in_block">
+                {{ form.as_p }}
+                <button class="in_line" type="submit" name="action" value="add">Add</button>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>
