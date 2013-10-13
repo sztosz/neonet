@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/html">
+<head>
+    <title>Search by EAN</title>
+    <link type="text/css" rel="stylesheet" href="{{ STATIC_URL }}base.css" />
+</head>
+<body>
+<div id="main_container">
+{#    {% include 'qa/header.html' %}#}
+    {% include 'qa/common_communication.html' %}
+{#    {% include 'qa/menu.html' %}#}
+    <div id="content">
+        {% if ean_form %}
+        <h3>Search by EAN:</h3>
+        <form method="post" action="{% url 'qa:damage_report' %}">
+            {% csrf_token %}
+            <h4>Enter Ean:</h4>
+            <div class="in_block">
+                {{ ean_form.as_p }}
+                <button class="in_line" type="submit" name="action" value="check_ean">Check EAN</button>
+            </div>
+        </form>
+        {% endif %}
+        {% if damage_report_form %}
+        <h3>Search by EAN:</h3>
+        <form method="post" action="{% url 'qa:damage_report' %}">
+            {% csrf_token %}
+            <h4>Damage Report:</h4>
+            <div class="in_block">
+                {{ damage_report_form.as_p }}
+                <button class="in_line" type="submit" name="action" value="add_damage_report">Add Damage Report</button>
+            </div>
+        </form>
+        {% endif %}
+    </div>
+</div>
+</body>
+</html>

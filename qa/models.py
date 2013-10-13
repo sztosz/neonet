@@ -12,24 +12,36 @@ from django.db import models
 
 class Commodity(models.Model):
     sku = models.CharField(max_length=25, verbose_name='Product Index (SKU)')
-    ean = models.IntegerField(max_length=13, verbose_name='EAN')
+    ean = models.CharField(max_length=13, verbose_name='EAN')
     name = models.CharField(max_length=100, verbose_name='Product Name')
 
     def __unicode__(self):
-        return self.name
+        return '{} : {}'.format(self.ean, self.name)
 
 class DamageDetectionTime(models.Model):
     detection_time = models.CharField(max_length=30, verbose_name='Detection Time')
+
+    def __unicode__(self):
+        return self.detection_time
 
 class DamageCategory(models.Model):
     category = models.CharField(max_length=1, verbose_name='Category')
     description = models.TextField(verbose_name='Category description')
 
+    def __unicode__(self):
+        return self.category
+
 class DamageFurtherAction(models.Model):
     further_action = models.CharField(max_length=30, verbose_name='Further Action')
 
+    def __unicode__(self):
+        return self.further_action
+
 class DamageKind(models.Model):
     damage_kind = models.CharField(max_length=30, verbose_name='Damage Kind')
+
+    def __unicode__(self):
+        return self.kind
 
 class DamageReport(models.Model):
     date = models.DateTimeField(verbose_name='Date of report entry')
@@ -41,6 +53,9 @@ class DamageReport(models.Model):
     comments = models.TextField(verbose_name='Comments')
     further_action = models.ForeignKey(DamageFurtherAction, verbose_name='Further Action')
     further_kind = models.ForeignKey(DamageKind, verbose_name='Damage Kind')
+
+    def __unicode__(self):
+        return self.commodity.name
 
 
 

@@ -11,4 +11,5 @@ urlpatterns = patterns('',
                        url(r'^$', 'qa.views.index', name='index'),
                        url(r'^logout/', 'qa.views.logout_view', name='logout'),
                        url(r'^commodity_import/', 'qa.views.commodity_import', name='commodity_import'),
+                       url(r'^damage_report/', 'qa.views.damage_report', name='damage_report'),
                        )

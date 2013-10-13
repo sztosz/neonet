@@ -12,3 +12,18 @@ from qa import models
 class CommodityImportForm(forms.ModelForm):
     class Meta:
         model = models.Commodity
+
+
+class CommodityBatchImportForm(forms.Form):
+    file = forms.FileField(label="Choose excel file to upload")
+
+
+class EanForm(forms.ModelForm):
+    class Meta:
+        model = models.Commodity
+        fields = ['ean']
+
+
+class DamageReportForm(forms.ModelForm):
+    class Meta:
+        models = models.DamageReport
