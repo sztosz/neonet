@@ -5,6 +5,8 @@
 #
 # @author: sztosz@gmail.com
 
+from __future__ import unicode_literals
+
 from django.contrib import admin
 from qa.models import Commodity, DamageCategory, DamageDetectionTime, DamageFurtherAction, DamageKind, DamageReport
 

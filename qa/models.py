@@ -7,6 +7,8 @@
 
 # Create your models here.
 
+from __future__ import unicode_literals
+
 from django.db import models
 
 
@@ -16,7 +18,7 @@ class Commodity(models.Model):
     name = models.CharField(max_length=100, verbose_name='Product Name')
 
     def __unicode__(self):
-        return '{} : {}'.format(self.ean, self.name)
+        return self.name
 
 class DamageDetectionTime(models.Model):
     detection_time = models.CharField(max_length=30, verbose_name='Detection Time')
@@ -41,18 +43,18 @@ class DamageKind(models.Model):
     damage_kind = models.CharField(max_length=30, verbose_name='Damage Kind')
 
     def __unicode__(self):
-        return self.kind
+        return self.damage_kind
 
 class DamageReport(models.Model):
     date = models.DateTimeField(verbose_name='Date of report entry')
-    brand = models.CharField(max_length=30, verbose_name='Brand')
     commodity = models.ForeignKey(Commodity, verbose_name='Product')
     serial = models.CharField(max_length=50, verbose_name='Serial Number')
+    brand = models.CharField(max_length=30, verbose_name='Brand')
     detection_time = models.ForeignKey(DamageDetectionTime, verbose_name='Detection Time')
     category = models.ForeignKey(DamageCategory, verbose_name='Damage Category')
     comments = models.TextField(verbose_name='Comments')
     further_action = models.ForeignKey(DamageFurtherAction, verbose_name='Further Action')
-    further_kind = models.ForeignKey(DamageKind, verbose_name='Damage Kind')
+    further_kind = models.ForeignKey(DamageKind, verbose_name='Damage Kind') # TODO CHANGE THE NAME!
 
     def __unicode__(self):
         return self.commodity.name

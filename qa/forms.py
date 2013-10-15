@@ -5,6 +5,8 @@
 #
 # @author: sztosz@gmail.com
 
+from __future__ import unicode_literals
+
 from django import forms
 from qa import models
 
@@ -26,4 +28,4 @@ class EanForm(forms.ModelForm):
 
 class DamageReportForm(forms.ModelForm):
     class Meta:
-        models = models.DamageReport
+        model = models.DamageReport

@@ -5,12 +5,13 @@
 #
 # @author: sztosz@gmail.com
 
+from __future__ import unicode_literals
+
 EAN_WEIGHTS = '13131313131313131313131313'
 
 class DataVerifier():
     def __init__(self):
         pass
-
 
     @staticmethod
     def ean13(ean):

@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>Index</title>
+    {% load staticfiles %}
     <link type="text/css" rel="stylesheet" href="{{ STATIC_URL }}base.css" />
 </head>
 <body>
@@ -11,6 +12,7 @@
     <p><a href="{% url 'qa:logout' %}">LOGOUT</a></p>
     <p><a href="{% url 'qa:commodity_import' %}">Commodity Import</a></p>
     <p><a href="{% url 'qa:damage_report' %}">Damage Report</a></p>
+    <p><a href="{% url 'qa:damage_report_export' %}">EXPORT DAMAGE REPORT</a></p>
 </div>
 </body>
 </html>

@@ -26,3 +26,4 @@ urlpatterns = patterns('',
     url(r'^qa/', include('qa.urls', namespace='qa')),
     (r'^accounts/login/$', 'django.contrib.auth.views.login'),
 )
+

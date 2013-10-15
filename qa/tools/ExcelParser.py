@@ -5,7 +5,10 @@
 #
 # @author: sztosz@gmail.com
 
+from __future__ import unicode_literals
+
 import xlrd
+from xlrd import XLRDError
 from qa.tools.DataVerifier import DataVerifier
 from qa.models import Commodity
 
@@ -15,10 +18,13 @@ class ExcelParser():
 
     @staticmethod
     def parse_commodity(excel_file):
-        workbook = xlrd.open_workbook(file_contents=excel_file.read())
-        worksheet = workbook.sheet_by_index(0)
         warnings = list()
         errors = list()
+        try:
+            workbook = xlrd.open_workbook(file_contents=excel_file.read())
+        except XLRDError:
+            errors.append('Imported file does not appear to be an excel file')
+        worksheet = workbook.sheet_by_index(0)
         num_rows = worksheet.nrows - 1
         num_cells = worksheet.ncols - 1
         if num_cells < 24:

@@ -2,11 +2,12 @@
 <html xmlns="http://www.w3.org/1999/html">
 <head>
     <title>Search by EAN</title>
+    {% load staticfiles %}
     <link type="text/css" rel="stylesheet" href="{{ STATIC_URL }}base.css" />
 </head>
 <body>
 <div id="main_container">
-{#    {% include 'qa/header.html' %}#}
+    {% include 'qa/header.html' %}
     {% include 'qa/common_communication.html' %}
 {#    {% include 'qa/menu.html' %}#}
     <div id="content">
