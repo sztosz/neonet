@@ -12,6 +12,8 @@ from xlrd import XLRDError
 from qa.tools.DataVerifier import DataVerifier
 from qa.models import Commodity
 
+#from qa.tools.openpyxl import workbook
+
 class ExcelParser():
     def __init__(self):
         pass
@@ -23,12 +25,12 @@ class ExcelParser():
         try:
             workbook = xlrd.open_workbook(file_contents=excel_file.read())
         except XLRDError:
-            errors.append('Imported file does not appear to be an excel file')
+            errors.append('Nie można wczytać pliku, prawdopodobnie nie jest to plik excel')
         worksheet = workbook.sheet_by_index(0)
         num_rows = worksheet.nrows - 1
         num_cells = worksheet.ncols - 1
         if num_cells < 24:
-            errors.append('Imported file has too little columns to be valid')
+            errors.append('Zbyt mała ilość kolumn, plik posiada niepoprawne dane')
         else:
             curr_row = -1
             while curr_row < num_rows:
@@ -38,16 +40,22 @@ class ExcelParser():
                 ean = worksheet.cell_value(curr_row, 16)
                 ean_is_invalid = DataVerifier.ean13(ean)
                 if ean_is_invalid:
-                    if ean_is_invalid[0] == 'ERROR':
-                        errors.append('ERROR in row {} : {}; NAME: {}'.format(curr_row+1, ean_is_invalid[1], name))
+                    if ean_is_invalid[0] == 'BŁĄD':
+                        errors.append('BŁĄD w lini {} : {}; TOWAR: {}'.format(curr_row+1, ean_is_invalid[1], name))
                         continue
                     else:
-                        warnings.append('WARNING in row {} : {} NAME: {}'.format(curr_row+1, ean_is_invalid[1], name))
+                        warnings.append('OSTRZEŻENIE w lini {} : {} TOWAR: {}'.format(curr_row+1, ean_is_invalid[1], name))
                 if Commodity.objects.filter(sku=sku):
-                    warnings.append('WARNING in row {}; SKU : {} already in database and was not added'. \
-                        format(curr_row + 1, sku))
+                    warnings.append('OSTRZEŻENIE w lini {}; TOWAR: {} SKU: {} jest już w bazie i towar nie został dodany'. \
+                        format(curr_row + 1, name, sku))
                 else:
                     commodity = Commodity(sku=sku, name=name, ean=ean)
                     commodity.save()
 
         return warnings, errors
+
+    #@staticmethod
+    #def reports_to_excel(self):
+    #    wb = workbook.Workbook()
+    #    worksheet = wb.get_active_sheet()
+

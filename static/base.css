@@ -1,11 +1,11 @@
 body{
     background-color: whitesmoke;
-    margin-top: 0;
-    margin-left: 20px;
-    margin-right: 20px;
-    padding-top: 0;
-    padding-left: 20px;
-    padding-right: 20px;
+    margin-top: 2px;
+    margin-left: 2px;
+    margin-right: 2px;
+    padding-top: 2px;
+    padding-left: 2px;
+    padding-right: 2px;
     font-family: sans-serif;
 
 }
@@ -13,9 +13,9 @@ body{
 
 /*}*/
 #main_container{
-    width: 840px;
+    width: 310px;
     margin: 0;
-    padding: 20px;
+    padding: 2px;
     background-color: lightgrey;
 }
 .errorlist{
@@ -37,7 +37,7 @@ form{
     margin: 0;
 }
 form label{
-    width: 350px;
+    width: 300px;
     float: left;
     display:inline-block;
 }
@@ -62,7 +62,7 @@ form select, input, textarea {
     padding: 1px !important;
     margin: 1px !important;
     /*display: block;*/
-    max-width: 350px !important;
+    max-width: 300px !important;
     /*margin: 0.2em 0 !important;*/
     /*padding: 0.1em 0 !important;*/
     text-indent: 0 !important;

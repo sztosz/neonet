@@ -17,7 +17,7 @@ class CommodityImportForm(forms.ModelForm):
 
 
 class CommodityBatchImportForm(forms.Form):
-    file = forms.FileField(label="Choose excel file to upload")
+    file = forms.FileField(label="Wybierz plik z danymi...")
 
 
 class EanForm(forms.ModelForm):

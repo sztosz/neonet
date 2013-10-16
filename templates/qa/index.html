@@ -1,18 +1,19 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Index</title>
+    <title>KONTROLA JAKOŚCI</title>
     {% load staticfiles %}
     <link type="text/css" rel="stylesheet" href="{{ STATIC_URL }}base.css" />
 </head>
 <body>
 <div id="main_container">
-    <h1>NEONET</h1>
-    <H2>Quality Assurance set of helper tools</H2>
-    <p><a href="{% url 'qa:logout' %}">LOGOUT</a></p>
-    <p><a href="{% url 'qa:commodity_import' %}">Commodity Import</a></p>
-    <p><a href="{% url 'qa:damage_report' %}">Damage Report</a></p>
-    <p><a href="{% url 'qa:damage_report_export' %}">EXPORT DAMAGE REPORT</a></p>
+    {% include 'qa/header.html' %}
+    {% include 'qa/common_communication.html' %}
+    <div id="content">
+        <p><a href="{% url 'qa:commodity_import' %}">Dodawanie towarów do bazy</a></p>
+        <p><a href="{% url 'qa:damage_report_export' %}">Eksport raportów</a></p>
+        <p><a href="{% url 'qa:damage_report' %}">Dodaj raport uszkodzeń</a></p>
+    </div>
 </div>
 </body>
 </html>

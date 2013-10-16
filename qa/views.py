@@ -69,7 +69,7 @@ class CommodityImport(AbstractView):
         if form.is_valid():
             commodity = form.save()
             commodity.save()
-            self.context['messages'].append('Commodity "{}" added successfully to database'.format(commodity.name))
+            self.context['messages'].append('Towar "{}" został dodany poprawnie do bazy danych'.format(commodity.name))
             self.context['add_single_form'] = forms.CommodityImportForm()
         else:
             self.context['add_single_form'] = form
@@ -83,9 +83,9 @@ class CommodityImport(AbstractView):
                 self.context['messages'].append(warning)
             for error in errors:
                 self.context['errors'].append(error)
-            self.context['messages'].append('Valid data from file was uploaded')
+            self.context['messages'].append('Dane bez błędów zostały dodane do bazy danych')
         else:
-            self.context['errors'].append('File that you were trying to upload was invalid')
+            self.context['errors'].append('Próba importu nie powiodła się, plik jest nieproprawny')
         self.context['add_single_form'] = forms.CommodityImportForm()
         self.context['batch_upload_file_form'] = forms.CommodityBatchImportForm()
 
@@ -96,21 +96,26 @@ class CommodityImport(AbstractView):
 class DamageReport(AbstractView):
     def _check_ean(self):
         form = forms.EanForm(self.request.POST)
+        try:
+            ean = self.request.POST['ean']
+        except KeyError:
+            ean = 'EAN NIE ZOSTAŁ PODANY!'
         if form.is_valid():
-            commodity = models.Commodity.objects.filter(ean=self.request.POST['ean'])
+            commodity = models.Commodity.objects.filter(ean=ean)
             if commodity:
-                self.context['messages'].append('Commodity: {}'.format(commodity[0].name))
-                self.context['messages'].append('Commodity ID: {}'.format(commodity[0].id))
+                self.context['messages'].append('TOWAR: {}'.format(commodity[0].name))
+                self.context['messages'].append('SKU: {}'.format(commodity[0].sku))
                 print(str(commodity[0].id))
                 form = forms.DamageReportForm(initial={'date':      datetime.now(),
                                                        'commodity': commodity[0],
                                                        })
                 self.context['damage_report_form'] = form
             else:
-                self.context['messages'].append('Commodity not in database')
+                self.context['messages'].append('Brak towaru w bazie z EAN\'em {}'.format(ean))
+                self.context['ean_form'] = form
 
         else:
-            self.context['messages'].append('EAN {} is invalid'.format(self.request.POST['ean']))
+            self.context['messages'].append('EAN {} jest niepoprawny'.format(ean))
             self.context['ean_form'] = form
 
     def _add_damage_report(self):
@@ -118,9 +123,10 @@ class DamageReport(AbstractView):
         if form.is_valid():
             damage = form.save()
             damage.save()
-            self.context['messages'].append('Report was saved successfully')
+            self.context['messages'].append('Raport zapisany poprawnie')
         else:
-            self.context['errors'].append('Form data is not valid')
+            self.context['errors'].append('Niepoprawne dane w formularzu')
+            self.context['ean_form'] = forms.EanForm()
 
     def _view(self):
         self.context['ean_form'] = forms.EanForm()
@@ -146,8 +152,8 @@ class DamageReportExport():
         damage_reports = models.DamageReport.objects.all()
         output = u''
         for report in damage_reports:
-            output += u'"{}";"{}";"{}";"{}";"{}";"{}";"{}";"{}";"{}";\r\n'.format('', report.date, report.brand,
-                                    report.commodity.name,report.serial, report.detection_time.detection_time,
+            output += u'"{}";"{}";"{}";"{}";"{}";"{}";"{}";"{}";"{}";"{}";\r\n'.format('', report.date, report.brand,
+                                    report.commodity.name, report.serial, report.detection_time.detection_time,
                                     report.category.category, report.comments, report.further_action.further_action,
                                     report.further_kind.damage_kind)
         response.write(output)
