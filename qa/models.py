@@ -55,7 +55,7 @@ class DamageReport(models.Model):
     category = models.ForeignKey(DamageCategory, verbose_name='Kategoria uszkodzenia')
     comments = models.TextField(verbose_name='Komentarz', null=True, blank=True)
     further_action = models.ForeignKey(DamageFurtherAction, verbose_name='Dalsze Postępowanie')
-    damage_kind = models.ForeignKey(DamageKind, verbose_name='Rodzaj szkody towaru') # TODO CHANGE THE NAME!
+    damage_kind = models.ForeignKey(DamageKind, verbose_name='Rodzaj szkody towaru')
     user = models.ForeignKey(User, verbose_name='Użytkownik')
 
     def __unicode__(self):
