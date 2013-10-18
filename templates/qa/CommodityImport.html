@@ -11,21 +11,20 @@
     {% include 'qa/common_communication.html' %}
 {#    {% include 'qa/menu.html' %}#}
     <div id="content">
-        <h3>SINGLE COMMODITY IMPORT:</h3>
         <form method="post" action="{% url 'qa:commodity_import' %}">
             {% csrf_token %}
-            <h4>Add new Commodity:</h4>
             <div class="in_block">
-                {{ add_single_form.as_p }}
-                <button class="in_line" type="submit" name="action" value="add">Add</button>
+                    {{ add_single_form.as_p }}
+                <input type='hidden' name='action' value='add' />
+                <button class="in_line" type="submit" >Dodaj</button>
             </div>
         </form>
-        <h3>BATCH COMMODITY IMPORT FROM EXCEL FILE:</h3>
         <form method="post" enctype="multipart/form-data" action="{% url 'qa:commodity_import' %}">
             {% csrf_token %}
             <div class="in_block">
                 {{ batch_upload_file_form.as_p }}
-                <button class="in_line" type="submit" name="action" value="import">Import</button>
+                <input type='hidden' name='action' value='import' />
+                <button class="in_line" type="submit" >Importuj</button>
             </div>
         </form>
     </div>

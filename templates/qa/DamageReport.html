@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/html">
 <head>
-    <title>Search by EAN</title>
+    <title>Raport uszkodzeń</title>
     {% load staticfiles %}
     <link type="text/css" rel="stylesheet" href="{{ STATIC_URL }}base.css" />
 </head>
@@ -12,24 +12,22 @@
 {#    {% include 'qa/menu.html' %}#}
     <div id="content">
         {% if ean_form %}
-        <h3>Search by EAN:</h3>
         <form method="post" action="{% url 'qa:damage_report' %}">
             {% csrf_token %}
-            <h4>Enter Ean:</h4>
             <div class="in_block">
                 {{ ean_form.as_p }}
-                <button class="in_line" type="submit" name="action" value="check_ean">Check EAN</button>
+                <input type='hidden' name='action' value='check_ean' />
+                <button class="in_line" type="submit">Dodaj po EAN'nie</button>
             </div>
         </form>
         {% endif %}
         {% if damage_report_form %}
-        <h3>Search by EAN:</h3>
         <form method="post" action="{% url 'qa:damage_report' %}">
             {% csrf_token %}
-            <h4>Damage Report:</h4>
             <div class="in_block">
                 {{ damage_report_form.as_p }}
-                <button class="in_line" type="submit" name="action" value="add_damage_report">Add Damage Report</button>
+                <input type='hidden' name='action' value="add_damage_report" />
+                <button class="in_line" type="submit" >Dodaj raport uszkodzeń</button>
             </div>
         </form>
         {% endif %}
