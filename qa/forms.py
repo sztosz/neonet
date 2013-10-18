@@ -23,9 +23,10 @@ class CommodityBatchImportForm(forms.Form):
 class EanForm(forms.ModelForm):
     class Meta:
         model = models.Commodity
-        fields = ['ean']
+        fields = ('ean',)
 
 
 class DamageReportForm(forms.ModelForm):
     class Meta:
         model = models.DamageReport
+        exclude = ('user',)

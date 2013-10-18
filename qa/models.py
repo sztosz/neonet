@@ -10,6 +10,7 @@
 from __future__ import unicode_literals
 
 from django.db import models
+from django.contrib.auth.models import User
 
 
 class Commodity(models.Model):
@@ -52,9 +53,10 @@ class DamageReport(models.Model):
     brand = models.CharField(max_length=30, verbose_name='Marka')
     detection_time = models.ForeignKey(DamageDetectionTime, verbose_name='Moment wykrycia')
     category = models.ForeignKey(DamageCategory, verbose_name='Kategoria uszkodzenia')
-    comments = models.TextField(verbose_name='Komentarz')
+    comments = models.TextField(verbose_name='Komentarz', null=True, blank=True)
     further_action = models.ForeignKey(DamageFurtherAction, verbose_name='Dalsze Postępowanie')
-    further_kind = models.ForeignKey(DamageKind, verbose_name='Rodzaj szkody towaru') # TODO CHANGE THE NAME!
+    damage_kind = models.ForeignKey(DamageKind, verbose_name='Rodzaj szkody towaru') # TODO CHANGE THE NAME!
+    user = models.ForeignKey(User, verbose_name='Użytkownik')
 
     def __unicode__(self):
         return self.commodity.name

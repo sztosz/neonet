@@ -121,7 +121,8 @@ class DamageReport(AbstractView):
     def _add_damage_report(self):
         form = forms.DamageReportForm(self.request.POST)
         if form.is_valid():
-            damage = form.save()
+            damage = form.save(commit=False)
+            damage.user = self.request.user
             damage.save()
             self.context['messages'].append('Raport zapisany poprawnie')
         else:
@@ -152,10 +153,10 @@ class DamageReportExport():
         damage_reports = models.DamageReport.objects.all()
         output = u''
         for report in damage_reports:
-            output += u'"{}";"{}";"{}";"{}";"{}";"{}";"{}";"{}";"{}";"{}";\r\n'.format('', report.date, report.brand,
+            output += u'"{}";"{}";"{}";"{}";"{}";"{}";"{}";"{}";"{}";"{}";"{} {}";\r\n'.format('', report.date, report.brand,
                                     report.commodity.name, report.serial, report.detection_time.detection_time,
                                     report.category.category, report.comments, report.further_action.further_action,
-                                    report.further_kind.damage_kind)
+                                    report.damage_kind.damage_kind, report.user.first_name, report.user.last_name)
         response.write(output)
         return response
 

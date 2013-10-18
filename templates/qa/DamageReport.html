@@ -11,6 +11,7 @@
     {% include 'qa/common_communication.html' %}
 {#    {% include 'qa/menu.html' %}#}
     <div id="content">
+        <h1>{{ user }}</h1>
         {% if ean_form %}
         <form method="post" action="{% url 'qa:damage_report' %}">
             {% csrf_token %}
