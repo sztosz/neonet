@@ -12,8 +12,6 @@ from xlrd import XLRDError
 from qa.tools.DataVerifier import DataVerifier
 from qa.models import Commodity
 
-#from qa.tools.openpyxl import workbook
-
 class ExcelParser():
     def __init__(self):
         pass

@@ -17,7 +17,7 @@ from django.http import HttpResponse
 from qa import models
 from qa import forms
 from qa.tools.ExcelParser import ExcelParser
-import csv
+
 
 class AbstractView():
     def __init__(self, request, action=None, template=None, output='html'):
@@ -63,6 +63,7 @@ class AbstractView():
 class Index(AbstractView):
     pass
 
+
 class CommodityImport(AbstractView):
     def _add(self):
         form = forms.CommodityImportForm(self.request.POST)
@@ -92,6 +93,7 @@ class CommodityImport(AbstractView):
     def _view(self):
         self.context['batch_upload_file_form'] = forms.CommodityBatchImportForm()
         self.context['add_single_form'] = forms.CommodityImportForm()
+
 
 class DamageReport(AbstractView):
     def _check_ean(self):
@@ -127,10 +129,11 @@ class DamageReport(AbstractView):
             self.context['messages'].append('Raport zapisany poprawnie')
         else:
             self.context['errors'].append('Niepoprawne dane w formularzu')
-            self.context['ean_form'] = forms.EanForm()
+            self.context['damage_report_form'] = form
 
     def _view(self):
         self.context['ean_form'] = forms.EanForm()
+
 
 class DamageReportExport():
     def __init__(self, request):
@@ -153,10 +156,11 @@ class DamageReportExport():
         damage_reports = models.DamageReport.objects.all()
         output = u''
         for report in damage_reports:
-            output += u'"{}";"{}";"{}";"{}";"{}";"{}";"{}";"{}";"{}";"{}";"{} {}";\r\n'.format('', report.date, report.brand,
-                                    report.commodity.name, report.serial, report.detection_time.detection_time,
-                                    report.category.category, report.comments, report.further_action.further_action,
-                                    report.damage_kind.damage_kind, report.user.first_name, report.user.last_name)
+            output += u'"{}";"{}";"{}";"{}";"{}";"{}";"{}";"{}";"{}";"{}";"{} {}";"{}";\r\n'.format(
+                '', report.date, report.brand, report.commodity.name, report.serial,
+                report.detection_time.detection_time, report.category.category, report.comments,
+                report.further_action.further_action, report.damage_kind.damage_kind, report.user.first_name,
+                report.user.last_name, report.net_value,)
         response.write(output)
         return response
 
@@ -180,6 +184,7 @@ def damage_report(request):
 def damage_report_export(request):
     page = DamageReportExport(request)
     return page.show()
+
 
 def logout_view(request):
     logout(request)

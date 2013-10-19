@@ -56,6 +56,7 @@ class DamageReport(models.Model):
     comments = models.TextField(verbose_name='Komentarz', null=True, blank=True)
     further_action = models.ForeignKey(DamageFurtherAction, verbose_name='Dalsze Postępowanie')
     damage_kind = models.ForeignKey(DamageKind, verbose_name='Rodzaj szkody towaru')
+    net_value = models.DecimalField(max_digits=8, decimal_places=2, verbose_name='Wartość towaru netto')
     user = models.ForeignKey(User, verbose_name='Użytkownik')
 
     def __unicode__(self):
