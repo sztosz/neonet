@@ -9,6 +9,7 @@ from __future__ import unicode_literals
 
 EAN_WEIGHTS = '13131313131313131313131313'
 
+
 class DataVerifier():
     def __init__(self):
         pass
@@ -22,7 +23,7 @@ class DataVerifier():
             return ['BŁĄD', 'EAN może się składać tylko z cyfr']
         l = len(ean)
         if l != 13:
-            return ['BŁĄD', 'EAN musi posiadać 13 cyfr, wpisany EAN: [{}] posiada tylko {} znaków'.format(ean,l)]
+            return ['BŁĄD', 'EAN musi posiadać 13 cyfr, wpisany EAN: [{}] posiada tylko {} znaków'.format(ean, l)]
         checksum_digit = int(ean[-1])
         checksum = 0
         i = 0

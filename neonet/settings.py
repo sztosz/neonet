@@ -7,7 +7,7 @@
 
 # Django settings for neonet project.
 
-import os
+#import os
 import django
 
 DEBUG = True

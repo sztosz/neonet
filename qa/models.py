@@ -21,11 +21,13 @@ class Commodity(models.Model):
     def __unicode__(self):
         return self.name
 
+
 class DamageDetectionTime(models.Model):
     detection_time = models.CharField(max_length=30, verbose_name='Moment wykrycia')
 
     def __unicode__(self):
         return self.detection_time
+
 
 class DamageCategory(models.Model):
     category = models.CharField(max_length=1, verbose_name='Kategoria uszkodzenia')
@@ -34,11 +36,13 @@ class DamageCategory(models.Model):
     def __unicode__(self):
         return self.category
 
+
 class DamageFurtherAction(models.Model):
     further_action = models.CharField(max_length=30, verbose_name='Dalsze Postępowanie')
 
     def __unicode__(self):
         return self.further_action
+
 
 class DamageKind(models.Model):
     damage_kind = models.CharField(max_length=30, verbose_name='Rodzaj szkody towaru')
@@ -46,8 +50,9 @@ class DamageKind(models.Model):
     def __unicode__(self):
         return self.damage_kind
 
+
 class DamageReport(models.Model):
-    date = models.DateTimeField(verbose_name='Data raportu')
+    date = models.DateTimeField(verbose_name='Data utworzenia raportu')
     commodity = models.ForeignKey(Commodity, verbose_name='Towar')
     serial = models.CharField(max_length=50, verbose_name='Numer seryjny')
     brand = models.CharField(max_length=30, verbose_name='Marka')
@@ -63,11 +68,16 @@ class DamageReport(models.Model):
         return self.commodity.name
 
 
+class CommoditiesPackage(models.Model):
+    name = models.CharField(max_length=50, verbose_name='Nazwa paczki towarów')
+    date = models.DateTimeField(verbose_name='Data utworzenia')
+    comment = models.CharField(max_length=100, verbose_name='Opis paczki')
+
+    def __unicode__(self):
+        return self.name
 
 
-
-
-
-
-
-
+class CommoditiesInPackage(models.Model):
+    commodity = models.ForeignKey(Commodity, verbose_name='Towar')
+    serial = models.CharField(max_length=50, verbose_name='Numer seryjny')
+    comment = models.CharField(max_length=100, verbose_name='Opis paczki')

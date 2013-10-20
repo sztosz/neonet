@@ -12,6 +12,7 @@ from xlrd import XLRDError
 from qa.tools.DataVerifier import DataVerifier
 from qa.models import Commodity
 
+
 class ExcelParser():
     def __init__(self):
         pass
@@ -24,6 +25,7 @@ class ExcelParser():
             workbook = xlrd.open_workbook(file_contents=excel_file.read())
         except XLRDError:
             errors.append('Nie można wczytać pliku, prawdopodobnie nie jest to plik excel')
+            return warnings, errors
         worksheet = workbook.sheet_by_index(0)
         num_rows = worksheet.nrows - 1
         num_cells = worksheet.ncols - 1
@@ -42,10 +44,11 @@ class ExcelParser():
                         errors.append('BŁĄD w lini {} : {}; TOWAR: {}'.format(curr_row+1, ean_is_invalid[1], name))
                         continue
                     else:
-                        warnings.append('OSTRZEŻENIE w lini {} : {} TOWAR: {}'.format(curr_row+1, ean_is_invalid[1], name))
+                        warnings.append('OSTRZEŻENIE w lini {} : {} TOWAR: {}'.format(curr_row+1, ean_is_invalid[1],
+                            name))
                 if Commodity.objects.filter(sku=sku):
-                    warnings.append('OSTRZEŻENIE w lini {}; TOWAR: {} SKU: {} jest już w bazie i towar nie został dodany'. \
-                        format(curr_row + 1, name, sku))
+                    warnings.append('OSTRZEŻENIE w lini {}; TOWAR: {} SKU: {} jest już w '
+                        'bazie i towar nie został dodany'.format(curr_row + 1, name, sku))
                 else:
                     commodity = Commodity(sku=sku, name=name, ean=ean)
                     commodity.save()
@@ -56,4 +59,3 @@ class ExcelParser():
     #def reports_to_excel(self):
     #    wb = workbook.Workbook()
     #    worksheet = wb.get_active_sheet()
-

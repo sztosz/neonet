@@ -41,4 +41,3 @@ admin.site.register(DamageDetectionTime, DamageDetectionTimeAdmin)
 admin.site.register(DamageFurtherAction, DamageFurtherActionAdmin)
 admin.site.register(DamageKind, DamageKindAdmin)
 admin.site.register(DamageReport, DamageReportAdmin)
-

@@ -25,7 +25,7 @@ class AbstractView():
         self.output = output
         if template is None:
             self.template = __package__ + '/' + self.__class__.__name__.lower() \
-                            + '.' + self.output
+                + '.' + self.output
         else:
             self.template = template
         self.output = output
@@ -57,7 +57,7 @@ class AbstractView():
             output = getattr(self, '_' + self.output)
             return output()
         except AttributeError:
-            return self.html()
+            return self._html()
 
 
 class Index(AbstractView):
@@ -170,15 +170,18 @@ def index(request):
     page = Index(request)
     return page.show()
 
+
 @login_required
 def commodity_import(request):
     page = CommodityImport(request)
     return page.show()
 
+
 @login_required
 def damage_report(request):
     page = DamageReport(request)
     return page.show()
+
 
 @login_required
 def damage_report_export(request):
