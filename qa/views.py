@@ -23,12 +23,15 @@ class AbstractView():
     def __init__(self, request, action=None, template=None, output='html'):
         self.request = request
         self.output = output
-        if template is None:
-            self.template = __package__ + '/' + self.__class__.__name__.lower() \
+        if template:
+            self.template = __package__ + '/' + template + '/' + self.__class__.__name__.lower() \
                 + '.' + self.output
         else:
-            self.template = template
+            self.template = __package__ + '/' + self.__class__.__name__.lower() \
+                + '.' + self.output
         self.output = output
+
+        print(self.template)
 
         try:
             if not action:

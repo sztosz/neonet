@@ -13,5 +13,5 @@ urlpatterns = patterns('',
                        url(r'^commodity_import/', 'qa.views.commodity_import', name='commodity_import'),
                        url(r'^damage_report/', 'qa.views.damage_report', name='damage_report'),
                        url(r'^damage_report_export/', 'qa.views.damage_report_export', name='damage_report_export'),
-                       url(r'^S/', include('qa.scanner.urls', namespace='scanner')),
+                       url(r'^S/', include('S.urls', namespace='scanner')),
                        )
