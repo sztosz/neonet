@@ -10,56 +10,14 @@ from __future__ import unicode_literals
 
 from datetime import datetime
 from S import forms
-#from qa.views import AbstractView
+from neonet.views import AbstractView
 from qa import models
 from django.contrib.auth.decorators import login_required
 
 from django.utils.datastructures import MultiValueDictKeyError
 from django.shortcuts import render, redirect
 
-
-class AbstractView():
-    def __init__(self, request, action=None, template=None, output='html'):
-        self.request = request
-        self.output = output
-        if template:
-            self.template = __package__ + '/' + template + '/' + self.__class__.__name__.lower() \
-                + '.' + self.output
-        else:
-            self.template = __package__ + '/' + self.__class__.__name__.lower() \
-                + '.' + self.output
-        self.output = output
-
-        print(self.template)
-
-        try:
-            if not action:
-                self.action = request.POST['action'].lower()
-            else:
-                self.action = action
-        except MultiValueDictKeyError:
-            self.action = 'view'
-        self.context = dict()
-        self.context['errors'] = list()
-        self.context['messages'] = list()
-
-    def _view(self):
-        pass
-
-    def _html(self):
-        try:
-            action = getattr(self, '_' + self.action)
-            action()
-        except AttributeError:
-            self._view()
-        return render(self.request, self.template, self.context)
-
-    def show(self):
-        try:
-            output = getattr(self, '_' + self.output)
-            return output()
-        except AttributeError:
-            return self._html()
+MODULE = __package__
 
 
 class DamageReport(AbstractView):
@@ -102,7 +60,39 @@ class DamageReport(AbstractView):
         self.context['ean_form'] = forms.EanForm()
 
 
+class CheckSN(AbstractView):
+    pass
+
+
+class QuickCommodityList(AbstractView):
+    pass
+
+
+class Index(AbstractView):
+    def _view(self):
+        self.context['user'] = self.request.user.username
+
+
+
 @login_required
 def damage_report(request):
-    page = DamageReport(request)
+    page = DamageReport(request, module=MODULE)
+    return page.show()
+
+
+@login_required
+def check_sn(request):
+    page = CheckSN(request, module=MODULE)
+    return page.show()
+
+
+@login_required
+def quick_commodity_list(request):
+    page = QuickCommodityList(request, module=MODULE)
+    return page.show()
+
+
+@login_required
+def index(request):
+    page = Index(request, module=MODULE)
     return page.show()

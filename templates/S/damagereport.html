@@ -3,16 +3,18 @@
 <head>
     <title>Raport uszkodzeń</title>
     {% load staticfiles %}
-    <link type="text/css" rel="stylesheet" href="{{ STATIC_URL }}/S/scanner.css" />
+    <link type="text/css" rel="stylesheet" href="{{ STATIC_URL }}S/scanner.css" />
+    <script src="{{ STATIC_URL }}jquery-1.10.2.js"></script>
+    <script src="{{ STATIC_URL }}S/scanner.js"></script>
 </head>
 <body>
 <div id="main_container">
 {#    {% include 'qa/header.html' %}#}
-{#    {% include 'qa/common_communication.html' %}#}
+    {% include 'qa/common_communication.html' %}
 {#    {% include 'qa/menu.html' %}#}
     <div id="content">
         {% if ean_form %}
-        <form method="post" action="{% url 'qa:damage_report' %}">
+        <form method="post" action="{% url 'qa:S:damage_report' %}">
             {% csrf_token %}
             <div class="in_block">
                 {{ ean_form.as_p }}
@@ -22,7 +24,7 @@
         </form>
         {% endif %}
         {% if damage_report_form %}
-        <form method="post" action="{% url 'qa:damage_report' %}">
+        <form method="post" action="{% url 'qa:S:damage_report' %}">
             {% csrf_token %}
             <div class="in_block">
                 {{ damage_report_form.as_p }}

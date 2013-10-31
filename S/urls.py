@@ -9,5 +9,7 @@ from django.conf.urls import patterns, url, include
 
 urlpatterns = patterns('',
                        url(r'^$', 'S.views.index', name='index'),
-                       url(r'^damage_report/', 'S.views.damage_report', name='damage_report'),
+                       url(r'^DR/', 'S.views.damage_report', name='damage_report'),
+                       url(r'^CS/', 'S.views.check_sn', name='check_sn'),
+                       url(r'^QCL/', 'S.views.quick_commodity_list', name='quick_commodity_list'),
                        )

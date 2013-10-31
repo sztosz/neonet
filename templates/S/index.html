@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Scanner menu</title>
+    {% load staticfiles %}
+    <link type="text/css" rel="stylesheet" href="{{ STATIC_URL }}S/scanner.css" />
+    <script src="{{ STATIC_URL }}jquery-1.10.2.js"></script>
+    <script src="{{ STATIC_URL }}S/scanner.js"></script>
+</head>
+<body>
+<p>Zalogowany: {{ user }}</p>
+<a href="{% url 'S:damage_report' %}">Tworzenie raportu uszkodzeń</a><br />
+<a href="{% url 'S:check_sn' %}">Sprawdź S/N</a><br />
+<a href="{% url 'S:quick_commodity_list' %}">Szybka lista towarów</a><br />
+</body>
+</html>

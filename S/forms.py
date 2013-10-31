@@ -6,11 +6,16 @@
 # @author: sztosz@gmail.com
 
 from qa import forms as qa_forms
+from django import forms
+from qa import models
 
 
 class EanForm(qa_forms.EanForm):
     pass
 
 
-class DamageReportForm(qa_forms.DamageReportForm):
-    pass
+class DamageReportForm(forms.ModelForm):
+    class Meta:
+        model = models.DamageReport
+
+

@@ -9,7 +9,6 @@
 from __future__ import unicode_literals
 
 from datetime import datetime
-from django.utils.datastructures import MultiValueDictKeyError
 from django.contrib.auth import logout
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
@@ -17,50 +16,9 @@ from django.http import HttpResponse
 from qa import models
 from qa import forms
 from qa.tools.ExcelParser import ExcelParser
+from neonet.views import AbstractView
 
-
-class AbstractView():
-    def __init__(self, request, action=None, template=None, output='html'):
-        self.request = request
-        self.output = output
-        if template:
-            self.template = __package__ + '/' + template + '/' + self.__class__.__name__.lower() \
-                + '.' + self.output
-        else:
-            self.template = __package__ + '/' + self.__class__.__name__.lower() \
-                + '.' + self.output
-        self.output = output
-
-        print(self.template)
-
-        try:
-            if not action:
-                self.action = request.POST['action'].lower()
-            else:
-                self.action = action
-        except MultiValueDictKeyError:
-            self.action = 'view'
-        self.context = dict()
-        self.context['errors'] = list()
-        self.context['messages'] = list()
-
-    def _view(self):
-        pass
-
-    def _html(self):
-        try:
-            action = getattr(self, '_' + self.action)
-            action()
-        except AttributeError:
-            self._view()
-        return render(self.request, self.template, self.context)
-
-    def show(self):
-        try:
-            output = getattr(self, '_' + self.output)
-            return output()
-        except AttributeError:
-            return self._html()
+MODULE = __package__
 
 
 class Index(AbstractView):
@@ -170,19 +128,19 @@ class DamageReportExport():
 
 @login_required
 def index(request):
-    page = Index(request)
+    page = Index(request, module=MODULE)
     return page.show()
 
 
 @login_required
 def commodity_import(request):
-    page = CommodityImport(request)
+    page = CommodityImport(request, module=MODULE)
     return page.show()
 
 
 @login_required
 def damage_report(request):
-    page = DamageReport(request)
+    page = DamageReport(request, module=MODULE)
     return page.show()
 
 

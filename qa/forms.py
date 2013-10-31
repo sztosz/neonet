@@ -29,4 +29,4 @@ class EanForm(forms.ModelForm):
 class DamageReportForm(forms.ModelForm):
     class Meta:
         model = models.DamageReport
-        exclude = ('user',)
+        exclude = ('user', 'commodity',)

@@ -24,6 +24,7 @@ urlpatterns = patterns('',
 
     url(r'^$', 'neonet.views.index', name='index'),
     url(r'^qa/', include('qa.urls', namespace='qa')),
+    url(r'^S/', include('S.urls', namespace='S')),
     (r'^accounts/login/$', 'django.contrib.auth.views.login'),
 )
 
