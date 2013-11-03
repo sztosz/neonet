@@ -17,5 +17,3 @@ class EanForm(qa_forms.EanForm):
 class DamageReportForm(forms.ModelForm):
     class Meta:
         model = models.DamageReport
-
-

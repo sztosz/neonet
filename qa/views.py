@@ -69,8 +69,7 @@ class DamageReport(AbstractView):
                 self.context['messages'].append('TOWAR: {}'.format(commodity[0].name))
                 self.context['messages'].append('SKU: {}'.format(commodity[0].sku))
                 print(str(commodity[0].id))
-                form = forms.DamageReportForm(initial={'date':      datetime.now(),
-                                                       'commodity': commodity[0],
+                form = forms.DamageReportForm(initial={'date': datetime.now(),
                                                        })
                 self.context['damage_report_form'] = form
             else:
