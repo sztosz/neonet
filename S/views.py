@@ -57,7 +57,7 @@ class DamageReport(AbstractView):
             self.context['damage_report_form'] = form
 
     def _view(self):
-        self.context['ean_form'] = forms.EanForm()
+        self.context['damage_detection_time_form'] = forms.DamageReportFo()
 
 
 class CheckSN(AbstractView):

@@ -25,3 +25,7 @@ class DamageReportForm(forms.ModelForm):
             'damage_kind':    forms.CharField(max_length=30),
         }
 
+
+class DamageDetectionTimeForm(forms.ModelForm):
+    class Meta:
+        model = models.DamageDetectionTime

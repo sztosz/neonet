@@ -31,7 +31,3 @@ class DamageReportForm(forms.ModelForm):
         model = models.DamageReport
         exclude = ('user', 'commodity',)
 
-
-class DamageDetectionTimeForm(forms.ModelForm):
-    class Meta:
-        model = models.DamageDetectionTime
