@@ -21,29 +21,13 @@ MODULE = __package__
 
 
 class DamageReport(AbstractView):
-    def _check_ean(self):
-        form = forms.EanForm(self.request.POST)
-        try:
-            ean = self.request.POST['ean']
-        except KeyError:
-            ean = 'EAN NIE ZOSTAŁ PODANY!'
+    def _choose_detection_time(self):
+        form = forms.DamageDetectionTimeForm(self.request.POST)
         if form.is_valid():
-            commodity = models.Commodity.objects.filter(ean=ean)
-            if commodity:
-                self.context['messages'].append('TOWAR: {}'.format(commodity[0].name))
-                self.context['messages'].append('SKU: {}'.format(commodity[0].sku))
-                print(str(commodity[0].id))
-                form = forms.DamageReportForm(initial={'date':      datetime.now(),
-                                                       'commodity': commodity[0],
-                                                       })
-                self.context['damage_report_form'] = form
-            else:
-                self.context['messages'].append('Brak towaru w bazie z EAN\'em {}'.format(ean))
-                self.context['ean_form'] = form
-
+            self.context['damage_report_form'] = forms.DamageReportForm(initial={'date': datetime.now()})
         else:
-            self.context['messages'].append('EAN {} jest niepoprawny'.format(ean))
-            self.context['ean_form'] = form
+            self.context['messages'].append('Niepoprawnie wybrany moment wykrycia uszkodzenia')
+            self.context['damage_detection_time_form'] = form
 
     def _add_damage_report(self):
         form = forms.DamageReportForm(self.request.POST)
@@ -57,7 +41,7 @@ class DamageReport(AbstractView):
             self.context['damage_report_form'] = form
 
     def _view(self):
-        self.context['damage_detection_time_form'] = forms.DamageReportFo()
+        self.context['damage_detection_time_form'] = forms.DamageDetectionTimeForm()
 
 
 class CheckSN(AbstractView):

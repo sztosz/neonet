@@ -10,20 +10,16 @@ from django import forms
 from qa import models
 
 
-class EanForm(qa_forms.EanForm):
-    pass
-
-
 class DamageReportForm(forms.ModelForm):
+    ean = forms.CharField(max_length=13, label='EAN')
+    serial = forms.CharField(max_length=50, label='Numer seryjny')
+    brand = forms.CharField(max_length=30, label='Marka')
+    category = forms.CharField(max_length=1, label='Klasyfikacja uszkodzenia')
+    further_action = forms.CharField(max_length=30, label='Dalsze Postępowanie')
+
     class Meta:
         model = models.DamageReport
-        fields = ('serial', 'brand', 'comment', 'net_value')
-        widgets = {
-            'detection_time': forms.CharField(max_length=30),
-            'category':       forms.CharField(max_length=1),
-            'further_action': forms.CharField(max_length=30),
-            'damage_kind':    forms.CharField(max_length=30),
-        }
+        fields = ('ean', 'serial', 'brand', 'category', 'further_action', 'comments')
 
 
 class DamageDetectionTimeForm(forms.ModelForm):

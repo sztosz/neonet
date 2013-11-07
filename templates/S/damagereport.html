@@ -13,21 +13,31 @@
     {% include 'qa/common_communication.html' %}
 {#    {% include 'qa/menu.html' %}#}
     <div id="content">
-        {% if ean_form %}
-        <form method="post" action="{% url 'qa:S:damage_report' %}">
+        {% if damage_detection_time_form %}
+        <form method="post" action="{% url 'S:damage_report' %}">
             {% csrf_token %}
             <div class="in_block">
-                {{ ean_form.as_p }}
+                {{ damage_detection_time_form.as_ul }}
+                <input type='hidden' name='action' value='choose_detection_time' />
+                <button class="in_line" type="submit">Wybierz moment wykrycia</button>
+            </div>
+        </form>
+        {% endif %}
+        {% if ean_form %}
+        <form method="post" action="{% url 'S:damage_report' %}">
+            {% csrf_token %}
+            <div class="in_block">
+                {{ ean_form.as_ul }}
                 <input type='hidden' name='action' value='check_ean' />
                 <button class="in_line" type="submit">Dodaj po EAN'nie</button>
             </div>
         </form>
         {% endif %}
         {% if damage_report_form %}
-        <form method="post" action="{% url 'qa:S:damage_report' %}">
+        <form method="post" action="{% url 'S:damage_report' %}">
             {% csrf_token %}
             <div class="in_block">
-                {{ damage_report_form.as_p }}
+                    {{ damage_report_form.as_ul }}
                 <input type='hidden' name='action' value="add_damage_report" />
                 <button class="in_line" type="submit" >Dodaj raport uszkodzeń</button>
             </div>
