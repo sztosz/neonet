@@ -20,10 +20,10 @@ class DataVerifier():
         try:
             int(ean)
         except ValueError:
-            return ['BŁĄD', 'EAN może się składać tylko z cyfr']
+            return 'EAN może się składać tylko z cyfr'
         l = len(ean)
         if l != 13:
-            return ['BŁĄD', 'EAN musi posiadać 13 cyfr, wpisany EAN: [{}] posiada tylko {} znaków'.format(ean, l)]
+            return 'EAN musi posiadać 13 cyfr, wpisany EAN: [{}] posiada tylko {} znaków'.format(ean, l)
         checksum_digit = int(ean[-1])
         checksum = 0
         i = 0
@@ -36,4 +36,4 @@ class DataVerifier():
         if checksum == checksum_digit:
             return False
         else:
-            return ['OSTRZEŻENIE', 'Niepoprawna suma kontrolna {} != {}'.format(checksum_digit, checksum)]
+            return 'Niepoprawna suma kontrolna {} != {}'.format(checksum_digit, checksum)

@@ -58,7 +58,7 @@ class DamageReport(models.Model):
     brand = models.CharField(max_length=30, verbose_name='Marka')
     detection_time = models.ForeignKey(DamageDetectionTime, verbose_name='Moment wykrycia')
     category = models.ForeignKey(DamageCategory, verbose_name='Klasyfikacja uszkodzenia')
-    comments = models.TextField(verbose_name='Komentarz', null=True, blank=True)
+    comments = models.TextField(verbose_name='Uwagi', null=True, blank=True)
     further_action = models.ForeignKey(DamageFurtherAction, verbose_name='Dalsze Postępowanie')
     damage_kind = models.ForeignKey(DamageKind, verbose_name='Rodzaj szkody towaru')
     net_value = models.DecimalField(max_digits=8, decimal_places=2, verbose_name='Wartość towaru netto')
