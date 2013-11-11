@@ -65,7 +65,22 @@ class DamageReport(AbstractView):
 
 
 class CheckSN(AbstractView):
-    pass
+    def _check(self):
+        form = forms.CheckSNForm(self.request.POST)
+        if form.is_valid():
+            serial = form.cleaned_data['serial']
+            try:
+                self.context['reports'] = models.DamageReport.objects.filter(serial=serial)
+                self.context['check_sn_form'] = forms.CheckSNForm()
+
+            except ObjectDoesNotExist:
+                self.context['messages'].append('Serial nie został wcześniej zarejestrowany')
+        else:
+            self.context['errors'].append('Niepoprawne dane w formularzu')
+            self.context['check_sn_form'] = form
+
+    def _view(self):
+        self.context['check_sn_form'] = forms.CheckSNForm()
 
 
 class QuickCommodityList(AbstractView):

@@ -61,3 +61,6 @@ class DamageDetectionTimeForm(forms.ModelForm):
             raise forms.ValidationError('Niepoprawny moment wykrycia')
 
 
+class CheckSNForm(forms.Form):
+    serial = forms.CharField(max_length=50, label='Numer seryjny')
+

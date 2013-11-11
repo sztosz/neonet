@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/html">
+<head>
+    <title>Raport uszkodzeń</title>
+    {% load staticfiles %}
+    <link type="text/css" rel="stylesheet" href="{{ STATIC_URL }}S/scanner.css" />
+    <script src="{{ STATIC_URL }}jquery-1.10.2.js"></script>
+    <script src="{{ STATIC_URL }}S/scanner.js"></script>
+</head>
+<body>
+<div id="main_container">
+{#    {% include 'qa/header.html' %}#}
+    {% include 'qa/common_communication.html' %}
+{#    {% include 'qa/menu.html' %}#}
+    <div id="content">
+    {% if reports %}
+        {% for report in reports %}
+            <ul>
+            <li>DATA: {{ report.date }}</li>
+            <li>TOWAR: {{ report.commodity.name }}</li>
+            <li>SERIAL: {{ report.serial }}</li>
+            <li>MOMENT WYKRYCIA: {{ report.detection_time.detection_time }}</li>
+            </ul>
+        {% endfor %}
+    {% endif %}
+    {% if check_sn_form %}
+        <form method="post" action="{% url 'S:check_sn' %}">
+            {% csrf_token %}
+            <div class="in_block">
+                    {{ check_sn_form.as_ul }}
+                <input type='hidden' name='action' value="check" />
+                <button class="in_line" type="submit" >Sprawdź</button>
+            </div>
+        </form>
+    {% endif %}
+    </div>
+</div>
+</body>
+</html>
+
