@@ -68,7 +68,7 @@ class DamageReport(models.Model):
         return self.commodity.name
 
 
-class CommoditiesPackage(models.Model):
+class QuickCommodityList(models.Model):
     name = models.CharField(max_length=50, verbose_name='Nazwa paczki towarów')
     date = models.DateTimeField(verbose_name='Data utworzenia')
     comment = models.CharField(max_length=100, verbose_name='Opis paczki')
@@ -77,7 +77,7 @@ class CommoditiesPackage(models.Model):
         return self.name
 
 
-class CommoditiesInPackage(models.Model):
+class CommodityInList(models.Model):
     commodity = models.ForeignKey(Commodity, verbose_name='Towar')
     serial = models.CharField(max_length=50, verbose_name='Numer seryjny')
     comment = models.CharField(max_length=100, verbose_name='Opis paczki')

@@ -64,3 +64,23 @@ class DamageDetectionTimeForm(forms.ModelForm):
 class CheckSNForm(forms.Form):
     serial = forms.CharField(max_length=50, label='Numer seryjny')
 
+
+class QuickCommodityListForm(forms.ModelForm):
+    class Meta:
+        model = models.QuickCommodityList
+        exclude = ('date',)
+
+
+class CommodityInListForm(forms.ModelForm):
+    ean = forms.CharField(max_length=13, label='EAN')
+
+    class Meta:
+        model = models.CommodityInList
+        fields = ('ean', 'serial', 'comment')
+
+    def clean_ean(self):
+        data = self.cleaned_data['ean']
+        ean_is_invalid = DataVerifier.ean13(data)
+        if ean_is_invalid:
+            raise forms.ValidationError(ean_is_invalid)
+        return data

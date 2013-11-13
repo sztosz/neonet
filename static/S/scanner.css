@@ -1,0 +1,17 @@
+body{
+    background-color: whitesmoke;
+    margin-top: 2px;
+    margin-left: 2px;
+    margin-right: 2px;
+    padding-top: 2px;
+    padding-left: 2px;
+    padding-right: 2px;
+    font-family: sans-serif;
+
+}
+#main_container{
+    width: 210px;
+    margin: 0;
+    padding: 2px;
+    background-color: lightgrey;
+}

@@ -27,7 +27,7 @@ class DamageReport(AbstractView):
             self.request.session['report_detection_time'] = form.cleaned_data['detection_time'].detection_time
             self.context['damage_report_form'] = forms.DamageReportForm()
         else:
-            self.context['messages'].append('Niepoprawnie wybrany moment wykrycia uszkodzenia')
+            #self.context['messages'].append('Niepoprawnie wybrany moment wykrycia uszkodzenia')
             self.context['damage_detection_time_form'] = form
 
     def _add_damage_report(self):
@@ -70,11 +70,14 @@ class CheckSN(AbstractView):
         if form.is_valid():
             serial = form.cleaned_data['serial']
             try:
-                self.context['reports'] = models.DamageReport.objects.filter(serial=serial)
-                self.context['check_sn_form'] = forms.CheckSNForm()
-
+                data = models.DamageReport.objects.filter(serial=serial)
+                if not data:
+                    self.context['messages'].append('Serial nie został wcześniej zarejestrowany')
+                else:
+                    self.context['reports'] = data
             except ObjectDoesNotExist:
                 self.context['messages'].append('Serial nie został wcześniej zarejestrowany')
+            self.context['check_sn_form'] = forms.CheckSNForm()
         else:
             self.context['errors'].append('Niepoprawne dane w formularzu')
             self.context['check_sn_form'] = form
@@ -84,7 +87,17 @@ class CheckSN(AbstractView):
 
 
 class QuickCommodityList(AbstractView):
-    pass
+    def _view(self):
+        pass
+
+    def _create_new_list(self):
+        pass
+
+    def _add_commodity_to_list(self):
+        pass
+
+    def _close_list(self):
+        pass
 
 
 class Index(AbstractView):
