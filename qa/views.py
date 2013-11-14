@@ -116,13 +116,24 @@ class DamageReportExport():
         damage_reports = models.DamageReport.objects.all()
         output = u''
         for report in damage_reports:
-            output += u'"{}";"{}";"{}";"{}";"{}";"{}";"{}";"{}";"{}";"{}";"{} {}";"{}";\r\n'.format(
-                '', report.date, report.brand, report.commodity.name, report.serial,
+            if report.commodity.name == 'BRAK_TOWARU_W_BAZIE':
+                commodity_name = 'EAN: {}'.format(report.commodity.ean)
+            else:
+                commodity_name = report.commodity.name
+            output += u'"{}";"{}";"{}";"{}";"{}";"{}";"{}";"{}";"{}";"";"";"{} {}";\r\n'.format(
+                '', report.date, report.brand, commodity_name, report.serial,
                 report.detection_time.detection_time, report.category.category, report.comments,
-                report.further_action.further_action, report.damage_kind.damage_kind, report.user.first_name,
-                report.user.last_name, report.net_value,)
+                report.further_action.further_action, report.user.first_name,
+                report.user.last_name,)
         response.write(output)
         return response
+
+
+class CommodityUpdateByEan(AbstractView):
+    def _view(self):
+        self.context['commodity_list'] = models.Commodity.objects.filter(name='BRAK_TOWARU_W_BAZIE')
+
+
 
 
 @login_required

@@ -9,6 +9,7 @@ from __future__ import unicode_literals
 
 from django import forms
 from qa import models
+from qa.tools.DataVerifier import DataVerifier
 
 
 class CommodityImportForm(forms.ModelForm):
@@ -31,3 +32,15 @@ class DamageReportForm(forms.ModelForm):
         model = models.DamageReport
         exclude = ('user', 'commodity',)
 
+
+class CommodityUpdateByEanForm(forms.ModelForm):
+    class Meta:
+        model = models.Commodity
+        exclude = ('sku',)
+
+    def clean_ean(self):
+        data = self.cleaned_data['ean']
+        ean_is_invalid = DataVerifier.ean13(data)
+        if ean_is_invalid:
+            raise forms.ValidationError(ean_is_invalid)
+        return data

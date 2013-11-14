@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/html">
+<head>
+    <title>Zmiana nazw towarów po EAN</title>
+    {% load staticfiles %}
+    <link type="text/css" rel="stylesheet" href="{{ STATIC_URL }}base.css" />
+</head>
+<body>
+<div id="main_container">
+    {% include 'S/header.html' %}
+    {% include 'S/common_communication.html' %}
+{#    {% include 'qa/menu.html' %}#}
+    <div id="content">
+        {% if commodity_list %}
+            {% for commodity in commodity_list %}
+                <ul>
+                <li>TOWAR: {{ commodity.name }}</li>
+                <li>EAN: {{ commodity.ean }}</li>
+                <li><a href="http://www.ean-search.org/perl/ean-search.pl?q={{ commodity.ean }}"></a> </li>
+                </ul>
+            {% endfor %}
+        {% else %}
+            <p>Brak towarów z nieznaną nazwą</p>
+        {% endif %}
+    </div>
+</div>
+</body>
+</html>
