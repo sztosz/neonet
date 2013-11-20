@@ -87,17 +87,48 @@ class CheckSN(AbstractView):
 
 
 class QuickCommodityList(AbstractView):
-    def _view(self):
-        pass
-
     def _create_new_list(self):
-        pass
+        form = forms.NewQuickCommodityListForm(self.request.POST)
+        if form.is_valid():
+            commodity_list = form.save(commit=False)
+            commodity_list.date = datetime.now()
+            commodity_list.closed = False
+            commodity_list.save()
+            self.context['new_quick_commodity_list_form'] = forms.NewQuickCommodityListForm()
+        else:
+            self.context['new_quick_commodity_list_form'] = form
+        self.context['quick_commodity_list'] = models.QuickCommodityList.objects.filter(closed=False)
 
     def _add_commodity_to_list(self):
-        pass
+        form = forms.AddCommodityToQuickListForm(self.request.POST)
+        try:
+            list_id = self.request.POST['list_id'].lower()
+            self.request.session['quick_commodity_list_id'] = list_id
+        except MultiValueDictKeyError:
+            try:
+                list_id = self.request.session['quick_commodity_list_id']
+            except MultiValueDictKeyError:
+                self.context['messages'].append('Niepoprawnie wybrana lista, proszę zgłosić administratorowi')
+                return self._view()
+        if form.is_valid():
+            commodity_in_list = form.save(commit=False)
+            commodity_in_list.list = models.QuickCommodityList.objects.get(id=list_id)
+            try:
+                commodity = models.Commodity.objects.get(ean=form.cleaned_data['ean'])
+            except ObjectDoesNotExist:
+                commodity = models.Commodity(sku='BRAK_TOWARU_W_BAZIE', name='BRAK_TOWARU_W_BAZIE',
+                                             ean=form.cleaned_data['ean'])
+                commodity.save()
+            commodity_in_list.commodity = commodity
+            commodity_in_list.save()
+            self.context['commodity_to_quick_list_form'] = forms.AddCommodityToQuickListForm()
+        else:
+            self.context['commodity_to_quick_list_form'] = form
+        self.context['commodity_in_quick_list'] = models.CommodityInQuickList.objects.filter(list=list_id)
 
-    def _close_list(self):
-        pass
+    def _view(self):
+        self.context['quick_commodity_list'] = models.QuickCommodityList.objects.filter(closed=False)
+        self.context['new_quick_commodity_list_form'] = forms.NewQuickCommodityListForm()
 
 
 class Index(AbstractView):

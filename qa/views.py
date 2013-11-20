@@ -18,6 +18,8 @@ from qa import forms
 from qa.tools.ExcelParser import ExcelParser
 from neonet.views import AbstractView
 
+from django.utils.datastructures import MultiValueDictKeyError
+
 MODULE = __package__
 
 
@@ -134,6 +136,18 @@ class CommodityUpdateByEan(AbstractView):
         self.context['commodity_list'] = models.Commodity.objects.filter(name='BRAK_TOWARU_W_BAZIE')
 
 
+class QuickCommodityList(AbstractView):
+    def _view(self):
+        self.context['quick_commodity_lists'] = models.QuickCommodityList.objects.all()
+
+    def _list_details(self):
+        try:
+            list_id = self.request.POST['list_id']
+        except MultiValueDictKeyError:
+            self.context['messages'].append('Niepoprawnie wybrana lista, proszę zgłosić administratorowi')
+            return self._view()
+        self.context['quick_commodity_list'] = models.CommodityInQuickList.objects.filter(list=list_id)
+
 
 
 @login_required
@@ -157,6 +171,11 @@ def damage_report(request):
 @login_required
 def damage_report_export(request):
     page = DamageReportExport(request)
+    return page.show()
+
+@login_required
+def quick_commodity_list(request):
+    page = QuickCommodityList(request, module=MODULE)
     return page.show()
 
 

@@ -72,12 +72,18 @@ class QuickCommodityList(models.Model):
     name = models.CharField(max_length=50, verbose_name='Nazwa paczki towarów')
     date = models.DateTimeField(verbose_name='Data utworzenia')
     comment = models.CharField(max_length=100, verbose_name='Opis paczki')
+    closed = models.BooleanField(verbose_name='Czy zamknięty')
 
     def __unicode__(self):
         return self.name
 
 
-class CommodityInList(models.Model):
+class CommodityInQuickList(models.Model):
+    list = models.ForeignKey(QuickCommodityList, verbose_name='Lista')
     commodity = models.ForeignKey(Commodity, verbose_name='Towar')
     serial = models.CharField(max_length=50, verbose_name='Numer seryjny')
-    comment = models.CharField(max_length=100, verbose_name='Opis paczki')
+    comment = models.CharField(max_length=100, verbose_name='Opis towaru')
+
+    def __unicode__(self):
+        return self.serial
+

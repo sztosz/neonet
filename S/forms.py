@@ -65,17 +65,17 @@ class CheckSNForm(forms.Form):
     serial = forms.CharField(max_length=50, label='Numer seryjny')
 
 
-class QuickCommodityListForm(forms.ModelForm):
+class NewQuickCommodityListForm(forms.ModelForm):
     class Meta:
         model = models.QuickCommodityList
-        exclude = ('date',)
+        exclude = ('date', 'closed',)
 
 
-class CommodityInListForm(forms.ModelForm):
+class AddCommodityToQuickListForm(forms.ModelForm):
     ean = forms.CharField(max_length=13, label='EAN')
 
     class Meta:
-        model = models.CommodityInList
+        model = models.CommodityInQuickList
         fields = ('ean', 'serial', 'comment')
 
     def clean_ean(self):

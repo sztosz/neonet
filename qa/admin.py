@@ -8,7 +8,7 @@
 from __future__ import unicode_literals
 
 from django.contrib import admin
-from qa.models import Commodity, DamageCategory, DamageDetectionTime, DamageFurtherAction, DamageKind, DamageReport
+from qa.models import *
 
 
 class CommodityAdmin(admin.ModelAdmin):
@@ -35,9 +35,19 @@ class DamageReportAdmin(admin.ModelAdmin):
     list_display = ('__unicode__', 'serial')
 
 
+class QuickCommodityListAdmin(admin.ModelAdmin):
+        list_display = ('__unicode__', 'date', 'closed')
+
+
+class CommodityInQuickListAdmin(admin.ModelAdmin):
+            list_display = ('__unicode__', 'list', 'commodity', 'serial')
+
+
 admin.site.register(Commodity, CommodityAdmin)
 admin.site.register(DamageCategory, DamageCategoryAdmin)
 admin.site.register(DamageDetectionTime, DamageDetectionTimeAdmin)
 admin.site.register(DamageFurtherAction, DamageFurtherActionAdmin)
 admin.site.register(DamageKind, DamageKindAdmin)
 admin.site.register(DamageReport, DamageReportAdmin)
+admin.site.register(QuickCommodityList, QuickCommodityListAdmin)
+admin.site.register(CommodityInQuickList, CommodityInQuickListAdmin)
