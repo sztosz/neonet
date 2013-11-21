@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/html">
+<head>
+    <title>Raport uszkodzeń</title>
+    {% load staticfiles %}
+    <link type="text/css" rel="stylesheet" href="{{ STATIC_URL }}base.css" />
+</head>
+<body>
+<div id="main_container">
+    {% include 'qa/header.html' %}
+    {% include 'qa/common_communication.html' %}
+{#    {% include 'qa/menu.html' %}#}
+    <div id="content">
+    {%  for list in quick_commodity_lists %}
+        <form method="post" action="{% url 'qa:quick_commodity_list' %}">
+            {% csrf_token %}
+            <div class="in_block">
+                <input type='hidden' name='action' value='list_details' />
+                <input type='hidden' name='list_id' value='{{ list.id }}'/>
+                {{ list.name }}<br />
+                {{ list.comment }}<br />
+                {{ list.date }}<br />
+                <button class="in_line" type="submit">Zobacz listę</button>
+            </div>
+        </form>
+        <hr>
+    {% endfor %}
+    {%  for list in quick_commodity_list %}
+        Towar: {{ list.commodity.name }}<br />
+        Serial: {{ list.serial }}<br />
+        Komentarz: {{ list.comment }}<br />
+        <hr>
+    {% endfor %}
+    </div>
+</div>
+</body>
+</html>
