@@ -18,6 +18,13 @@ body{
     padding: 10px;
     background-color: lightgrey;
 }
+#header{
+    width: auto;
+    margin: 10px;
+    padding: 10px;
+    background-color: lightgrey;
+}
+
 .errorlist{
     color: red;
 }
