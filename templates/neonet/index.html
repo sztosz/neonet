@@ -6,12 +6,12 @@
     <link type="text/css" rel="stylesheet" href="{{ STATIC_URL }}base.css" />
 </head>
 <body>
+<form><input type="button" value="SKANER" onClick="window.location.href='{% url 'S:index' %}'"></form>
 <div id="main_container">
     <p>NEONET</p>
-    <p>Zestaw pomocniczych narzędzi napisany przez pracowników, dla pracowników...</p>
-    <p>...za darmo...</p>
-    <p>...w wolnym czasie...</p>
-    <p><a href="{% url 'qa:index' %}">Kontrola Jakości</a></p>
+    <form><input type="button" value="SKANER" onClick="window.location.href='{% url 'S:index' %}'"></form>
+    <hr>
+    <form><input type="button" value="KONTROLA JAKOŚCI" onClick="window.location.href='{% url 'qa:index' %}'"></form>
 </div>
 </body>
 </html>

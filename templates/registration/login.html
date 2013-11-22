@@ -8,7 +8,7 @@
 <body>
     <div class='login_box'>
         {% if form.errors %}
-            <p class="errorlist">Your username and password didn't match. Please try again.</p>
+            <p class="errorlist">Podany login i hasło się nie zgadzają, spróbuj ponownie.</p>
         {% endif %}
 
         <form method="post" action="{% url 'django.contrib.auth.views.login' %}">

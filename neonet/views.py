@@ -49,6 +49,7 @@ class AbstractView():
         return render(self.request, self.template, self.context)
 
     def show(self):
+
         try:
             output = getattr(self, '_' + self.output)
             return output()
