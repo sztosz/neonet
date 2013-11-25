@@ -19,7 +19,10 @@ class Commodity(models.Model):
     name = models.CharField(max_length=100, verbose_name='Nazwa towaru')
 
     def __unicode__(self):
-        return self.name
+        if self.name == 'BRAK_TOWARU_W_BAZIE':
+            return self.ean
+        else:
+            return self.name
 
 
 class DamageDetectionTime(models.Model):

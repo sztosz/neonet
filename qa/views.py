@@ -118,12 +118,12 @@ class DamageReportExport():
         damage_reports = models.DamageReport.objects.all()
         output = u''
         for report in damage_reports:
-            if report.commodity.name == 'BRAK_TOWARU_W_BAZIE':
-                commodity_name = 'EAN: {}'.format(report.commodity.ean)
-            else:
-                commodity_name = report.commodity.name
+            #if report.commodity.name == 'BRAK_TOWARU_W_BAZIE':
+            #    commodity_name = 'EAN: {}'.format(report.commodity.ean)
+            #else:
+            #    commodity_name = report.commodity.name
             output += u'"{}";"{}";"{}";"{}";"{}";"{}";"{}";"{}";"{}";"";"";"{} {}";\r\n'.format(
-                '', report.date, report.brand, commodity_name, report.serial,
+                '', report.date, report.brand, report.commodity.__unicode__(), report.serial,
                 report.detection_time.detection_time, report.category.category, report.comments,
                 report.further_action.further_action, report.user.first_name,
                 report.user.last_name,)
