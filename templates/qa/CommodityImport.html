@@ -5,9 +5,9 @@
     {% load staticfiles %}
     <link type="text/css" rel="stylesheet" href="{{ STATIC_URL }}base.css" />
 </head>
+{% include 'qa/header.html' %}
 <body>
 <div id="main_container">
-    {% include 'qa/header.html' %}
     {% include 'qa/common_communication.html' %}
 {#    {% include 'qa/menu.html' %}#}
     <div id="content">

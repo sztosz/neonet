@@ -34,7 +34,7 @@
         </form>
     {% endif %}
     {%  for list in quick_commodity_list %}
-        <form method="post" action="{% url 'S:quick_commodity_list' %}">
+            <form method="post" action="{% url 'S:quick_commodity_list' %}">
             {% csrf_token %}
             <div class="in_block">
                 <input type='hidden' name='action' value='add_commodity_to_list' />
