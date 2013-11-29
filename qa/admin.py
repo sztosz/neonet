@@ -12,7 +12,7 @@ from qa.models import *
 
 
 class CommodityAdmin(admin.ModelAdmin):
-    list_display = ('__unicode__', 'ean', 'sku')
+    list_display = ('__unicode__', 'ean', 'sku', )
 
 
 class DamageCategoryAdmin(admin.ModelAdmin):
@@ -32,15 +32,15 @@ class DamageKindAdmin(admin.ModelAdmin):
 
 
 class DamageReportAdmin(admin.ModelAdmin):
-    list_display = ('__unicode__', 'serial')
+    list_display = ('__unicode__', 'serial', )
 
 
 class QuickCommodityListAdmin(admin.ModelAdmin):
-        list_display = ('__unicode__', 'date', 'closed')
+        list_display = ('__unicode__', 'date', 'closed', )
 
 
 class CommodityInQuickListAdmin(admin.ModelAdmin):
-            list_display = ('__unicode__', 'list', 'commodity', 'serial')
+            list_display = ('__unicode__', 'list', 'commodity', 'serial', )
 
 
 admin.site.register(Commodity, CommodityAdmin)
