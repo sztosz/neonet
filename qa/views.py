@@ -9,6 +9,7 @@
 from __future__ import unicode_literals
 
 from datetime import datetime
+from pytz import timezone
 from django.contrib.auth import logout
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
@@ -71,7 +72,7 @@ class DamageReport(AbstractView):
                 self.context['messages'].append('TOWAR: {}'.format(commodity[0].name))
                 self.context['messages'].append('SKU: {}'.format(commodity[0].sku))
                 print(str(commodity[0].id))
-                form = forms.DamageReportForm(initial={'date': datetime.now(),
+                form = forms.DamageReportForm(initial={'date': datetime.now(timezone('Poland')),
                                                        })
                 self.context['damage_report_form'] = form
             else:
@@ -97,12 +98,8 @@ class DamageReport(AbstractView):
         self.context['ean_form'] = forms.EanForm()
 
 
-class DamageReportExport():
-    def __init__(self, request):
-        self.request = request
-
-    @staticmethod
-    def show():
+class DamageReportExport(AbstractView):
+    def _view(self):
         #response = HttpResponse(content_type='text/csv')
         #response['Content-Disposition'] = 'attachment; filename="damage_report.csv"'
         #writer = csv.writer(response)
@@ -113,22 +110,21 @@ class DamageReportExport():
         #                     report.further_action.further_action, report.further_kind.damage_kind]
         #    )
         #return response
-        response = HttpResponse(content_type='text/plain')
-        response['Content-Disposition'] = 'attachment; filename="damage_report.txt"'
+        self.output = 'file'
+        self.content_type = 'text/plain'
+        self.filename = "damage_report.txt"
         damage_reports = models.DamageReport.objects.all()
-        output = u''
+        self.context['file_content'] = u''
         for report in damage_reports:
             #if report.commodity.name == 'BRAK_TOWARU_W_BAZIE':
             #    commodity_name = 'EAN: {}'.format(report.commodity.ean)
             #else:
             #    commodity_name = report.commodity.name
-            output += u'"{}";"{}";"{}";"{}";"{}";"{}";"{}";"{}";"{}";"";"";"{} {}";\r\n'.format(
+            self.context['file_content'] += u'"{}";"{}";"{}";"{}";"{}";"{}";"{}";"{}";"{}";"";"";"{} {}";\r\n'.format(
                 '', report.date, report.brand, report.commodity.__unicode__(), report.serial,
                 report.detection_time.detection_time, report.category.category, report.comments,
                 report.further_action.further_action, report.user.first_name,
                 report.user.last_name,)
-        response.write(output)
-        return response
 
 
 class CommodityUpdateByEan(AbstractView):
@@ -170,7 +166,7 @@ def damage_report(request):
 
 @login_required
 def damage_report_export(request):
-    page = DamageReportExport(request)
+    page = DamageReportExport(request, module=MODULE)
     return page.show()
 
 @login_required

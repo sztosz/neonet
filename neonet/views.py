@@ -51,7 +51,6 @@ class AbstractView():
             response.write('')
         return response
 
-
     def show(self):
         try:
             action = getattr(self, '_' + self.action)
