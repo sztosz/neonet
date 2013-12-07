@@ -27,7 +27,7 @@ class EanForm(forms.ModelForm):
         fields = ('ean',)
 
 
-class DamageReportForm(forms.ModelForm):
+class AddDamageReportForm(forms.ModelForm):
     class Meta:
         model = models.DamageReport
         exclude = ('user', 'commodity',)
@@ -44,3 +44,4 @@ class CommodityUpdateByEanForm(forms.ModelForm):
         if ean_is_invalid:
             raise forms.ValidationError(ean_is_invalid)
         return data
+

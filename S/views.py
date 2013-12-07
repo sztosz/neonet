@@ -21,18 +21,18 @@ from django.core.exceptions import ObjectDoesNotExist
 MODULE = __package__
 
 
-class DamageReport(AbstractView):
+class AddDamageReport(AbstractView):
     def _choose_detection_time(self):
         form = forms.DamageDetectionTimeForm(self.request.POST)
         if form.is_valid():
             self.request.session['report_detection_time'] = form.cleaned_data['detection_time'].detection_time
-            self.context['damage_report_form'] = forms.DamageReportForm()
+            self.context['damage_report_form'] = forms.AddDamageReportForm()
         else:
             #self.context['messages'].append('Niepoprawnie wybrany moment wykrycia uszkodzenia')
             self.context['damage_detection_time_form'] = form
 
     def _add_damage_report(self):
-        form = forms.DamageReportForm(self.request.POST)
+        form = forms.AddDamageReportForm(self.request.POST)
         if form.is_valid():
             damage = form.save(commit=False)
             damage.user = self.request.user
@@ -56,7 +56,7 @@ class DamageReport(AbstractView):
 
             damage.save()
             self.context['messages'].append('Raport zapisany poprawnie')
-            self.context['damage_report_form'] = forms.DamageReportForm()
+            self.context['damage_report_form'] = forms.AddDamageReportForm()
         else:
             self.context['errors'].append('Niepoprawne dane w formularzu')
             self.context['damage_report_form'] = form
@@ -139,7 +139,7 @@ class Index(AbstractView):
 
 @login_required
 def damage_report(request):
-    page = DamageReport(request, module=MODULE)
+    page = AddDamageReport(request, module=MODULE)
     return page.show()
 
 

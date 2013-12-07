@@ -13,7 +13,7 @@ from qa.tools.DataVerifier import DataVerifier
 from django.core.exceptions import ObjectDoesNotExist
 
 
-class DamageReportForm(forms.ModelForm):
+class AddDamageReportForm(forms.ModelForm):
     ean = forms.CharField(max_length=13, label='EAN')
     serial = forms.CharField(max_length=50, label='Numer seryjny')
     brand = forms.CharField(max_length=30, label='Marka')
