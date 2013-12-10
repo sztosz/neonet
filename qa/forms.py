@@ -8,6 +8,7 @@
 from __future__ import unicode_literals
 
 from django import forms
+from django.contrib.auth.models import User
 from qa import models
 from qa.tools.DataVerifier import DataVerifier
 
@@ -45,3 +46,10 @@ class CommodityUpdateByEanForm(forms.ModelForm):
             raise forms.ValidationError(ean_is_invalid)
         return data
 
+
+class DamageReportViewFilter(forms.Form):
+    choices = [(User.username, User.username) for User in User.objects.all()]
+    print(choices)
+    users = forms.MultipleChoiceField(choices)
+    datefrom = forms.SplitDateTimeField()
+    dateto = forms.SplitDateTimeField()

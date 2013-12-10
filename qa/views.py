@@ -8,7 +8,7 @@
 
 from __future__ import unicode_literals
 
-from datetime import datetime
+from datetime import datetime, timedelta
 from pytz import timezone
 from django.contrib.auth import logout
 from django.shortcuts import render, redirect
@@ -99,8 +99,8 @@ class AddDamageReport(AbstractView):
         self.context['ean_form'] = forms.EanForm()
 
 
-class DamageReportExport(AbstractView):
-    def _view(self):
+class DamageReports(AbstractView):
+    def _export(self):
         #response = HttpResponse(content_type='text/csv')
         #response['Content-Disposition'] = 'attachment; filename="damage_report.csv"'
         #writer = csv.writer(response)
@@ -126,6 +126,13 @@ class DamageReportExport(AbstractView):
                 report.detection_time.detection_time, report.category.category, report.comments,
                 report.further_action.further_action, report.user.first_name,
                 report.user.last_name,)
+
+    def _view(self):
+        now = datetime.now(timezone('Poland'))
+        from_yesterday = now - timedelta(days=1)
+        reports = models.DamageReport.objects.filter(date__range=(from_yesterday, now))
+        self.context['damage_reports'] = reports
+        self.context['damage_reports_filter'] = forms.DamageReportViewFilter()
 
 
 class CommodityUpdateByEan(AbstractView):
@@ -166,8 +173,8 @@ def damage_report(request):
 
 
 @login_required
-def damage_report_export(request):
-    page = DamageReportExport(request, module=MODULE)
+def damage_reports(request):
+    page = DamageReports(request, module=MODULE)
     return page.show()
 
 @login_required
