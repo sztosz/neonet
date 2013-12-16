@@ -101,26 +101,12 @@ class AddDamageReport(AbstractView):
 
 class DamageReports(AbstractView):
     def _export(self):
-        #response = HttpResponse(content_type='text/csv')
-        #response['Content-Disposition'] = 'attachment; filename="damage_report.csv"'
-        #writer = csv.writer(response)
-        #damage_reports = models.DamageReport.objects.all()
-        #for report in damage_reports:
-        #    writer.writerow(['', report.date, report.brand, report.commodity.name, report.serial,
-        #                     report.detection_time.detection_time, report.category.category, report.comments,
-        #                     report.further_action.further_action, report.further_kind.damage_kind]
-        #    )
-        #return response
         self.output = 'file'
         self.content_type = 'text/plain'
         self.filename = "damage_report.txt"
-        damage_reports = models.DamageReport.objects.all()
+        reports = models.DamageReport.objects.all()
         self.context['file_content'] = u''
-        for report in damage_reports:
-            #if report.commodity.name == 'BRAK_TOWARU_W_BAZIE':
-            #    commodity_name = 'EAN: {}'.format(report.commodity.ean)
-            #else:
-            #    commodity_name = report.commodity.name
+        for report in reports:
             self.context['file_content'] += u'"{}";"{}";"{}";"{}";"{}";"{}";"{}";"{}";"{}";"";"";"{} {}";\r\n'.format(
                 '', report.date, report.brand, report.commodity.__unicode__(), report.serial,
                 report.detection_time.detection_time, report.category.category, report.comments,
@@ -128,11 +114,18 @@ class DamageReports(AbstractView):
                 report.user.last_name,)
 
     def _view(self):
-        now = datetime.now(timezone('Poland'))
-        from_yesterday = now - timedelta(days=1)
-        reports = models.DamageReport.objects.filter(date__range=(from_yesterday, now))
+        form = forms.DamageReportViewFilter(self.request.POST)
+        if form.is_valid():
+            date_from = form.cleaned_data['date_from']
+            date_to = form.cleaned_data['date_to']
+            reports = models.DamageReport.objects.filter(date__range=(date_from, date_to),
+                                                         user__username=form.cleaned_data['users'])
+        else:
+            now = datetime.now(timezone('Poland'))
+            from_yesterday = now - timedelta(days=1)
+            reports = models.DamageReport.objects.filter(date__range=(from_yesterday, now))
         self.context['damage_reports'] = reports
-        self.context['damage_reports_filter'] = forms.DamageReportViewFilter()
+        self.context['damage_reports_filter'] = form
 
 
 class CommodityUpdateByEan(AbstractView):
