@@ -67,6 +67,9 @@ class DamageReport(models.Model):
     net_value = models.DecimalField(max_digits=8, decimal_places=2, verbose_name='Wartość towaru netto')
     user = models.ForeignKey(User, verbose_name='Użytkownik')
 
+    def commodity_ean(self):
+        return self.commodity.ean
+
     def __unicode__(self):
         return self.commodity.name
 

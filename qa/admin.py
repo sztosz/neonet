@@ -32,15 +32,17 @@ class DamageKindAdmin(admin.ModelAdmin):
 
 
 class DamageReportAdmin(admin.ModelAdmin):
-    list_display = ('__unicode__', 'serial', )
+    list_display = ('__unicode__', 'serial', 'commodity_ean', )
+    # fields = ('commodity_ean', )
+    exclude = ('commodity', )
 
 
 class QuickCommodityListAdmin(admin.ModelAdmin):
-        list_display = ('__unicode__', 'date', 'closed', )
+    list_display = ('__unicode__', 'date', 'closed', )
 
 
 class CommodityInQuickListAdmin(admin.ModelAdmin):
-            list_display = ('__unicode__', 'list', 'commodity', 'serial', )
+    list_display = ('__unicode__', 'list', 'commodity', 'serial', )
 
 
 admin.site.register(Commodity, CommodityAdmin)
