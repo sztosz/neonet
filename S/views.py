@@ -36,7 +36,8 @@ class AddDamageReport(AbstractView):
         if form.is_valid():
             damage = form.save(commit=False)
             damage.user = self.request.user
-            damage.date = datetime.now(timezone('Poland'))
+            damage.date = datetime.now(timezone('Europe/Warsaw'))
+            print(damage.date)
             try:
                 commodity = models.Commodity.objects.filter(ean=form.cleaned_data['ean'])[:1].get()
                 damage.commodity = commodity
@@ -92,7 +93,7 @@ class QuickCommodityList(AbstractView):
         form = forms.NewQuickCommodityListForm(self.request.POST)
         if form.is_valid():
             commodity_list = form.save(commit=False)
-            commodity_list.date = datetime.now(timezone('Poland'))
+            commodity_list.date = datetime.now(timezone('Europe/Warsaw'))
             commodity_list.closed = False
             commodity_list.save()
             self.context['new_quick_commodity_list_form'] = forms.NewQuickCommodityListForm()
