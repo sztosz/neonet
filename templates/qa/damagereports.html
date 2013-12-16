@@ -1,37 +1,71 @@
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/html">
-<head>
-    <title>Raporty uszkodzeń</title>
-    {% load staticfiles %}
-    <link type="text/css" rel="stylesheet" href="{{ STATIC_URL }}base.css" />
-</head>
-{% include 'qa/header.html' %}
-<body>
-<div id="main_container">
-    {% include 'qa/common_communication.html' %}
+{#<!DOCTYPE html>#}
+{#<html xmlns="http://www.w3.org/1999/html">#}
+{#<head>#}
+{#    <title>Raporty uszkodzeń</title>#}
+{#    {% load staticfiles %}#}
+{#    <link type="text/css" rel="stylesheet" href="{{ STATIC_URL }}base.css" />#}
+{#</head>#}
+{#{% include 'qa/header.html' %}#}
+{#<body>#}
+{#<div id="main_container">#}
+{#    {% include 'qa/common_communication.html' %}#}
 {#    {% include 'qa/menu.html' %}#}
-    <div id="content">
-        {% if damage_reports_filter %}
+{#    <div id="content">#}
+{#        {% if damage_reports_filter %}#}
+{#        <form method="post" action="{% url 'qa:damage_reports' %}">#}
+{#            {% csrf_token %}#}
+{#            <div class="in_block">#}
+{#                {{ damage_reports_filter.as_p }}#}
+{#                <input type='hidden' name='action' value='view' />#}
+{#                <button class="in_line" type="submit">Filtruj</button>#}
+{#            </div>#}
+{#        </form>#}
+{#        {% endif %}#}
+{#    {% block content %}#}
+{#        {% if damage_reports %}#}
+{#            {% for report in damage_reports %}#}
+{#                Towar: {{ report.commodity.name }}<br/>#}
+{#                Serial: {{ report.serial }}<br/>#}
+{#                Wykryto: {{ report.detection_time }}<br/>#}
+{#                User: {{ report.user }}<hr/>#}
+{#            {% endfor %}#}
+{#        {% else %}#}
+{#            Nie znaleziono raportów spełniających kryteria#}
+{#        {% endif %}#}
+{#    {% endblock %}#}
+{#    </div>#}
+{##}
+{% extends "qa/base.html" %}
+
+{% block title %}RAPORTY{% endblock %}
+{% block title_long %}Raporty Uszkodzeń{% endblock %}
+
+{% block content %}
+    {% if damage_reports_filter %}
         <form method="post" action="{% url 'qa:damage_reports' %}">
             {% csrf_token %}
             <div class="in_block">
                 {{ damage_reports_filter.as_p }}
-                <input type='hidden' name='action' value='view' />
-                <button class="in_line" type="submit">Filtruj</button>
+                <p><input type='hidden' name='action' value='view' />
+                <button class="in_line" type="submit">Filtruj</button></p>
             </div>
         </form>
         {% endif %}
-        {% if damage_reports %}
-            {% for report in damage_reports %}
-                Towar: {{ report.commodity.name }}<br/>
-                Serial: {{ report.serial }}<br/>
-                Wykryto: {{ report.detection_time }}<br/>
-                User: {{ report.user }}<hr/>
-            {% endfor %}
-        {% else %}
-            Nie znaleziono raportów spełniających kryteria
-        {% endif %}
-    </div>
-</div>
-</body>
-</html>
+    {% if damage_reports %}
+        <p>
+        {% for report in damage_reports %}
+            Towar: {{ report.commodity.name }};
+            Serial: {{ report.serial }};
+            Wykryto: {{ report.detection_time }};
+            User: {{ report.user }}<br />
+        {% endfor %}
+        </p>
+        <div class="console">
+        {% for report in damage_reports %}
+{{ report.date }}; {{ report.brand }}; {{ report.commodity }}; {{ report.serial }}; {{ report.detection_time.detection_time }}; {{ report.category.category }}; {{ report.comments }}; {{ report.further_action.further_action  }}; {{ report.user.first_name }} {{ report.user.last_name }}<br />
+        {% endfor %}
+        </div>
+    {% else %}
+        Nie znaleziono raportów spełniających kryteria
+    {% endif %}
+{% endblock %}
