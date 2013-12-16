@@ -49,7 +49,6 @@ class CommodityUpdateByEanForm(forms.ModelForm):
 
 class DamageReportViewFilter(forms.Form):
     choices = [(User.username, User.username) for User in User.objects.all()]
-    print(choices)
     users = forms.MultipleChoiceField(choices)
     datefrom = forms.SplitDateTimeField()
     dateto = forms.SplitDateTimeField()
