@@ -475,7 +475,16 @@ h1#title {
 background:url(images/cloud/cloud-top-left.png) top left no-repeat;
 font-size:220%;
 margin-top:5px;
+}
+
+h1#title span {
+background:url(images/cloud/cloud-top-right.png) top right no-repeat;
+color:#000;
+display:block;
+font-size:80%;
+font-weight:400;
 padding:1em 2.6em 0;
+text-decoration:none;
 }
 
 h1#title a {
