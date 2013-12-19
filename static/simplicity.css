@@ -475,6 +475,7 @@ h1#title {
 background:url(images/cloud/cloud-top-left.png) top left no-repeat;
 font-size:220%;
 margin-top:5px;
+padding:1em 2.6em 0;
 }
 
 h1#title a {
