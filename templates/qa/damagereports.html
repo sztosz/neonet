@@ -60,11 +60,18 @@
             User: {{ report.user }}<br />
         {% endfor %}
         </p>
-        <div class="console">
-        {% for report in damage_reports %}
-{{ report.date }}; {{ report.brand }}; {{ report.commodity }}; {{ report.serial }}; {{ report.detection_time.detection_time }}; {{ report.category.category }}; {{ report.comments }}; {{ report.further_action.further_action  }}; {{ report.user.first_name }} {{ report.user.last_name }}<br />
-        {% endfor %}
-        </div>
+{#        <div class="console">#}
+{#        {% for report in damage_reports %}#}
+{#{{ report.date }}; {{ report.brand }}; {{ report.commodity }}; {{ report.serial }}; {{ report.detection_time.detection_time }}; {{ report.category.category }}; {{ report.comments }}; {{ report.further_action.further_action  }}; {{ report.user.first_name }} {{ report.user.last_name }}<br />#}
+{#        {% endfor %}#}
+{#        </div>#}
+        <form method="post" action="{% url 'qa:damage_reports' %}">
+            {% csrf_token %}
+            <div class="in_block">
+                <p><input type='hidden' name='action' value='export' />
+                <button class="in_line" type="submit">Exportuj</button></p>
+            </div>
+        </form>
     {% else %}
         Nie znaleziono raportów spełniających kryteria
     {% endif %}
