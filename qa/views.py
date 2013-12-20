@@ -104,14 +104,23 @@ class DamageReports(AbstractView):
         self.output = 'file'
         self.content_type = 'text/plain'
         self.filename = "damage_report.txt"
-        reports = models.DamageReport.objects.all()
-        self.context['file_content'] = u''
-        for report in reports:
-            self.context['file_content'] += u'"{}";"{}";"{}";"{}";"{}";"{}";"{}";"{}";"{}";"";"";"{} {}";\r\n'.format(
-                '', report.date, report.brand, report.commodity.__unicode__(), report.serial,
-                report.detection_time.detection_time, report.category.category, report.comments,
-                report.further_action.further_action, report.user.first_name,
-                report.user.last_name,)
+        form = forms.DamageReportViewFilter(self.request.POST)
+        if form.is_valid():
+            date_from = form.cleaned_data['date_from']
+            date_to = form.cleaned_data['date_to']
+            reports = models.DamageReport.objects.filter(date__range=(date_from, date_to),
+                                                         user__username=form.cleaned_data['users'])
+
+            # reports = models.DamageReport.objects.all()
+            self.context['file_content'] = u''
+            for report in reports:
+                self.context['file_content'] += u'"{}";"{}";"{}";"{}";"{}";"{}";"{}";"{}";"{}";"";"";"{} {}";\r\n'.format(
+                    '', report.date, report.brand, report.commodity.__unicode__(), report.serial,
+                    report.detection_time.detection_time, report.category.category, report.comments,
+                    report.further_action.further_action, report.user.first_name,
+                    report.user.last_name,)
+        else:
+            self.output = 'html'
 
     def _view(self):
         form = forms.DamageReportViewFilter(self.request.POST)
