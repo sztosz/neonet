@@ -108,8 +108,7 @@ class DamageReports(AbstractView):
         if form.is_valid():
             date_from = form.cleaned_data['date_from']
             date_to = form.cleaned_data['date_to']
-            reports = models.DamageReport.objects.filter(date__range=(date_from, date_to),
-                                                         user__username=form.cleaned_data['users'])
+            reports = models.DamageReport.objects.filter(date__range=(date_from, date_to))
 
             # reports = models.DamageReport.objects.all()
             self.context['file_content'] = u''
@@ -127,12 +126,13 @@ class DamageReports(AbstractView):
         if form.is_valid():
             date_from = form.cleaned_data['date_from']
             date_to = form.cleaned_data['date_to']
-            reports = models.DamageReport.objects.filter(date__range=(date_from, date_to),
-                                                         user__username=form.cleaned_data['users'])
+            reports = models.DamageReport.objects.filter(date__range=(date_from, date_to))
         else:
             now = datetime.now(timezone('Poland'))
             from_yesterday = now - timedelta(days=1)
+            print(now, '\n', from_yesterday)
             reports = models.DamageReport.objects.filter(date__range=(from_yesterday, now))
+            form = forms.DamageReportViewFilter(initial={'date_from': from_yesterday, 'date_to': now})
         self.context['damage_reports'] = reports
         self.context['damage_reports_filter'] = form
 

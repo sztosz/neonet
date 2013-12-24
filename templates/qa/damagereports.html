@@ -74,6 +74,14 @@
             </div>
         </form>
     {% else %}
-        Nie znaleziono raportów spełniających kryteria
+        <p>Nie znaleziono raportów spełniających kryteria</p>
+        <form method="post" action="{% url 'qa:damage_reports' %}">
+            {% csrf_token %}
+            <div class="in_block">
+                {{ damage_reports_filter.as_p }}
+                <p><input type='hidden' name='action' value='view' />
+                <button class="in_line" type="submit">Filtruj</button></p>
+            </div>
+        </form>
     {% endif %}
 {% endblock %}
