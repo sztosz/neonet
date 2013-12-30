@@ -11,9 +11,8 @@ from __future__ import unicode_literals
 from datetime import datetime, timedelta
 from pytz import timezone
 from django.contrib.auth import logout
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse
 from qa import models
 from qa import forms
 from qa.tools.ExcelParser import ExcelParser
@@ -114,7 +113,8 @@ class DamageReports(AbstractView):
             # reports = models.DamageReport.objects.all()
             self.context['file_content'] = u''
             for report in reports:
-                self.context['file_content'] += u'"{}";"{}";"{}";"{}";"{}";"{}";"{}";"{}";"{}";"";"";"{} {}";\r\n'.format(
+                self.context['file_content'] += \
+                    u'"{}";"{}";"{}";"{}";"{}";"{}";"{}";"{}";"{}";"";"";"{} {}";\r\n'.format(
                     '', report.date, report.brand, report.commodity.__unicode__(), report.serial,
                     report.detection_time.detection_time, report.category.category, report.comments,
                     report.further_action.further_action, report.user.first_name,
@@ -155,7 +155,6 @@ class QuickCommodityList(AbstractView):
         self.context['quick_commodity_list'] = models.CommodityInQuickList.objects.filter(list=list_id)
 
 
-
 @login_required
 def index(request):
     page = Index(request, module=MODULE)
@@ -179,10 +178,12 @@ def damage_reports(request):
     page = DamageReports(request, module=MODULE)
     return page.show()
 
+
 @login_required
 def commodity_update_by_ean(request):
     page = CommodityUpdateByEan(request, module=MODULE)
     return page.show()
+
 
 @login_required
 def quick_commodity_list(request):
