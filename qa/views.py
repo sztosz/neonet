@@ -155,6 +155,12 @@ class QuickCommodityList(AbstractView):
         self.context['quick_commodity_list'] = models.CommodityInQuickList.objects.filter(list=list_id)
 
 
+class ReportsCharts(AbstractView):
+    def _view(self):
+        form = forms.DamageReportChartFilter()
+        self.context['chart_filter_form'] = form
+
+
 @login_required
 def index(request):
     page = Index(request, module=MODULE)
@@ -188,6 +194,11 @@ def commodity_update_by_ean(request):
 @login_required
 def quick_commodity_list(request):
     page = QuickCommodityList(request, module=MODULE)
+    return page.show()
+
+@login_required
+def reports_charts(request):
+    page = ReportsCharts(request, module=MODULE)
     return page.show()
 
 

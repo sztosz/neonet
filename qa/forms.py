@@ -51,3 +51,10 @@ class DamageReportViewFilter(forms.Form):
     users = forms.ModelChoiceField(User.objects.all())
     date_from = forms.SplitDateTimeField()
     date_to = forms.SplitDateTimeField()
+
+
+class DamageReportChartFilter(forms.Form):
+    # choices = forms.ModelChoiceField(User.objects.all())
+    # users = forms.MultipleChoiceField(choices=choices)
+    date_from = forms.SplitDateTimeField()
+    date_to = forms.SplitDateTimeField()
