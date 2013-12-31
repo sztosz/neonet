@@ -107,8 +107,7 @@ class DamageReports(AbstractView):
         if form.is_valid():
             date_from = form.cleaned_data['date_from']
             date_to = form.cleaned_data['date_to']
-            reports = models.DamageReport.objects.filter(date__range=(date_from, date_to),
-                                                         user__username=form.cleaned_data['users'])
+            reports = models.DamageReport.objects.filter(date__range=(date_from, date_to))
 
             # reports = models.DamageReport.objects.all()
             self.context['file_content'] = u''
@@ -127,12 +126,16 @@ class DamageReports(AbstractView):
         if form.is_valid():
             date_from = form.cleaned_data['date_from']
             date_to = form.cleaned_data['date_to']
-            reports = models.DamageReport.objects.filter(date__range=(date_from, date_to),
-                                                         user__username=form.cleaned_data['users'])
+            reports = models.DamageReport.objects.filter(date__range=(date_from, date_to))
         else:
             now = datetime.now(timezone('Poland'))
             from_yesterday = now - timedelta(days=1)
             reports = models.DamageReport.objects.filter(date__range=(from_yesterday, now))
+            form = forms.DamageReportViewFilter(initial={'date_from': from_yesterday, 'date_to': now})
+<<<<<<< .merge_file_5Xj8bp
+
+=======
+>>>>>>> .merge_file_wS69Lo
         self.context['damage_reports'] = reports
         self.context['damage_reports_filter'] = form
 
@@ -153,6 +156,12 @@ class QuickCommodityList(AbstractView):
             self.context['messages'].append('Niepoprawnie wybrana lista, proszę zgłosić administratorowi')
             return self._view()
         self.context['quick_commodity_list'] = models.CommodityInQuickList.objects.filter(list=list_id)
+
+
+class ReportsCharts(AbstractView):
+    def _view(self):
+        form = forms.DamageReportChartFilter()
+        self.context['chart_filter_form'] = form
 
 
 @login_required
@@ -188,6 +197,11 @@ def commodity_update_by_ean(request):
 @login_required
 def quick_commodity_list(request):
     page = QuickCommodityList(request, module=MODULE)
+    return page.show()
+
+@login_required
+def reports_charts(request):
+    page = ReportsCharts(request, module=MODULE)
     return page.show()
 
 
