@@ -17,4 +17,5 @@ urlpatterns = patterns('',
                            name='commodity_update_by_ean'),
                        url(r'^quick_commodity_list/', 'qa.views.quick_commodity_list', name='quick_commodity_list'),
                        url(r'^reports_charts/', 'qa.views.reports_charts', name='reports_charts'),
+                       url(r'^chart/', 'qa.views.chart', name='chart'),
                        )
