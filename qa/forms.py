@@ -54,7 +54,13 @@ class DamageReportViewFilter(forms.Form):
 
 
 class DamageReportChartFilter(forms.Form):
-    # choices = forms.ModelChoiceField(User.objects.all())
-    # users = forms.MultipleChoiceField(choices=choices)
+    user_obj = User.objects.all()
+    # users = ['{} {}'.format(user.first_name, user.last_name) for user in user_obj]
+    choices = [('Wszyscy', 'Wszyscy')]
+    for user in ['{} {}'.format(user.first_name, user.last_name) for user in user_obj]:
+        choices.append((user, user))
+    print choices
+    users = forms.ChoiceField(choices=choices)
     date_from = forms.SplitDateTimeField()
     date_to = forms.SplitDateTimeField()
+    fields = ('users', 'date_from', 'date_to')

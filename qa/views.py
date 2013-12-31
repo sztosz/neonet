@@ -133,6 +133,8 @@ class DamageReports(AbstractView):
             now = datetime.now(timezone('Poland'))
             from_yesterday = now - timedelta(days=1)
             reports = models.DamageReport.objects.filter(date__range=(from_yesterday, now))
+            form = forms.DamageReportViewFilter(initial={'date_from': from_yesterday, 'date_to': now})
+
         self.context['damage_reports'] = reports
         self.context['damage_reports_filter'] = form
 

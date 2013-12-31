@@ -5,10 +5,10 @@
 
 {% block content %}
     {% if chart_filter_form %}
-        <form method="post" action="{% url 'qa:damage_reports' %}">
+        <form method="post" action="{% url 'qa:reports_charts' %}">
             {% csrf_token %}
             <div class="in_block">
-                {{ damage_reports_filter.as_p }}
+                {{ chart_filter_form.as_p }}
                 <p><input type='hidden' name='action' value='view' />
                 <button class="in_line" type="submit">Filtruj</button></p>
             </div>
