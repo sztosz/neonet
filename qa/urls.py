@@ -5,7 +5,7 @@
 #
 # @author: sztosz@gmail.com
 
-from django.conf.urls import patterns, url, include
+from django.conf.urls import patterns, url
 
 urlpatterns = patterns('',
                        url(r'^$', 'qa.views.index', name='index'),

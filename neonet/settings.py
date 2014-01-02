@@ -137,7 +137,6 @@ INSTALLED_APPS = (
     'django.contrib.admindocs',
     'qa',
     'S',
-    'schenker_orders',
 )
 
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'

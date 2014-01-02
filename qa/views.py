@@ -11,9 +11,8 @@ from __future__ import unicode_literals
 from datetime import datetime, timedelta
 from pytz import timezone
 from django.contrib.auth import logout
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse
 from qa import models
 from qa import forms
 from qa.tools.ExcelParser import ExcelParser
@@ -110,7 +109,6 @@ class DamageReports(AbstractView):
             date_to = form.cleaned_data['date_to']
             reports = models.DamageReport.objects.filter(date__range=(date_from, date_to))
 
-            # reports = models.DamageReport.objects.all()
             self.context['file_content'] = u''
             for report in reports:
                 self.context['file_content'] += u'"{}";"{}";"{}";"{}";"{}";"{}";"{}";"{}";"{}";"";"";"{} {}";\r\n'.format(

@@ -28,7 +28,6 @@ class AddDamageReport(AbstractView):
             self.request.session['report_detection_time'] = form.cleaned_data['detection_time'].detection_time
             self.context['damage_report_form'] = forms.AddDamageReportForm()
         else:
-            #self.context['messages'].append('Niepoprawnie wybrany moment wykrycia uszkodzenia')
             self.context['damage_detection_time_form'] = form
 
     def _add_damage_report(self):

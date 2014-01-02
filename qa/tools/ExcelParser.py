@@ -41,7 +41,6 @@ class ExcelParser():
                 ean = worksheet.cell_value(curr_row, 0)
                 ean_is_invalid = DataVerifier.ean13(ean)
                 if ean_is_invalid:
-                    # errors.append('BŁĄD w lini {} : {}; TOWAR: {}'.format(curr_row+1, ean_is_invalid, name))
                     continue
                 try:
                     commodity = Commodity.objects.get(ean=ean)
@@ -55,13 +54,5 @@ class ExcelParser():
                     commodity.save()
                     warnings.append('OSTRZEŻENIE w lini {}; TOWAR z EAN\'em {} dostał poprawną nazwę: '
                                     '{}'.format(curr_row + 1, ean, name))
-                # else:
-                #     warnings.append('OSTRZEŻENIE w lini {}; TOWAR: {} SKU: {} jest już w bazie i nie został dodany'.
-                #                     format(curr_row + 1, name, sku))
 
         return warnings, errors
-
-    #@staticmethod
-    #def reports_to_excel(self):
-    #    wb = workbook.Workbook()
-    #    worksheet = wb.get_active_sheet()

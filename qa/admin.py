@@ -33,7 +33,6 @@ class DamageKindAdmin(admin.ModelAdmin):
 
 class DamageReportAdmin(admin.ModelAdmin):
     list_display = ('__unicode__', 'serial', 'commodity_ean', )
-    # fields = ('commodity_ean', )
     exclude = ('commodity', )
 
 
