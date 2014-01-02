@@ -3,55 +3,54 @@
 
 <head>
     <title>{% block title %}NOENET QA{% endblock %}</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <meta http-equiv="Content-Language" content="pl-PL"/>
-    <meta name="author" content="Bartosz Nowak <sztosz['at']gmail['dot']com>"/>
-    <meta name="description" content="Set of helper tools for Neonet Quality Assurance Division."/>
-    <meta name="copyright" content="All content excluding dynamic data (c) Bartosz Nowak, but please do read licence"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="Content-Language" content="pl-PL" />
+    <meta name="author" content="Bartosz Nowak <sztosz['at']gmail['dot']com>" />
+    <meta name="description" content="Set of helper tools for Neonet Quality Assurance Division." />
+    <meta name="copyright" content="All content excluding dynamic data (c) Bartosz Nowak, but please do read licence" />
 
     {% load staticfiles %}
-    <link type="text/css" rel="stylesheet" href="{{ STATIC_URL }}simplicity.css"/>
+    <link type="text/css" rel="stylesheet" href="{{ STATIC_URL }}simplicity.css" />
 </head>
 <body>
 <div id="window">
-    <div id="container">
+  <div id="container">
 
-        <div id="navigation">
-            <ul>
-                <!-- The link you call "active" will show up as a darker tab -->
-                <!--[if IE 6]><li></li><![endif]-->
-                <li><a href="{% url 'S:index' %}">Menu Skanera</a></li>
-                <li><a href="{% url 'qa:damage_reports' %}">Raporty uszkodzeń</a></li>
-                <li><a href="{% url 'qa:commodity_import' %}">Dodawanie towarów</a></li>
-                <li><a href="{% url 'qa:commodity_update_by_ean' %}">Towary bez nazwy</a></li>
-                <li><a href="{% url 'qa:quick_commodity_list' %}">Szybkie listy</a></li>
-                <li><a href="{% url 'qa:damage_report' %}">Nowy Raport</a></li>
-            </ul>
-        </div>
+	<div id="navigation">
+	  <ul>
+	    <!-- The link you call "active" will show up as a darker tab -->
+	    <!--[if IE 6]><li></li><![endif]-->
+	    <li><a href="{% url 'S:index' %}">Menu Skanera</a></li>
+        <li><a href="{% url 'qa:damage_reports' %}">Raporty uszkodzeń</a></li>
+	    <li><a href="{% url 'qa:commodity_import' %}">Dodawanie towarów</a></li>
+	    <li><a href="{% url 'qa:commodity_update_by_ean' %}">Towary bez nazwy</a></li>
+	    <li><a href="{% url 'qa:quick_commodity_list' %}">Szybkie listy</a></li>
+	    <li><a href="{% url 'qa:damage_report' %}">Nowy Raport</a></li>
+	  </ul>
+	</div>
 
-        <div id="main">
-            <div id="outer-prettification">
-                <div id="inner-prettification">
-                    <div id="header">
-                        <h1 id="title"><span>{% block title_long %}{% endblock %}</span></h1>
-                    </div>
-                    <div id="contents">
-                        {% block content %}{% endblock %}
-                    </div>
+    <div id="main">
+	  <div id="outer-prettification">
+	    <div id="inner-prettification">
+          <div id="header">
+		<h1 id="title"><span>{% block title_long %}{% endblock %}</span></h1>
+	      </div>
+          <div id="contents">
+        {% block content %}{% endblock %}
+          </div>
 
-                    <div id="footer">
-                        <p><a href="http://python.org/"
-                              title="Well... it just points to best programming language i know...">Python.org</a></p>
-                        <!-- You can do whatever you like here -->
-                    </div>
+          <div id="footer">
+		<p><a href="http://python.org/" title="Well... it just points to best programming language i know...">Python.org</a></p>
+		<!-- You can do whatever you like here -->
+	      </div>
 
-                </div>
-            </div>
-        </div>
+	    </div>
+	  </div>
+	</div>
 
+      </div>
     </div>
-</div>
 
-</body>
+  </body>
 
 </html>

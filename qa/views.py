@@ -8,26 +8,18 @@
 
 from __future__ import unicode_literals
 
-from datetime import datetime, timedelta, date
-# from numpy.core.tests.test_numerictypes import read_values_nested
+from datetime import datetime, timedelta
 from pytz import timezone
 from django.contrib.auth import logout
-from django.shortcuts import redirect
+from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
 from qa import models
 from qa import forms
 from qa.tools.ExcelParser import ExcelParser
 from neonet.views import AbstractView
 
 from django.utils.datastructures import MultiValueDictKeyError
-
-from matplotlib import pylab
-from pylab import *
-import PIL
-import PIL.Image
-import StringIO
-
-from collections import OrderedDict
 
 MODULE = __package__
 
@@ -121,8 +113,7 @@ class DamageReports(AbstractView):
             # reports = models.DamageReport.objects.all()
             self.context['file_content'] = u''
             for report in reports:
-                self.context['file_content'] += \
-                    u'"{}";"{}";"{}";"{}";"{}";"{}";"{}";"{}";"{}";"";"";"{} {}";\r\n'.format(
+                self.context['file_content'] += u'"{}";"{}";"{}";"{}";"{}";"{}";"{}";"{}";"{}";"";"";"{} {}";\r\n'.format(
                     '', report.date, report.brand, report.commodity.__unicode__(), report.serial,
                     report.detection_time.detection_time, report.category.category, report.comments,
                     report.further_action.further_action, report.user.first_name,
@@ -139,6 +130,7 @@ class DamageReports(AbstractView):
         else:
             now = datetime.now(timezone('Poland'))
             from_yesterday = now - timedelta(days=1)
+            print(now, '\n', from_yesterday)
             reports = models.DamageReport.objects.filter(date__range=(from_yesterday, now))
             form = forms.DamageReportViewFilter(initial={'date_from': from_yesterday, 'date_to': now})
         self.context['damage_reports'] = reports
@@ -161,60 +153,6 @@ class QuickCommodityList(AbstractView):
             self.context['messages'].append('Niepoprawnie wybrana lista, proszę zgłosić administratorowi')
             return self._view()
         self.context['quick_commodity_list'] = models.CommodityInQuickList.objects.filter(list=list_id)
-
-
-class ReportsCharts(AbstractView):
-    def _view(self):
-        form = forms.DamageReportChartFilter()
-        self.context['chart_filter_form'] = form
-
-
-class Chart(AbstractView):
-    def _view(self):
-        self.output = 'file'
-        self.filename = "chart.png"
-
-        # Construct the graph
-        # t = arange(0.0, 2.0, 0.01)
-        # s = sin(2*pi*t)
-        # plot(t, s, linewidth=1.0)
-        #
-        # xlabel('time (s)')
-        # ylabel('voltage (mV)')
-        # title('About as simple as it gets, folks')
-        # grid(True)
-
-        reports = models.DamageReport.objects.all()
-        dates = {}
-        for report in reports:
-            _date = date(report.date.year, report.date.month, report.date.day)
-            if _date in dates:
-                dates[_date] += 1
-            else:
-                dates[_date] = 1
-        sorted_dates = OrderedDict(sorted(dates.items(), key=lambda t: t[0]))
-        # print sorted_dates
-        plot(sorted_dates.keys(), sorted_dates.values(), linewidth=2.0)
-        #rcParams['figure.figsize'] = 30, 3
-        xlabel('Dates')
-        ylabel('Number of reports')
-        # ylabel.set_rotation('vertical')
-        xticks( rotation=30, size='small')
-        title('Number of reports per day')
-
-        # Store image in a string buffer
-        _buffer = StringIO.StringIO()
-        canvas = pylab.get_current_fig_manager().canvas
-        canvas.draw()
-        pilImage = PIL.Image.fromstring("RGB", canvas.get_width_height(), canvas.tostring_rgb())
-        pilImage.save(_buffer, "PNG")
-        pylab.close()
-
-        # Send buffer in a http response the the browser with the mime type image/png set
-        self.context['file_content'] = _buffer.getvalue()
-        self.content_type = 'image/png'
-        # return HttpResponse(buffer.getvalue(), mimetype="image/png")
-
 
 
 
@@ -241,28 +179,14 @@ def damage_reports(request):
     page = DamageReports(request, module=MODULE)
     return page.show()
 
-
 @login_required
 def commodity_update_by_ean(request):
     page = CommodityUpdateByEan(request, module=MODULE)
     return page.show()
 
-
 @login_required
 def quick_commodity_list(request):
     page = QuickCommodityList(request, module=MODULE)
-    return page.show()
-
-
-@login_required
-def reports_charts(request):
-    page = ReportsCharts(request, module=MODULE)
-    return page.show()
-
-
-@login_required
-def chart(request):
-    page = Chart(request)
     return page.show()
 
 

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/html">
+<head>
+    <title>Commodity Import</title>
+    {% load staticfiles %}
+    <link type="text/css" rel="stylesheet" href="{{ STATIC_URL }}base.css" />
+</head>
+{% include 'qa/header.html' %}
+<body>
+<div id="main_container">
+    {% include 'qa/common_communication.html' %}
+{#    {% include 'qa/menu.html' %}#}
+    <div id="content">
+        <form method="post" action="{% url 'qa:commodity_import' %}">
+            {% csrf_token %}
+            <div class="in_block">
+                    {{ add_single_form.as_p }}
+                <input type='hidden' name='action' value='add' />
+                <button class="in_line" type="submit" >Dodaj</button>
+            </div>
+        </form>
+        <form method="post" enctype="multipart/form-data" action="{% url 'qa:commodity_import' %}">
+            {% csrf_token %}
+            <div class="in_block">
+                {{ batch_upload_file_form.as_p }}
+                <input type='hidden' name='action' value='import' />
+                <button class="in_line" type="submit" >Importuj</button>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

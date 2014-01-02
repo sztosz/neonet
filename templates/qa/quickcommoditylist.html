@@ -1,0 +1,42 @@
+{#<!DOCTYPE html>#}
+{#<html xmlns="http://www.w3.org/1999/html">#}
+{#<head>#}
+{#    <title>Raport uszkodzeń</title>#}
+{#    {% load staticfiles %}#}
+{#    <link type="text/css" rel="stylesheet" href="{{ STATIC_URL }}base.css" />#}
+{#</head>#}
+{#{% include 'qa/header.html' %}#}
+{#<body>#}
+{#<div id="main_container">#}
+{#    {% include 'qa/common_communication.html' %}#}
+{#    {% include 'qa/menu.html' %}#}
+{#    <div id="content">#}
+{% extends "qa/base.html" %}
+
+{% block title %}LISTY{% endblock %}
+{% block title_long %}Szybkie listy towarów{% endblock %}
+
+{% block content %}
+    {%  for list in quick_commodity_lists %}
+        <form method="post" action="{% url 'qa:quick_commodity_list' %}">
+            {% csrf_token %}
+            <div class="in_block">
+                <p><input type='hidden' name='action' value='list_details' /></p>
+                <p><input type='hidden' name='list_id' value='{{ list.id }}'/></p>
+                <p><b>Nazwa:</b> {{ list.name }}
+                   <b>Komentarz:</b> {{ list.comment }}
+                   <b>Data:</b> {{ list.date }}
+                <button class="in_line" type="submit">Zobacz listę</button></p>
+            </div>
+        </form>
+    {% endfor %}
+    {%  for list in quick_commodity_list %}
+        <p><b>Towar:</b> {{ list.commodity }};
+           <b>Serial:</b> {{ list.serial }};
+           <b>Komentarz:</b> {{ list.comment }};</p>
+    {% endfor %}
+{% endblock %}
+{#    </div>#}
+{#</div>#}
+{#</body>#}
+{#</html>#}
