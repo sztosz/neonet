@@ -36,7 +36,6 @@ class AddDamageReport(AbstractView):
             damage = form.save(commit=False)
             damage.user = self.request.user
             damage.date = datetime.now(timezone('Europe/Warsaw'))
-            print(damage.date)
             try:
                 commodity = models.Commodity.objects.filter(ean=form.cleaned_data['ean'])[:1].get()
                 damage.commodity = commodity

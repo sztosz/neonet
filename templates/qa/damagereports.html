@@ -4,34 +4,45 @@
 {% block title_long %}Raporty Uszkodzeń{% endblock %}
 
 {% block content %}
-    {% if damage_reports_filter %}
-        <form method="post" action="{% url 'qa:damage_reports' %}">
-            {% csrf_token %}
-            <div class="in_block">
-                {{ damage_reports_filter.as_p }}
-                <p><input type='hidden' name='action' value='view' />
-                <button class="in_line" type="submit">Filtruj</button></p>
-            </div>
-        </form>
+
+    <div class="hero-unit">
+        <h1>Zestawienie raportów</h1>
+    </div>
+    <div class="row-fluid">
+        {#        <div class="span6">#}
+        {% if damage_reports_filter %}
+            <form method="post" action="{% url 'qa:damage_reports' %}">
+                {% csrf_token %}
+{#                {% for hidden in damage_reports_filter.hidden_fields %}#}
+{#                    {{ hidden }}#}
+{#                {% endfor %}#}
+                <input type='hidden' name='action' value='view'/>
+{#                {% for field in damage_reports_filter.visible_field %}#}
+                {% for field in damage_reports_filter %}
+                    {{ fiedl.errors }}
+                    {{ field.help_text }}<br/>
+                    {{ field }}<br/>
+                {% endfor %}
+                <button class="btn btn-primary" type="submit" name="submit">Filtruj</button>
+            </form>
         {% endif %}
-    {% if damage_reports %}
-        <p>
-        {% for report in damage_reports %}
-            Towar: {{ report.commodity.name }};
-            Serial: {{ report.serial }};
-            Wykryto: {{ report.detection_time }};
-            User: {{ report.user }}<br />
-        {% endfor %}
-        </p>
-        <form method="post" action="{% url 'qa:damage_reports' %}">
-            {% csrf_token %}
-            <div class="in_block">
+        {% if damage_reports %}
+            {% for report in damage_reports %}
+                Towar: {{ report.commodity.name }};
+                Serial: {{ report.serial }};
+                Wykryto: {{ report.detection_time }};
+                User: {{ report.user }}<br/>
+            {% endfor %}
+            <form method="post" action="{% url 'qa:damage_reports' %}">
+                {% csrf_token %}
                 {{ damage_reports_filter.as_p }}
-                <p><input type='hidden' name='action' value='export' />
-                <button class="in_line" type="submit">Exportuj</button></p>
-            </div>
-        </form>
-    {% else %}
-        Nie znaleziono raportów spełniających kryteria
-    {% endif %}
+                <p><input type='hidden' name='action' value='export'/>
+                    <button class="in_line" type="submit">Eksportuj</button>
+                </p>
+            </form>
+        {% else %}
+            Nie znaleziono raportów spełniających kryteria
+        {% endif %}
+        {#        </div>#}
+    </div>
 {% endblock %}

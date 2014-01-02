@@ -1,25 +1,27 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>LOGIN REQUIRED</title>
-    {% load staticfiles %}
-    <link type="text/css" rel="stylesheet" href="{{ STATIC_URL }}base.css" />
-</head>
-<body>
-    <div class='login_box'>
+{% extends "qa/base.html" %}
+
+{% block content %}
+<div class="hero-unit">
+    <h1>Zaloguj się</h1>
+
+    <div class="container">
+    <form class="form-signin span4" id="login_form" method="post" action="/accounts/login/">
+        <h2 class="form-signin-heading">Podaj login i hasło</h2>
+        {% csrf_token %}
+
         {% if form.errors %}
-            <p class="errorlist">Podany login i hasło się nie zgadzają, spróbuj ponownie.</p>
+        <p><strong>Podane hasło lub login są nieprawidłowe!</strong></p>
         {% endif %}
 
-        <form method="post" action="{% url 'django.contrib.auth.views.login' %}">
-            {% csrf_token %}
-            {{ form.username.label_tag }}
-            {{ form.username }}<br/>
-            {{ form.password.label_tag }}
-            {{ form.password }}
-            <input id="id_login_submit" type="submit" value="Login" />
-            <input type="hidden" name="next" value="{{ next }}" />
-        </form>
+        Login: <input type="text" id="id_username" class="input-block-level" placeholder="Login" name="username" value="" size="50" />
+        <br />
+        Hasło: <input type="password" id="id_password" class="input-block-level" placeholder="Hasło" name="password" value="" size="50" />
+        <br />
+        <button class="btn btn-primary" type="submit">Zaloguj</button>
+        <input type="hidden" name="next" value="/qa/" />
+    </form>
+
     </div>
-</body>
-</html>
+    <!-- /container -->
+</div>
+{% endblock %}

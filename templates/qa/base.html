@@ -1,56 +1,104 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/html" xml:lang="en-GB">
-
+{% load static %}
+<!DOCTYPE html>
+<html>
 <head>
-    <title>{% block title %}NOENET QA{% endblock %}</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta http-equiv="Content-Language" content="pl-PL" />
-    <meta name="author" content="Bartosz Nowak <sztosz['at']gmail['dot']com>" />
-    <meta name="description" content="Set of helper tools for Neonet Quality Assurance Division." />
-    <meta name="copyright" content="All content excluding dynamic data (c) Bartosz Nowak, but please do read licence" />
 
-    {% load staticfiles %}
-    <link type="text/css" rel="stylesheet" href="{{ STATIC_URL }}simplicity.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="Content-Language" content="pl-PL"/>
+    <meta name="author" content="Bartosz Nowak <sztosz['at']gmail['dot']com>"/>
+    <meta name="description" content="Set of helper tools for Neonet Quality Assurance Division."/>
+    <meta name="copyright" content="All content excluding dynamic data (c) Bartosz Nowak, but please do read licence"/>
+
+    <!-- Bootstrap -->
+    <link href="{% static 'css/bootstrap-fluid-adj.css' %}" rel="stylesheet">
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet" media="screen">
+    <link href="{% static 'css/bootstrap-responsive.css' %}" rel="stylesheet">
+
+    <title>{% block title %}NOENET QA{% endblock %}</title>
 </head>
 <body>
-<div id="window">
-  <div id="container">
+<div class="navbar navbar-inverse navbar-fixed-top">
+   <div class="navbar-inner">
+       <div class="container">
+           <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+               <span class="icon-bar"></span>
+               <span class="icon-bar"></span>
+               <span class="icon-bar"></span>
+           </button>
+           <a class="brand" href="/rango/">Neonet QA</a>
 
-	<div id="navigation">
-	  <ul>
-	    <!-- The link you call "active" will show up as a darker tab -->
-	    <!--[if IE 6]><li></li><![endif]-->
-	    <li><a href="{% url 'S:index' %}">Menu Skanera</a></li>
-        <li><a href="{% url 'qa:damage_reports' %}">Raporty uszkodzeń</a></li>
-	    <li><a href="{% url 'qa:commodity_import' %}">Dodawanie towarów</a></li>
-	    <li><a href="{% url 'qa:commodity_update_by_ean' %}">Towary bez nazwy</a></li>
-	    <li><a href="{% url 'qa:quick_commodity_list' %}">Szybkie listy</a></li>
-	    <li><a href="{% url 'qa:damage_report' %}">Nowy Raport</a></li>
-	  </ul>
-	</div>
-
-    <div id="main">
-	  <div id="outer-prettification">
-	    <div id="inner-prettification">
-          <div id="header">
-		<h1 id="title"><span>{% block title_long %}{% endblock %}</span></h1>
-	      </div>
-          <div id="contents">
-        {% block content %}{% endblock %}
-          </div>
-
-          <div id="footer">
-		<p><a href="http://python.org/" title="Well... it just points to best programming language i know...">Python.org</a></p>
-		<!-- You can do whatever you like here -->
-	      </div>
-
-	    </div>
-	  </div>
-	</div>
-
-      </div>
+           <div class="nav-collapse collapse">
+               <ul class="nav pull-right">
+                   {% if user.is_authenticated %}
+                    <li class="navbar-text">Witaj, {{ user.username }}!</li>
+                    <li><a href="/rango/logout/">Wyloguj</a></li>
+                   {% else %}
+                    <li><a href="/rango/register/">Register</a></li>
+                    <li><a href="/rango/login/">Login</a></li>
+                   {% endif %}
+               </ul>
+               <ul class="nav">
+{#                   {% if user.is_authenticated %}#}
+{#                    <li><a href="/rango/restricted/">Restricted</a></li>#}
+{#                    <li><a href="/rango/add_category/">Add Category</a></li>#}
+{#                   {% endif %}#}
+{#                   <li><a href="/rango/about/">About</a></li>#}
+               </ul>
+           </div>
+           <!--/.nav-collapse -->
+       </div>
+   </div>
+</div>
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="span3">
+            <div class="well sidebar-nav">
+                <!--- Empty for the timebeing -->
+                               <ul>
+                <!-- The link you call "active" will show up as a darker tab -->
+                <!--[if IE 6]><li></li><![endif]-->
+                <li><a href="{% url 'S:index' %}">Menu Skanera</a></li>
+                <li><a href="{% url 'qa:damage_reports' %}">Raporty uszkodzeń</a></li>
+                <li><a href="{% url 'qa:commodity_import' %}">Dodawanie towarów</a></li>
+                <li><a href="{% url 'qa:commodity_update_by_ean' %}">Towary bez nazwy</a></li>
+                <li><a href="{% url 'qa:quick_commodity_list' %}">Szybkie listy</a></li>
+                <li><a href="{% url 'qa:damage_report' %}">Nowy Raport</a></li>
+            </ul>
+            </div>
+            <!--/.well -->
+        </div>
+        <!--/span-->
+        <div class="span9">
+            {% block content %}
+            {% endblock %}
+        </div>
+        <!--/span-->
     </div>
+    <!--/row-->
+</div>
+<!--/.fluid-container-->
 
-  </body>
+<hr>
+{##}
+{#                        <h1 id="title"><span>{% block title_long %}{% endblock %}</span></h1>#}
+{#                    </div>#}
+{#                    <div id="contents">#}
+{##}
+{#                    <div id="footer">#}
+{#                        <p><a href="http://python.org/"#}
+{#                              title="Well... it just points to best programming language i know...">Python.org</a></p>#}
+{#                        <!-- You can do whatever you like here -->#}
+{#                    </div>#}
+
+<footer>
+    <div class="container">
+        <p>&copy; Bartosz Nowak 2013-2014</p>
+    </div>
+</footer>
+
+<script src="{% static 'js/jquery-2.0.3.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+</body>
 
 </html>
