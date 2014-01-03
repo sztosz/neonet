@@ -52,13 +52,8 @@
 </div>
 <div class="container-fluid">
     <div class="row-fluid">
-        <div class="span3">
+        <div class="span2">
             <div class="well sidebar-nav">
-                <!--- Empty for the timebeing -->
-                               <ul>
-                <!-- The link you call "active" will show up as a darker tab -->
-                <!--[if IE 6]><li></li><![endif]-->
-                <li><a href="{% url 'S:index' %}">Menu Skanera</a></li>
                 <li><a href="{% url 'qa:damage_reports' %}">Raporty uszkodzeń</a></li>
                 <li><a href="{% url 'qa:commodity_import' %}">Dodawanie towarów</a></li>
                 <li><a href="{% url 'qa:commodity_update_by_ean' %}">Towary bez nazwy</a></li>
@@ -69,7 +64,7 @@
             <!--/.well -->
         </div>
         <!--/span-->
-        <div class="span9">
+        <div class="span10">
             {% block content %}
             {% endblock %}
         </div>
