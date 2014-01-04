@@ -153,35 +153,35 @@ class QuickCommodityList(AbstractView):
 
 
 
-@login_required(login_url='login/')
+@login_required(login_url='/qa/login/')
 def index(request):
     page = Index(request, module=MODULE)
     return page.show()
 
 
-@login_required
+@login_required(login_url='/qa/login/')
 def commodity_import(request):
     page = CommodityImport(request, module=MODULE)
     return page.show()
 
 
-@login_required
+@login_required(login_url='/qa/login/')
 def damage_report(request):
     page = AddDamageReport(request, module=MODULE)
     return page.show()
 
 
-@login_required
+@login_required(login_url='/qa/login/')
 def damage_reports(request):
     page = DamageReports(request, module=MODULE)
     return page.show()
 
-@login_required
+@login_required(login_url='/qa/login/')
 def commodity_update_by_ean(request):
     page = CommodityUpdateByEan(request, module=MODULE)
     return page.show()
 
-@login_required
+@login_required(login_url='/qa/login/')
 def quick_commodity_list(request):
     page = QuickCommodityList(request, module=MODULE)
     return page.show()

@@ -136,25 +136,25 @@ class Index(AbstractView):
         self.context['user'] = self.request.user.username
 
 
-@login_required
+@login_required(login_url='/S/login/')
 def damage_report(request):
     page = AddDamageReport(request, module=MODULE)
     return page.show()
 
 
-@login_required
+@login_required(login_url='/S/login/')
 def check_sn(request):
     page = CheckSN(request, module=MODULE)
     return page.show()
 
 
-@login_required
+@login_required(login_url='/S/login/')
 def quick_commodity_list(request):
     page = QuickCommodityList(request, module=MODULE)
     return page.show()
 
 
-@login_required(login_url='login/')
+@login_required(login_url='/S/login/')
 def index(request):
     page = Index(request, module=MODULE)
     return page.show()
