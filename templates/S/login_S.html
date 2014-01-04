@@ -11,7 +11,7 @@
             <p class="errorlist">Podany login i hasło się nie zgadzają, spróbuj ponownie.</p>
         {% endif %}
 
-        <form method="post" action="{% url 'django.contrib.auth.views.login' %}">
+        <form method="post" action="/S/login/">
             {% csrf_token %}
             {{ form.username.label_tag }}
             {{ form.username }}<br/>

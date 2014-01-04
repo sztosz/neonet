@@ -153,7 +153,7 @@ class QuickCommodityList(AbstractView):
 
 
 
-@login_required
+@login_required(login_url='login/')
 def index(request):
     page = Index(request, module=MODULE)
     return page.show()

@@ -16,4 +16,7 @@ urlpatterns = patterns('',
                        url(r'^commodity_update_by_ean/', 'qa.views.commodity_update_by_ean',
                            name='commodity_update_by_ean'),
                        url(r'^quick_commodity_list/', 'qa.views.quick_commodity_list', name='quick_commodity_list'),
+                       url(r'^login/$', 'django.contrib.auth.views.login',
+                           {'template_name': 'qa/login.html'}),
+                       # url(r'^logout/$', 'django.contrib.auth.views.logout'),
                        )
