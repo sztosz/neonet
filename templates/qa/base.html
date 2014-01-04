@@ -2,96 +2,89 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta http-equiv="Content-Type" content="charset=utf-8"/>
+  <meta http-equiv="Content-Language" content="pl-PL"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <meta http-equiv="Content-Language" content="pl-PL"/>
-    <meta name="author" content="Bartosz Nowak <sztosz['at']gmail['dot']com>"/>
-    <meta name="description" content="Set of helper tools for Neonet Quality Assurance Division."/>
-    <meta name="copyright" content="All content excluding dynamic data (c) Bartosz Nowak, but please do read licence"/>
+  <meta name="author" content="Bartosz Nowak <sztosz['at']gmail['dot']com>"/>
+  <meta name="description" content="Set of helper tools for Neonet Quality Assurance Division."/>
+  <meta name="copyright" content="All content excluding Bootstrap and dynamic data (c) Bartosz Nowak"/>
 
-    <!-- Bootstrap -->
-    <link href="{% static 'css/bootstrap-fluid-adj.css' %}" rel="stylesheet">
-    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet" media="screen">
-    <link href="{% static 'css/bootstrap-responsive.css' %}" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>{% block title %}NOENET QA{% endblock %}</title>
+  <meta name="author" content="Bartosz Nowak <sztosz['at']gmail['dot']com>"/>
+  <meta name="description" content="Set of helper tools for Neonet Quality Assurance Division."/>
+  <meta name="copyright" content="All content excluding dynamic data (c) Bartosz Nowak, but please do read licence"/>
+
+  <!-- Bootstrap -->
+  <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
+  <link href="{% static 'css/sticky-footer-navbar.css' %}" rel="stylesheet">
+
+  <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+
+  <title>{% block title %}NOENET QA{% endblock %}</title>
 </head>
 <body>
-<div class="navbar navbar-inverse navbar-fixed-top">
-   <div class="navbar-inner">
-       <div class="container">
-           <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-               <span class="icon-bar"></span>
-               <span class="icon-bar"></span>
-               <span class="icon-bar"></span>
-           </button>
-           <a class="brand" href="/rango/">Neonet QA</a>
+<!-- Wrap all page content here -->
+<div id="wrap">
 
-           <div class="nav-collapse collapse">
-               <ul class="nav pull-right">
-                   {% if user.is_authenticated %}
-                    <li class="navbar-text">Witaj, {{ user.username }}!</li>
-                    <li><a href="/rango/logout/">Wyloguj</a></li>
-                   {% else %}
-                    <li><a href="/rango/register/">Register</a></li>
-                    <li><a href="/rango/login/">Login</a></li>
-                   {% endif %}
-               </ul>
-               <ul class="nav">
-{#                   {% if user.is_authenticated %}#}
-{#                    <li><a href="/rango/restricted/">Restricted</a></li>#}
-{#                    <li><a href="/rango/add_category/">Add Category</a></li>#}
-{#                   {% endif %}#}
-{#                   <li><a href="/rango/about/">About</a></li>#}
-               </ul>
-           </div>
-           <!--/.nav-collapse -->
-       </div>
-   </div>
-</div>
-<div class="container-fluid">
-    <div class="row-fluid">
-        <div class="span2">
-            <div class="well sidebar-nav">
-                <li><a href="{% url 'qa:damage_reports' %}">Raporty uszkodzeń</a></li>
-                <li><a href="{% url 'qa:commodity_import' %}">Dodawanie towarów</a></li>
-                <li><a href="{% url 'qa:commodity_update_by_ean' %}">Towary bez nazwy</a></li>
-                <li><a href="{% url 'qa:quick_commodity_list' %}">Szybkie listy</a></li>
-                <li><a href="{% url 'qa:damage_report' %}">Nowy Raport</a></li>
-            </ul>
-            </div>
-            <!--/.well -->
-        </div>
-        <!--/span-->
-        <div class="span10">
-            {% block content %}
-            {% endblock %}
-        </div>
-        <!--/span-->
-    </div>
-    <!--/row-->
-</div>
-<!--/.fluid-container-->
-
-<hr>
-{##}
-{#                        <h1 id="title"><span>{% block title_long %}{% endblock %}</span></h1>#}
-{#                    </div>#}
-{#                    <div id="contents">#}
-{##}
-{#                    <div id="footer">#}
-{#                        <p><a href="http://python.org/"#}
-{#                              title="Well... it just points to best programming language i know...">Python.org</a></p>#}
-{#                        <!-- You can do whatever you like here -->#}
-{#                    </div>#}
-
-<footer>
+  <!-- Fixed navbar -->
+  <div class="navbar navbar-default navbar-fixed-top" role="navigation">
     <div class="container">
-        <p>&copy; Bartosz Nowak 2013-2014</p>
-    </div>
-</footer>
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="{% url 'qa:damage_reports' %}">Neonet QA</a>
+      </div>
+    <div class="collapse navbar-collapse">
+      <ul class="nav navbar-nav">
+        <li class="active"><a href="#">Home</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#contact">Contact</a></li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <b class="caret"></b></a>
+          <ul class="dropdown-menu">
+            {% if user.is_authenticated %}
+              <li>Witaj, {{ user.username }}!</li>
+              <li><a href="/qa/logout/">Wyloguj</a></li>
+              <li class="divider"></li>
+            {% endif %}
+            <li class="dropdown-header">Strony</li>
+            <li><a href="{% url 'qa:damage_reports' %}">Raporty uszkodzeń</a></li>
+            <li><a href="{% url 'qa:commodity_import' %}">Dodawanie towarów</a></li>
+            <li><a href="{% url 'qa:commodity_update_by_ean' %}">Towary bez nazwy</a></li>
+            <li><a href="{% url 'qa:quick_commodity_list' %}">Szybkie listy</a></li>
+            <li><a href="{% url 'qa:damage_report' %}">Nowy Raport</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div>
+  </div>
 
+  <!-- Begin page content -->
+  {% block content %}
+  {% endblock %}
+</div>
+
+
+<div id="footer">
+  <div class="container">
+    <p class="text-muted">&copy; Bartosz Nowak 2013-2014</p>
+  </div>
+</div>
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
 <script src="{% static 'js/jquery-2.0.3.min.js' %}"></script>
 <script src="{% static 'js/bootstrap.min.js' %}"></script>
 </body>
