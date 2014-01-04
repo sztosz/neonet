@@ -1,19 +1,15 @@
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/html">
-<head>
-    <title>Raport uszkodzeń</title>
-    {% load staticfiles %}
-    <link type="text/css" rel="stylesheet" href="{{ STATIC_URL }}base.css" />
-</head>
-{% include 'qa/header.html' %}
-<body>
-<div id="main_container">
-    {% include 'qa/common_communication.html' %}
-{#    {% include 'qa/menu.html' %}#}
-    <div id="content">
-        <h1>{{ user }}</h1>
+{% extends "qa/base.html" %}
+
+{% block title %}RAPORTY{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="page-header">
+    <h1>Dodawanie raportu uszkodzeń</h1>
+  </div>
+  <p class="lead">Awaryjny formularz dodawania raportów</p>
         {% if ean_form %}
-        <form method="post" action="{% url 'qa:damage_report' %}">
+        <form method="post" action="{% url 'qa:add_damage_report' %}">
             {% csrf_token %}
             <div class="in_block">
                 {{ ean_form.as_p }}
@@ -23,7 +19,7 @@
         </form>
         {% endif %}
         {% if damage_report_form %}
-        <form method="post" action="{% url 'qa:damage_report' %}">
+        <form method="post" action="{% url 'qa:add_damage_report' %}">
             {% csrf_token %}
             <div class="in_block">
                 {{ damage_report_form.as_p }}
@@ -33,6 +29,4 @@
         </form>
         {% endif %}
     </div>
-</div>
-</body>
-</html>
+{% endblock %}

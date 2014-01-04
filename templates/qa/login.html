@@ -1,10 +1,10 @@
 {% extends "qa/base.html" %}
-
+{% block title %}RAPORTY{% endblock %}
 {% block content %}
-<div class="hero-unit">
-    <h1>Zaloguj się</h1>
-
-    <div class="container">
+<div class="container">
+  <div class="page-header">
+    <h1>Logowanie</h1>
+  </div>
     <form class="form-signin span4" id="login_form" method="post" action="/qa/login/">
         <h2 class="form-signin-heading">Podaj login i hasło</h2>
         {% csrf_token %}
@@ -22,6 +22,4 @@
     </form>
 
     </div>
-    <!-- /container -->
-</div>
 {% endblock %}

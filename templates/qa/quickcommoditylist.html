@@ -4,26 +4,35 @@
 {% block title_long %}Szybkie listy towarów{% endblock %}
 
 {% block content %}
-    {%  for list in quick_commodity_lists %}
-        <form method="post" action="{% url 'qa:quick_commodity_list' %}">
-            {% csrf_token %}
-            <div class="in_block">
-                <p><input type='hidden' name='action' value='list_details' /></p>
-                <p><input type='hidden' name='list_id' value='{{ list.id }}'/></p>
-                <p><b>Nazwa:</b> {{ list.name }}
-                   <b>Komentarz:</b> {{ list.comment }}
-                   <b>Data:</b> {{ list.date }}
-                <button class="in_line" type="submit">Zobacz listę</button></p>
-            </div>
-        </form>
+  <div class="container">
+    <div class="page-header">
+      <h1>Szybkie listy towarów</h1>
+    </div>
+    <p class="lead">Szybkie listy zostały utworzone za pomocą skanera, możesz przejżeć towary w listach lub zamknąć
+      listę aby więcej się nie pojawiała na tej stronie</p>
+
+    {% for list in quick_commodity_lists %}
+      <form method="post" action="{% url 'qa:quick_commodity_list' %}">
+        {% csrf_token %}
+        <div class="in_block">
+          <p><input type='hidden' name='action' value='list_details'/></p>
+
+          <p><input type='hidden' name='list_id' value='{{ list.id }}'/></p>
+
+          <p><b>Nazwa:</b> {{ list.name }}
+            <b>Komentarz:</b> {{ list.comment }}
+            <b>Data:</b> {{ list.date }}
+            <button class="in_line" type="submit">Zobacz listę</button>
+          </p>
+        </div>
+      </form>
     {% endfor %}
-    {%  for list in quick_commodity_list %}
-        <p><b>Towar:</b> {{ list.commodity }};
-           <b>Serial:</b> {{ list.serial }};
-           <b>Komentarz:</b> {{ list.comment }};</p>
+
+    {% for list in quick_commodity_list %}
+      <p><b>Towar:</b> {{ list.commodity }};
+        <b>Serial:</b> {{ list.serial }};
+        <b>Komentarz:</b> {{ list.comment }};</p>
     {% endfor %}
+
+  </div>
 {% endblock %}
-{#    </div>#}
-{#</div>#}
-{#</body>#}
-{#</html>#}

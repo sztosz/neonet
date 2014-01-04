@@ -8,10 +8,10 @@
 from django.conf.urls import patterns, url
 
 urlpatterns = patterns('',
-                       url(r'^$', 'qa.views.index', name='index'),
+                       url(r'^$', 'qa.views.damage_reports', name='index'),
                        url(r'^logout/', 'qa.views.logout_view', name='logout'),
                        url(r'^commodity_import/$', 'qa.views.commodity_import', name='commodity_import'),
-                       url(r'^damage_report/$', 'qa.views.damage_report', name='damage_report'),
+                       url(r'^add_damage_report/$', 'qa.views.add_damage_report', name='add_damage_report'),
                        url(r'^damage_report_export/$', 'qa.views.damage_reports', name='damage_reports'),
                        url(r'^commodity_update_by_ean/$', 'qa.views.commodity_update_by_ean',
                            name='commodity_update_by_ean'),

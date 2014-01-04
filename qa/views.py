@@ -166,7 +166,7 @@ def commodity_import(request):
 
 
 @login_required(login_url='/qa/login/')
-def damage_report(request):
+def add_damage_report(request):
     page = AddDamageReport(request, module=MODULE)
     return page.show()
 
