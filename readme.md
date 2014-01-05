@@ -8,11 +8,11 @@ INDEX
 		HOME
 		ABOUT
 		CONTACT
-		Raporty Uszkodzeń [DamageReports]
+		Wykresy Raportów Uszkodzeń [DamageReportCharts]
 		Szybkie Listy Towarów [QuickCommodityList]
 		Import Towarów [CommodityImport]
 		Dodawanie Raportów Uszkodzeń [AddDamageReport]
-		Export Raportów Uszkodzeń [DamageReportsExport]
+		Export Raportów Uszkodzeń [DamageReportExport]
 	Logowaanie
 		
 		

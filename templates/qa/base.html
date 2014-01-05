@@ -43,13 +43,13 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="{% url 'qa:damage_reports' %}">Neonet QA</a>
+        <a class="navbar-brand" href="{% url 'qa:damage_report_charts' %}">Neonet QA</a>
       </div>
     <div class="collapse navbar-collapse">
       <ul class="nav navbar-nav">
         <li class="active"><a href="#">Home</a></li>
-        <li><a href={% url 'qa:damage_reports' %}>About</a></li>
-        <li><a href={% url 'qa:damage_reports' %}>Contact</a></li>
+        <li><a href={% url 'qa:index' %}>About</a></li>
+        <li><a href={% url 'qa:damage_report_charts' %}>Contact</a></li>
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <b class="caret"></b></a>
           <ul class="dropdown-menu">
@@ -59,11 +59,11 @@
               <li class="divider"></li>
             {% endif %}
             <li class="dropdown-header">Strony</li>
-            <li><a href="{% url 'qa:damage_reports' %}">Raporty uszkodzeń</a></li>
+            <li><a href="{% url 'qa:damage_report_charts' %}">Wykresy Raportów uszkodzeń</a></li>
             <li><a href="{% url 'qa:quick_commodity_list' %}">Szybkie listy towarów</a></li>
             <li><a href="{% url 'qa:commodity_import' %}">Import towarów</a></li>
             <li><a href="{% url 'qa:add_damage_report' %}">Dodawanie raportów uszkodzeń</a></li>
-            <li><a href="{% url 'qa:damage_reports' %}">Eksport raportów uszkodzeń</a></li>
+            <li><a href="{% url 'qa:damage_report_export' %}">Eksport raportów uszkodzeń</a></li>
 
 
           </ul>

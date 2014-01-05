@@ -98,7 +98,7 @@ class AddDamageReport(AbstractView):
         self.context['ean_form'] = forms.EanForm()
 
 
-class DamageReports(AbstractView):
+class DamageReportExport(AbstractView):
     def _export(self):
         self.output = 'file'
         self.content_type = 'text/plain'
@@ -152,6 +152,9 @@ class QuickCommodityList(AbstractView):
         self.context['quick_commodity_list'] = models.CommodityInQuickList.objects.filter(list=list_id)
 
 
+class DamageReportCharts(AbstractView):
+    pass
+
 
 @login_required(login_url='/qa/login/')
 def index(request):
@@ -172,8 +175,8 @@ def add_damage_report(request):
 
 
 @login_required(login_url='/qa/login/')
-def damage_reports(request):
-    page = DamageReports(request, module=MODULE)
+def damage_report_export(request):
+    page = DamageReportExport(request, module=MODULE)
     return page.show()
 
 @login_required(login_url='/qa/login/')
@@ -181,9 +184,16 @@ def commodity_update_by_ean(request):
     page = CommodityUpdateByEan(request, module=MODULE)
     return page.show()
 
+
 @login_required(login_url='/qa/login/')
 def quick_commodity_list(request):
     page = QuickCommodityList(request, module=MODULE)
+    return page.show()
+
+
+@login_required(login_url='/qa/login/')
+def damage_report_charts(request):
+    page = DamageReportCharts(request, module=MODULE)
     return page.show()
 
 
