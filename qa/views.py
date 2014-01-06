@@ -133,6 +133,7 @@ class DamageReportExport(AbstractView):
         self.context['damage_reports'] = reports
         self.context['damage_reports_filter'] = form
 
+
 class QuickCommodityList(AbstractView):
     def _view(self):
         self.context['quick_commodity_lists'] = models.QuickCommodityList.objects.all()
@@ -144,20 +145,6 @@ class QuickCommodityList(AbstractView):
             self.context['messages'].append('Niepoprawnie wybrana lista, proszę zgłosić administratorowi')
             return self._view()
         self.context['quick_commodity_list'] = models.CommodityInQuickList.objects.filter(list=list_id)
-
-
-# class DamageReportCharts(ListView):
-#     model = models.DamageReport
-#     template_name = "qa/damagereportcharts.html"
-#     context_object_name = "chart"
-#
-#     def queryset(self):
-#         reports = []
-#         for report in models.DamageReport.objects.all():
-#             reports.append((report.detection_time, report.))
-#
-#
-# damage_report_charts = DamageReportCharts.as_view()
 
 
 class DamageReportCharts(AbstractView):
