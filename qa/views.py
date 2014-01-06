@@ -7,7 +7,6 @@
 # Create your views here.
 
 from __future__ import unicode_literals
-from collections import OrderedDict
 
 from datetime import datetime, timedelta, date
 from pytz import timezone
@@ -20,8 +19,6 @@ from qa.tools.ExcelParser import ExcelParser
 from neonet.views import AbstractView
 
 from django.utils.datastructures import MultiValueDictKeyError
-
-from django.views.generic import ListView
 
 MODULE = __package__
 
@@ -183,7 +180,7 @@ class DamageReportCharts(AbstractView):
                 if _date in A:
                     A[_date] += 1
                 else:
-                    B[_date] = 1
+                    A[_date] = 1
             if report.category.category == 'B':
                 if _date in B:
                     B[_date] += 1
@@ -199,7 +196,7 @@ class DamageReportCharts(AbstractView):
         for k, v in B.items():
             reports[1]['data'].append([k, v])
         for k, v in C.items():
-            reports[2   ]['data'].append([k, v])
+            reports[2]['data'].append([k, v])
 
         self.context['chart'] = reports
 
