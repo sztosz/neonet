@@ -9,6 +9,7 @@
 
 import os
 import django
+import chartkick
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -86,6 +87,7 @@ STATICFILES_DIRS = (
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
     os.path.join(SITE_ROOT, 'static'),
+    chartkick.js(),
 )
 
 # List of finder classes that know how to find static files in
@@ -135,6 +137,11 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     'django.contrib.admindocs',
+
+    # Chartkick:
+    'chartkick',
+
+    # Apps
     'qa',
     'S',
 )

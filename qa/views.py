@@ -7,8 +7,9 @@
 # Create your views here.
 
 from __future__ import unicode_literals
+from collections import OrderedDict
 
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 from pytz import timezone
 from django.contrib.auth import logout
 from django.shortcuts import redirect
@@ -19,6 +20,8 @@ from qa.tools.ExcelParser import ExcelParser
 from neonet.views import AbstractView
 
 from django.utils.datastructures import MultiValueDictKeyError
+
+from django.views.generic import ListView
 
 MODULE = __package__
 
@@ -152,8 +155,53 @@ class QuickCommodityList(AbstractView):
         self.context['quick_commodity_list'] = models.CommodityInQuickList.objects.filter(list=list_id)
 
 
+# class DamageReportCharts(ListView):
+#     model = models.DamageReport
+#     template_name = "qa/damagereportcharts.html"
+#     context_object_name = "chart"
+#
+#     def queryset(self):
+#         reports = []
+#         for report in models.DamageReport.objects.all():
+#             reports.append((report.detection_time, report.))
+#
+#
+# damage_report_charts = DamageReportCharts.as_view()
+
+
 class DamageReportCharts(AbstractView):
-    pass
+    def _view(self):
+        reports = [{'data': [], 'name': 'A'},
+                   {'data': [], 'name': 'B'},
+                   {'data': [], 'name': 'C'}]
+        A = {}
+        B = {}
+        C = {}
+        for report in models.DamageReport.objects.order_by('-date'):
+            _date = str(date(report.date.year, report.date.month, report.date.day))
+            if report.category.category == 'A':
+                if _date in A:
+                    A[_date] += 1
+                else:
+                    B[_date] = 1
+            if report.category.category == 'B':
+                if _date in B:
+                    B[_date] += 1
+                else:
+                    B[_date] = 1
+            if report.category.category == 'C':
+                if _date in C:
+                    C[_date] += 1
+                else:
+                    C[_date] = 1
+        for k, v in A.items():
+            reports[0]['data'].append([k, v])
+        for k, v in B.items():
+            reports[1]['data'].append([k, v])
+        for k, v in C.items():
+            reports[2   ]['data'].append([k, v])
+
+        self.context['chart'] = reports
 
 
 @login_required(login_url='/qa/login/')
@@ -178,6 +226,7 @@ def add_damage_report(request):
 def damage_report_export(request):
     page = DamageReportExport(request, module=MODULE)
     return page.show()
+
 
 @login_required(login_url='/qa/login/')
 def commodity_update_by_ean(request):
