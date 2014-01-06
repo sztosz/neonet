@@ -133,12 +133,6 @@ class DamageReportExport(AbstractView):
         self.context['damage_reports'] = reports
         self.context['damage_reports_filter'] = form
 
-
-class CommodityUpdateByEan(AbstractView):
-    def _view(self):
-        self.context['commodity_list'] = models.Commodity.objects.filter(name='BRAK_TOWARU_W_BAZIE')
-
-
 class QuickCommodityList(AbstractView):
     def _view(self):
         self.context['quick_commodity_lists'] = models.QuickCommodityList.objects.all()
