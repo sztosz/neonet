@@ -220,12 +220,6 @@ def damage_report_export(request):
 
 
 @login_required(login_url='/qa/login/')
-def commodity_update_by_ean(request):
-    page = CommodityUpdateByEan(request, module=MODULE)
-    return page.show()
-
-
-@login_required(login_url='/qa/login/')
 def quick_commodity_list(request):
     page = QuickCommodityList(request, module=MODULE)
     return page.show()
