@@ -1,16 +1,14 @@
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/html">
-<head>
-    <title>Commodity Import</title>
-    {% load staticfiles %}
-    <link type="text/css" rel="stylesheet" href="{{ STATIC_URL }}base.css" />
-</head>
-{% include 'qa/header.html' %}
-<body>
-<div id="main_container">
-    {% include 'qa/common_communication.html' %}
-{#    {% include 'qa/menu.html' %}#}
-    <div id="content">
+{% extends "qa/base.html" %}
+
+{% block title %}TOWARY{% endblock %}
+{% block title_long %}Importowanie towarów{% endblock %}
+
+{% block content %}
+  <div class="container">
+  <div class="page-header">
+    <h1>Import towarów</h1>
+  </div>
+  <p class="lead">Towary można wpisywać pojedyńczo używając poniżeszego formularza, lub zaimportować je hurtem z pliku wyeksportowanego z CDN. Przy imporcie hurtem proszę pamiętać, że musi to być arkusz excela, EAN powienien znajdować się w pierwszej kolumnie, INDEX w drugiej, a NAZWA w trzeciej kolumnie. Obecnie brakuje systemu powiadomień o błędach w importowanym pliku...</p>
         <form method="post" action="{% url 'qa:commodity_import' %}">
             {% csrf_token %}
             <div class="in_block">
@@ -28,6 +26,4 @@
             </div>
         </form>
     </div>
-</div>
-</body>
-</html>
+{% endblock %}

@@ -36,7 +36,6 @@ class AddDamageReport(AbstractView):
             damage = form.save(commit=False)
             damage.user = self.request.user
             damage.date = datetime.now(timezone('Europe/Warsaw'))
-            print(damage.date)
             try:
                 commodity = models.Commodity.objects.filter(ean=form.cleaned_data['ean'])[:1].get()
                 damage.commodity = commodity
@@ -137,25 +136,25 @@ class Index(AbstractView):
         self.context['user'] = self.request.user.username
 
 
-@login_required
+@login_required(login_url='/S/login/')
 def damage_report(request):
     page = AddDamageReport(request, module=MODULE)
     return page.show()
 
 
-@login_required
+@login_required(login_url='/S/login/')
 def check_sn(request):
     page = CheckSN(request, module=MODULE)
     return page.show()
 
 
-@login_required
+@login_required(login_url='/S/login/')
 def quick_commodity_list(request):
     page = QuickCommodityList(request, module=MODULE)
     return page.show()
 
 
-@login_required
+@login_required(login_url='/S/login/')
 def index(request):
     page = Index(request, module=MODULE)
     return page.show()

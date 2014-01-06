@@ -8,7 +8,7 @@
 
 from __future__ import unicode_literals
 
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 from pytz import timezone
 from django.contrib.auth import logout
 from django.shortcuts import redirect
@@ -98,7 +98,7 @@ class AddDamageReport(AbstractView):
         self.context['ean_form'] = forms.EanForm()
 
 
-class DamageReports(AbstractView):
+class DamageReportExport(AbstractView):
     def _export(self):
         self.output = 'file'
         self.content_type = 'text/plain'
@@ -128,7 +128,6 @@ class DamageReports(AbstractView):
         else:
             now = datetime.now(timezone('Poland'))
             from_yesterday = now - timedelta(days=1)
-            print(now, '\n', from_yesterday)
             reports = models.DamageReport.objects.filter(date__range=(from_yesterday, now))
             form = forms.DamageReportViewFilter(initial={'date_from': from_yesterday, 'date_to': now})
         self.context['damage_reports'] = reports
@@ -153,38 +152,94 @@ class QuickCommodityList(AbstractView):
         self.context['quick_commodity_list'] = models.CommodityInQuickList.objects.filter(list=list_id)
 
 
+# class DamageReportCharts(ListView):
+#     model = models.DamageReport
+#     template_name = "qa/damagereportcharts.html"
+#     context_object_name = "chart"
+#
+#     def queryset(self):
+#         reports = []
+#         for report in models.DamageReport.objects.all():
+#             reports.append((report.detection_time, report.))
+#
+#
+# damage_report_charts = DamageReportCharts.as_view()
 
-@login_required
+
+class DamageReportCharts(AbstractView):
+    def _view(self):
+        reports = [{'data': [], 'name': 'A'},
+                   {'data': [], 'name': 'B'},
+                   {'data': [], 'name': 'C'}]
+        A = {}
+        B = {}
+        C = {}
+        for report in models.DamageReport.objects.order_by('-date'):
+            _date = str(date(report.date.year, report.date.month, report.date.day))
+            if report.category.category == 'A':
+                if _date in A:
+                    A[_date] += 1
+                else:
+                    A[_date] = 1
+            if report.category.category == 'B':
+                if _date in B:
+                    B[_date] += 1
+                else:
+                    B[_date] = 1
+            if report.category.category == 'C':
+                if _date in C:
+                    C[_date] += 1
+                else:
+                    C[_date] = 1
+        for k, v in A.items():
+            reports[0]['data'].append([k, v])
+        for k, v in B.items():
+            reports[1]['data'].append([k, v])
+        for k, v in C.items():
+            reports[2]['data'].append([k, v])
+
+        self.context['chart'] = reports
+
+
+@login_required(login_url='/qa/login/')
 def index(request):
     page = Index(request, module=MODULE)
     return page.show()
 
 
-@login_required
+@login_required(login_url='/qa/login/')
 def commodity_import(request):
     page = CommodityImport(request, module=MODULE)
     return page.show()
 
 
-@login_required
-def damage_report(request):
+@login_required(login_url='/qa/login/')
+def add_damage_report(request):
     page = AddDamageReport(request, module=MODULE)
     return page.show()
 
 
-@login_required
-def damage_reports(request):
-    page = DamageReports(request, module=MODULE)
+@login_required(login_url='/qa/login/')
+def damage_report_export(request):
+    page = DamageReportExport(request, module=MODULE)
     return page.show()
 
-@login_required
+
+@login_required(login_url='/qa/login/')
 def commodity_update_by_ean(request):
     page = CommodityUpdateByEan(request, module=MODULE)
     return page.show()
 
-@login_required
+
+@login_required(login_url='/qa/login/')
 def quick_commodity_list(request):
     page = QuickCommodityList(request, module=MODULE)
+    return page.show()
+
+
+@login_required(login_url='/qa/login/')
+def damage_report_charts(request):
+    page = DamageReportCharts(request, module=MODULE)
     return page.show()
 
 

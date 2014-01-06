@@ -2,13 +2,9 @@
 <html>
 <head>
     <title>Index</title>
-    {% load staticfiles %}
-    <link type="text/css" rel="stylesheet" href="{{ STATIC_URL }}base.css" />
 </head>
 <body>
-<form><input type="button" value="SKANER" onClick="window.location.href='{% url 'S:index' %}'"></form>
 <div id="main_container">
-    <p>NEONET</p>
     <form><input type="button" value="SKANER" onClick="window.location.href='{% url 'S:index' %}'"></form>
     <hr>
     <form><input type="button" value="KONTROLA JAKOŚCI" onClick="window.location.href='{% url 'qa:index' %}'"></form>
