@@ -13,14 +13,15 @@ from pytz import timezone
 from django.contrib.auth import logout
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
+from django.core.urlresolvers import reverse
 from qa import models
 from qa import forms
 from qa.tools.ExcelParser import ExcelParser
 from neonet.views import AbstractView
 
-from django.utils.datastructures import MultiValueDictKeyError
+# from django.utils.datastructures import MultiValueDictKeyError
 
-from django.views.generic.list import ListView
+from django.views.generic import DetailView, UpdateView, ListView
 
 
 MODULE = __package__
@@ -137,23 +138,29 @@ class DamageReportExport(AbstractView):
         self.context['damage_reports_filter'] = form
 
 
-# class QuickCommodityList(AbstractView):
-#     def _view(self):
-#         self.context['quick_commodity_lists'] = models.QuickCommodityList.objects.all()
-#
-#     def _list_details(self):
-#         try:
-#             list_id = self.request.POST['list_id']
-#         except MultiValueDictKeyError:
-#             self.context['messages'].append('Niepoprawnie wybrana lista, proszę zgłosić administratorowi')
-#             return self._view()
-#         self.context['quick_commodity_list'] = models.CommodityInQuickList.objects.filter(list=list_id)
-
-
 class QuickCommodityListView(ListView):
 
     queryset = models.QuickCommodityList.objects.filter(closed=False).order_by('-date')
-    template_name = 'qa/quick_commodity_list_view.html'
+
+
+class QuickCommodityListDetailView(DetailView):
+
+    model = models.QuickCommodityList
+    context_object_name = 'list'
+
+    def get_context_data(self, **kwargs):
+        context = super(QuickCommodityListDetailView, self).get_context_data(**kwargs)
+        context['commodities'] = models.CommodityInQuickList.objects.filter(list=self.object.pk)
+        return context
+
+
+class QuickCommodityListUpdateView(UpdateView):
+
+    model = models.QuickCommodityList
+    template_name_suffix = '_update'
+
+    def get_success_url(self):
+        return reverse('qa:quick_commodity_list')
 
 
 class DamageReportCharts(AbstractView):
@@ -213,12 +220,6 @@ def add_damage_report(request):
 def damage_report_export(request):
     page = DamageReportExport(request, module=MODULE)
     return page.show()
-
-
-# @login_required(login_url='/qa/login/')
-# def quick_commodity_list(request):
-#     page = QuickCommodityList(request, module=MODULE)
-#     return page.show()
 
 
 @login_required(login_url='/qa/login/')

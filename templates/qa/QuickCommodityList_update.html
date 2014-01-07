@@ -1,0 +1,22 @@
+{% extends "qa/base.html" %}
+
+{% block title %}LISTY{% endblock %}
+{% block title_long %}Szybkie listy towarów{% endblock %}
+
+{% block content %}
+  <div class="container">
+    <div class="page-header">
+      <h1>Zamknij listę</h1>
+    </div>
+
+    <p class="lead">Zaktualizuj dane poniżej, aby zamknąć listę zaznacz odpowiednie pole, wtedy lista już pojawi się na
+      zestawieniu</p>
+
+    <form action="" method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <input type="submit" value="Aktualizuj"/>
+    </form>
+
+  </div>
+{% endblock %}

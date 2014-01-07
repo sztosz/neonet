@@ -78,7 +78,7 @@ class QuickCommodityList(models.Model):
     name = models.CharField(max_length=50, verbose_name='Nazwa paczki towarów')
     date = models.DateTimeField(verbose_name='Data utworzenia')
     comment = models.CharField(max_length=100, verbose_name='Opis paczki')
-    closed = models.BooleanField(verbose_name='Czy zamknięty')
+    closed = models.BooleanField(verbose_name='Czy zamknięta')
 
     def __unicode__(self):
         return self.name

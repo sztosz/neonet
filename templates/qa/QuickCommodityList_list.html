@@ -1,0 +1,26 @@
+{% extends "qa/base.html" %}
+
+{% block title %}LISTY{% endblock %}
+{% block title_long %}Szybkie listy towarów{% endblock %}
+
+{% block content %}
+  <div class="container">
+    <div class="page-header">
+      <h1>Szybkie listy towarów</h1>
+    </div>
+
+    <p class="lead">Szybkie listy zostały utworzone za pomocą skanera, możesz przejżeć towary w listach lub zamknąć
+      listę aby więcej się nie pojawiała na tej stronie</p>
+
+    {% for list in object_list %}
+      <p>
+        <strong>Nazwa:</strong> {{ list.name }}
+        <strong>Komentarz:</strong> {{ list.comment }}
+        <strong>Data:</strong> {{ list.date }}
+        <a href="{% url 'qa:quick_commodity_list_detail' list.id %}">WYŚWIETL</a>
+        <a href="{% url 'qa:quick_commodity_list_update' list.id %}">AKTUALIZUJ</a>
+      </p>
+    {% endfor %}
+
+  </div>
+{% endblock %}
