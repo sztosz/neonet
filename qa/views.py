@@ -66,7 +66,12 @@ class AddDamageReport(AbstractView):
         except KeyError:
             ean = 'EAN NIE ZOSTAŁ PODANY!'
         if form.is_valid():
-            commodity = models.Commodity.objects.get(ean=ean)
+            try:
+                commodity = models.Commodity.objects.filter(ean=form.cleaned_data['ean'])[:1].get()
+            except models.Commodity.ObjectDoesNotExist:
+                commodity = models.Commodity(sku='BRAK_TOWARU_W_BAZIE', name='BRAK_TOWARU_W_BAZIE',
+                                             ean=form.cleaned_data['ean'])
+                commodity.save()
             if commodity:
                 self.context['messages'].append('TOWAR: {}'.format(commodity.name))
                 self.context['messages'].append('SKU: {}'.format(commodity.sku))

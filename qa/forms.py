@@ -27,6 +27,13 @@ class EanForm(forms.ModelForm):
         model = models.Commodity
         fields = ('ean',)
 
+    def clean_ean(self):
+        data = self.cleaned_data['ean']
+        ean_is_invalid = DataVerifier.ean13(data)
+        if ean_is_invalid:
+            raise forms.ValidationError(ean_is_invalid)
+        return data
+
 
 class AddDamageReportForm(forms.ModelForm):
     class Meta:

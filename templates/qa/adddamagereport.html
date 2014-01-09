@@ -9,6 +9,7 @@
   </div>
   <p class="lead">Awaryjny formularz dodawania raportów</p>
         {% if ean_form %}
+        <p>EAN składa się z 13 cyfr. Jeżeli KOD który posiadasz ma tylko 12 cyfr, prawdopodobnie jest to kod UPC, koniecznie jest wtedy dodanie na początku kodu cyfry 0</p>
         <form method="post" action="{% url 'qa:add_damage_report' %}">
             {% csrf_token %}
             <div class="in_block">
