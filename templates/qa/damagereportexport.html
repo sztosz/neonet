@@ -11,7 +11,7 @@
   <p class="lead">Lista raportów, proszę przefiltrować używając poniższego formularza</p>
   {% if damage_reports_filter %}
     <form method="post" action="{% url 'qa:damage_report_export' %}">
-      {% csrf_token %}
+
       {#                {% for hidden in damage_reports_filter.hidden_fields %}#}
       {#                    {{ hidden }}#}
       {#                {% endfor %}#}

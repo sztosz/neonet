@@ -14,14 +14,15 @@ from django.contrib.auth import logout
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
+from django.http import HttpResponse
 from qa import models
 from qa import forms
-from qa.tools.ExcelParser import ExcelParser
+from qa.tools.parsers import ExcelParser, damage_reports_export_to_csv
 from neonet.views import AbstractView
 
 # from django.utils.datastructures import MultiValueDictKeyError
 
-from django.views.generic import DetailView, UpdateView, ListView, TemplateView
+from django.views.generic import DetailView, UpdateView, ListView, FormView, TemplateView
 
 
 MODULE = __package__
@@ -75,8 +76,7 @@ class AddDamageReport(AbstractView):
                 self.context['messages'].append('TOWAR: {}'.format(commodity.name))
                 self.context['messages'].append('SKU: {}'.format(commodity.sku))
                 self.request.session['commodity'] = commodity.pk
-                form = forms.AddDamageReportForm(initial={'date': datetime.now(timezone('Poland')),
-                                                          })
+                form = forms.AddDamageReportForm(initial={'date': datetime.now(timezone('Poland'))})
                 self.context['damage_report_form'] = form
             else:
                 self.context['messages'].append('Brak towaru w bazie z EAN\'em {}'.format(ean))
@@ -102,49 +102,24 @@ class AddDamageReport(AbstractView):
         self.context['ean_form'] = forms.EanForm()
 
 
-class DamageReportExport(AbstractView):
-    def _export(self):
-        self.output = 'file'
-        self.content_type = 'text/plain'
-        self.filename = "damage_report.txt"
-        form = forms.DamageReportViewFilter(self.request.POST)
-        if form.is_valid():
-            date_from = form.cleaned_data['date_from']
-            date_to = form.cleaned_data['date_to']
-            reports = models.DamageReport.objects.filter(date__range=(date_from, date_to))
+class DamageReportsExport(FormView):
 
-            self.context['file_content'] = u''
-            for report in reports:
-                self.context['file_content'] += u'"{}";"{}";"{}";"{}";"{}";"{}";"{}";"{}";"{}";"";"";"{} {}";\r\n'.format(
-                    '', report.date, report.brand, report.commodity.__unicode__(), report.serial,
-                    report.detection_time.detection_time, report.category.category, report.comments,
-                    report.further_action.further_action, report.user.first_name,
-                    report.user.last_name,)
-        else:
-            self.output = 'html'
+    template_name = 'qa/DamageReportExport_file.html'
+    form_class = forms.DamageReportsExportDateFilter
 
-    def _view(self):
-        form = forms.DamageReportViewFilter(self.request.POST)
-        if form.is_valid():
-            date_from = form.cleaned_data['date_from']
-            date_to = form.cleaned_data['date_to']
-            reports = models.DamageReport.objects.filter(date__range=(date_from, date_to))
-        else:
-            now = datetime.now(timezone('Poland'))
-            from_yesterday = now - timedelta(days=1)
-            reports = models.DamageReport.objects.filter(date__range=(from_yesterday, now))
-            form = forms.DamageReportViewFilter(initial={'date_from': from_yesterday, 'date_to': now})
-        self.context['damage_reports'] = reports
-        self.context['damage_reports_filter'] = form
+    def form_valid(self, form):
+        data = damage_reports_export_to_csv(data=models.DamageReport.objects.filter(
+            date__range=(form.cleaned_data['date_from'], form.cleaned_data['date_to'])))
+        response = HttpResponse(data, content_type='application/csv')
+        response['content-disposition'] = 'attachment; filename="reports.csv.txt"'
+        return response
 
 
 class QuickCommodityListView(ListView):
-
     queryset = models.QuickCommodityList.objects.filter(closed=False).order_by('-date')
 
 
 class QuickCommodityListDetailView(DetailView):
-
     model = models.QuickCommodityList
     context_object_name = 'list'
 
@@ -155,7 +130,6 @@ class QuickCommodityListDetailView(DetailView):
 
 
 class QuickCommodityListUpdateView(UpdateView):
-
     model = models.QuickCommodityList
     template_name_suffix = '_update'
 
@@ -164,7 +138,6 @@ class QuickCommodityListUpdateView(UpdateView):
 
 
 class DamageReports(TemplateView):
-
     template_name = 'qa/DamageReports_chart.html'
 
     def get_context_data(self, **kwargs):
@@ -258,11 +231,11 @@ def add_damage_report(request):
     page = AddDamageReport(request, module=MODULE)
     return page.show()
 
-
-@login_required(login_url='/qa/login/')
-def damage_report_export(request):
-    page = DamageReportExport(request, module=MODULE)
-    return page.show()
+#
+# @login_required(login_url='/qa/login/')
+# def damage_report_export(request):
+#     page = DamageReportExport(request, module=MODULE)
+#     return page.show()
 
 
 # @login_required(login_url='/qa/login/')

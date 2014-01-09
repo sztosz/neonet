@@ -10,7 +10,7 @@ from __future__ import unicode_literals
 from django import forms
 from django.contrib.auth.models import User
 from qa import models
-from qa.tools.DataVerifier import DataVerifier
+from qa.tools.DataVerifier import validate_ean13
 
 
 class CommodityImportForm(forms.ModelForm):
@@ -41,12 +41,12 @@ class CommodityUpdateByEanForm(forms.ModelForm):
 
     def clean_ean(self):
         data = self.cleaned_data['ean']
-        ean_is_invalid = DataVerifier.ean13(data)
+        ean_is_invalid = validate_ean13(data)
         if ean_is_invalid:
             raise forms.ValidationError(ean_is_invalid)
         return data
 
 
-class DamageReportViewFilter(forms.Form):
+class DamageReportsExportDateFilter(forms.Form):
     date_from = forms.SplitDateTimeField()
     date_to = forms.SplitDateTimeField()
