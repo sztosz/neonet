@@ -116,6 +116,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'neonet.profiler.ProfileMiddleware',
 )
 
 ROOT_URLCONF = 'neonet.urls'
@@ -138,8 +139,11 @@ INSTALLED_APPS = (
     # Uncomment the next line to enable admin documentation:
     'django.contrib.admindocs',
 
-    # Chartkick:
+    # Chartkick
     'chartkick',
+
+    # Django Debug Toolbar
+    'debug_toolbar',
 
     # Apps
     'qa',

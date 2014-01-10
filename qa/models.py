@@ -11,6 +11,7 @@ from __future__ import unicode_literals
 
 from django.db import models
 from django.contrib.auth.models import User
+from datetime import date
 
 
 class Commodity(models.Model):
@@ -69,6 +70,9 @@ class DamageReport(models.Model):
 
     def commodity_ean(self):
         return self.commodity.ean
+
+    def day_str(self):
+        return date(self.date.year, self.date.month, self.date.day).isoformat()
 
     def __unicode__(self):
         return self.commodity.name
