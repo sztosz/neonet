@@ -71,6 +71,9 @@ class DamageReport(models.Model):
     def commodity_ean(self):
         return self.commodity.ean
 
+    def unique_id(self):
+        return self.date.strftime('%y%m%d%H%M%S')
+
     def day_str(self):
         return date(self.date.year, self.date.month, self.date.day).isoformat()
 

@@ -8,7 +8,6 @@
 from __future__ import unicode_literals
 
 from django import forms
-from django.contrib.auth.models import User
 from qa import models
 from qa.tools.DataVerifier import validate_ean13
 
@@ -47,6 +46,6 @@ class CommodityUpdateByEanForm(forms.ModelForm):
         return data
 
 
-class DamageReportsExportDateFilter(forms.Form):
+class DamageReportsDateFilter(forms.Form):
     date_from = forms.SplitDateTimeField()
     date_to = forms.SplitDateTimeField()

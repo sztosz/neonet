@@ -8,7 +8,7 @@
 
 from __future__ import unicode_literals
 
-from datetime import datetime, timedelta, date
+from datetime import datetime, timedelta
 from pytz import timezone
 from django.contrib.auth import logout
 from django.shortcuts import redirect
@@ -102,10 +102,39 @@ class AddDamageReport(AbstractView):
         self.context['ean_form'] = forms.EanForm()
 
 
+class DamageReportsFilterView(FormView):
+
+    template_name = 'qa/DamageReportsFilter_view.html'
+    form_class = forms.DamageReportsDateFilter
+    now = datetime.now(timezone('Europe/Warsaw'))
+    yesterday = now - timedelta(days=1)
+    initial = {'date_from': yesterday, 'date_to': now}
+
+    def form_valid(self, form):
+        reports = models.DamageReport.objects.select_related('commodity').filter(date__range=(
+            form.cleaned_data['date_from'], form.cleaned_data['date_to']))
+        return self.render_to_response(self.get_context_data(form=form, reports=reports))
+
+
+        # def form_invalid(self, form):
+    #     pass
+
+    # def get(self, request, *args, **kwargs):
+    #     now = datetime.now(timezone('Europe/Warsaw'))
+    #     yesterday = now - timedelta(days=1)
+    #
+    #     form = self.get_form(self.get_form_class())
+    #     return self.render_to_response(self.get_context_data(form=form))
+
+
+
+
+
+
 class DamageReportsExport(FormView):
 
     template_name = 'qa/DamageReportExport_file.html'
-    form_class = forms.DamageReportsExportDateFilter
+    form_class = forms.DamageReportsDateFilter
 
     def form_valid(self, form):
         data = damage_reports_export_to_csv(data=models.DamageReport.objects.filter(
@@ -137,11 +166,11 @@ class QuickCommodityListUpdateView(UpdateView):
         return reverse('qa:quick_commodity_list')
 
 
-class DamageReports(TemplateView):
-    template_name = 'qa/DamageReports_chart.html'
+class DamageReportsCharts(TemplateView):
+    template_name = 'qa/DamageReports_charts.html'
 
     def get_context_data(self, **kwargs):
-        context = super(DamageReports, self).get_context_data(**kwargs)
+        context = super(DamageReportsCharts, self).get_context_data(**kwargs)
         context['chart'] = self._view()
         return context
 
@@ -183,41 +212,6 @@ class DamageReports(TemplateView):
         return reports
 
 
-# class DamageReportCharts(AbstractView):
-#     def _view(self):
-#         reports = [{'data': [], 'name': 'A'},
-#                    {'data': [], 'name': 'B'},
-#                    {'data': [], 'name': 'C'}]
-#         A = {}
-#         B = {}
-#         C = {}
-#         for report in models.DamageReport.objects.order_by('-date'):
-#             _date = str(date(report.date.year, report.date.month, report.date.day))
-#             if report.category.category == 'A':
-#                 if _date in A:
-#                     A[_date] += 1
-#                 else:
-#                     A[_date] = 1
-#             if report.category.category == 'B':
-#                 if _date in B:
-#                     B[_date] += 1
-#                 else:
-#                     B[_date] = 1
-#             if report.category.category == 'C':
-#                 if _date in C:
-#                     C[_date] += 1
-#                 else:
-#                     C[_date] = 1
-#         for k, v in A.items():
-#             reports[0]['data'].append([k, v])
-#         for k, v in B.items():
-#             reports[1]['data'].append([k, v])
-#         for k, v in C.items():
-#             reports[2]['data'].append([k, v])
-#
-#         self.context['chart'] = reports
-
-
 @login_required(login_url='/qa/login/')
 def index(request):
     page = Index(request, module=MODULE)
@@ -234,18 +228,6 @@ def commodity_import(request):
 def add_damage_report(request):
     page = AddDamageReport(request, module=MODULE)
     return page.show()
-
-#
-# @login_required(login_url='/qa/login/')
-# def damage_report_export(request):
-#     page = DamageReportExport(request, module=MODULE)
-#     return page.show()
-
-
-# @login_required(login_url='/qa/login/')
-# def damage_report_charts(request):
-#     page = DamageReportCharts(request, module=MODULE)
-#     return page.show()
 
 
 def logout_view(request):
