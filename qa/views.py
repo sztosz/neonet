@@ -22,7 +22,7 @@ from neonet.views import AbstractView
 
 # from django.utils.datastructures import MultiValueDictKeyError
 
-from django.views.generic import DetailView, UpdateView, ListView, FormView, TemplateView
+from django.views.generic import DetailView, UpdateView, ListView, FormView, TemplateView, CreateView
 
 
 MODULE = __package__
@@ -116,57 +116,27 @@ class DamageReportsFilterView(FormView):
         return self.render_to_response(self.get_context_data(form=form, reports=reports))
 
 
-        # def form_invalid(self, form):
-    #     pass
+class DamageReportsCreateView(CreateView):
 
-    # def get(self, request, *args, **kwargs):
-    #     now = datetime.now(timezone('Europe/Warsaw'))
-    #     yesterday = now - timedelta(days=1)
-    #
-    #     form = self.get_form(self.get_form_class())
-    #     return self.render_to_response(self.get_context_data(form=form))
-
-
-
-
-
-
-class DamageReportsExport(FormView):
-
-    template_name = 'qa/DamageReportExport_file.html'
-    form_class = forms.DamageReportsDateFilter
-
-    def form_valid(self, form):
-        data = damage_reports_export_to_csv(data=models.DamageReport.objects.filter(
-            date__range=(form.cleaned_data['date_from'], form.cleaned_data['date_to'])))
-        response = HttpResponse(data, content_type='application/csv')
-        response['content-disposition'] = 'attachment; filename="reports.csv.txt"'
-        return response
-
-
-class QuickCommodityListView(ListView):
-    queryset = models.QuickCommodityList.objects.filter(closed=False).order_by('-date')
-
-
-class QuickCommodityListDetailView(DetailView):
-    model = models.QuickCommodityList
-    context_object_name = 'list'
-
-    def get_context_data(self, **kwargs):
-        context = super(QuickCommodityListDetailView, self).get_context_data(**kwargs)
-        context['commodities'] = models.CommodityInQuickList.objects.filter(list=self.object.pk)
-        return context
-
-
-class QuickCommodityListUpdateView(UpdateView):
-    model = models.QuickCommodityList
-    template_name_suffix = '_update'
+    model = models.DamageReport
+    template_name = 'qa/DamageReports_create.html'
+    form_class = forms.AddDamageReportForm
+    now = datetime.now(timezone('Europe/Warsaw'))
+    initial = {'date': now}
 
     def get_success_url(self):
-        return reverse('qa:quick_commodity_list')
+        return reverse('qa:damage_reports_view')
 
+    def form_valid(self, form):
+        # form.cleaned_data['commmodity'] = models.Commodity.objects.filter(ean=form.cleaned_data['ean'])[:1].get()
+        # form.cleaned_data['user'] = self.request.user
+        object = form.save(commit=False)
+        object.user = self.request.user
+        object.save()
+        return super(CreateView, self).form_valid(form)
 
 class DamageReportsCharts(TemplateView):
+
     template_name = 'qa/DamageReports_charts.html'
 
     def get_context_data(self, **kwargs):
@@ -210,6 +180,55 @@ class DamageReportsCharts(TemplateView):
             reports[2]['data'].append([k, v])
 
         return reports
+
+
+class DamageReportsUpdateView(UpdateView):
+
+    model = models.DamageReport
+    template_name = 'qa/DamageReports_update.html'
+
+    def get_success_url(self):
+        return reverse('qa:damage_reports')
+
+
+class DamageReportsExportView(FormView):
+
+    template_name = 'qa/DamageReports_export.html'
+    form_class = forms.DamageReportsDateFilter
+
+    def form_valid(self, form):
+        data = damage_reports_export_to_csv(data=models.DamageReport.objects.filter(
+            date__range=(form.cleaned_data['date_from'], form.cleaned_data['date_to'])))
+        response = HttpResponse(data, content_type='application/csv')
+        response['content-disposition'] = 'attachment; filename="reports.csv.txt"'
+        return response
+
+
+class QuickCommodityListView(ListView):
+
+    queryset = models.QuickCommodityList.objects.filter(closed=False).order_by('-date')
+    template_name = 'qa/QuickCommodityList_list.html'
+
+
+class QuickCommodityListDetailView(DetailView):
+
+    model = models.QuickCommodityList
+    template_name = 'qa/QuickCommodityList_detail.html'
+    context_object_name = 'list'
+
+    def get_context_data(self, **kwargs):
+        context = super(QuickCommodityListDetailView, self).get_context_data(**kwargs)
+        context['commodities'] = models.CommodityInQuickList.objects.filter(list=self.object.pk)
+        return context
+
+
+class QuickCommodityListUpdateView(UpdateView):
+
+    model = models.QuickCommodityList
+    template_name = 'qa/QuickCommodityList_update.html'
+
+    def get_success_url(self):
+        return reverse('qa:quick_commodity_list')
 
 
 @login_required(login_url='/qa/login/')
