@@ -1,0 +1,22 @@
+{% extends "qa/base.html" %}
+
+{% block title %}TOWARY{% endblock %}
+{% block title_long %}Importowanie towarów{% endblock %}
+
+{% block content %}
+  <div class="container">
+    <div class="page-header">
+      <h1>Import towarów</h1>
+    </div>
+    <p class="lead">Pojedyńczy Towar można wpisywać pojedyńczo używając poniższego formularza</p>
+
+    <form method="post" action="{% url 'qa:commodity_import' %}">
+      {% csrf_token %}
+      <p>
+        {{ form.as_p }}
+        <input type='hidden' name='action' value='add'/>
+        <button class="in_line" type="submit">Dodaj</button>
+      </p>
+    </form>
+  </div>
+{% endblock %}

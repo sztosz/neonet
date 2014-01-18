@@ -16,7 +16,11 @@
       <button class="btn btn-primary" type="submit" name="submit">Filtruj</button>
     </form>
   {% for report in reports %}
-    <p>{{ report.unique_id }} {{ report.commodity }}, {{ report.serial }}</p>
+    <p>
+      <strong>ID:</strong> <a href="{% url 'qa:damage_report_update' report.id %}"> {{ report.unique_id }}</a>
+      <strong>Towar:</strong>  {{ report.commodity }}
+      <strong>S/N:</strong> {{ report.serial }}
+    </p>
   {% endfor %}
 </div>
 {% endblock %}

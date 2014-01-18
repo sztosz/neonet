@@ -28,24 +28,20 @@ from django.views.generic import DetailView, UpdateView, ListView, FormView, Tem
 MODULE = __package__
 
 
-class Index(AbstractView):
-    pass
-
-
 class CommodityImport(AbstractView):
     def _add(self):
-        form = forms.CommodityImportForm(self.request.POST)
+        form = forms.CommodityImportSingleForm(self.request.POST)
         if form.is_valid():
             commodity = form.save()
             commodity.save()
             self.context['messages'].append('Towar "{}" został dodany poprawnie do bazy danych'.format(commodity.name))
-            self.context['add_single_form'] = forms.CommodityImportForm()
+            self.context['add_single_form'] = forms.CommodityImportSingleForm()
         else:
             self.context['add_single_form'] = form
-        self.context['batch_upload_file_form'] = forms.CommodityBatchImportForm()
+        self.context['batch_upload_file_form'] = forms.CommodityImportBatchForm()
 
     def _import(self):
-        form = forms.CommodityBatchImportForm(self.request.POST, self.request.FILES)
+        form = forms.CommodityImportBatchForm(self.request.POST, self.request.FILES)
         if form.is_valid():
             warnings, errors = ExcelParser.parse_commodity(self.request.FILES['file'])
             for warning in warnings:
@@ -55,56 +51,39 @@ class CommodityImport(AbstractView):
             self.context['messages'].append('Dane bez błędów zostały dodane do bazy danych')
         else:
             self.context['errors'].append('Próba importu nie powiodła się, plik jest nieproprawny')
-        self.context['add_single_form'] = forms.CommodityImportForm()
-        self.context['batch_upload_file_form'] = forms.CommodityBatchImportForm()
+        self.context['add_single_form'] = forms.CommodityImportSingleForm()
+        self.context['batch_upload_file_form'] = forms.CommodityImportBatchForm()
 
     def _view(self):
-        self.context['batch_upload_file_form'] = forms.CommodityBatchImportForm()
-        self.context['add_single_form'] = forms.CommodityImportForm()
+        self.context['batch_upload_file_form'] = forms.CommodityImportBatchForm()
+        self.context['add_single_form'] = forms.CommodityImportSingleForm()
 
 
-class AddDamageReport(AbstractView):
-    def _check_ean(self):
-        form = forms.EanForm(self.request.POST)
-        try:
-            ean = self.request.POST['ean']
-        except KeyError:
-            ean = 'EAN NIE ZOSTAŁ PODANY!'
-        if form.is_valid():
-            commodity = models.Commodity.objects.get(ean=ean)
-            if commodity:
-                self.context['messages'].append('TOWAR: {}'.format(commodity.name))
-                self.context['messages'].append('SKU: {}'.format(commodity.sku))
-                self.request.session['commodity'] = commodity.pk
-                form = forms.AddDamageReportForm(initial={'date': datetime.now(timezone('Poland'))})
-                self.context['damage_report_form'] = form
-            else:
-                self.context['messages'].append('Brak towaru w bazie z EAN\'em {}'.format(ean))
-                self.context['ean_form'] = form
+class CommodityImportSingle(CreateView):
 
-        else:
-            self.context['messages'].append('EAN {} jest niepoprawny'.format(ean))
-            self.context['ean_form'] = form
+    template_name = 'qa/CommodityImport_single.html'
+    form_class = forms.CommodityImportSingleForm
 
-    def _add_damage_report(self):
-        form = forms.AddDamageReportForm(self.request.POST)
-        if form.is_valid():
-            damage = form.save(commit=False)
-            damage.user = self.request.user
-            damage.commodity = models.Commodity.objects.get(pk=self.request.session.pop('commodity'))
-            damage.save()
-            self.context['messages'].append('Raport zapisany poprawnie')
-        else:
-            self.context['errors'].append('Niepoprawne dane w formularzu')
-            self.context['damage_report_form'] = form
-
-    def _view(self):
-        self.context['ean_form'] = forms.EanForm()
+    def get_success_url(self):
+        return reverse('qa:damage_reports_view')
 
 
-class DamageReportsFilterView(FormView):
+class CommodityImportBatch(FormView):
 
-    template_name = 'qa/DamageReportsFilter_view.html'
+    template_name = 'qa/CommodityImport_batch.html'
+    form_class = forms.CommodityImportBatchForm
+
+    def form_valid(self, form):
+        warnings, errorrs = ExcelParser.parse_commodity(self.request.FILES['file'])
+        return super(CommodityImportBatch, self).form_valid(form)
+
+    def get_success_url(self):
+        return reverse('qa:damage_reports_view')
+
+
+class DamageReports(FormView):
+
+    template_name = 'qa/DamageReports_view.html'
     form_class = forms.DamageReportsDateFilter
     now = datetime.now(timezone('Europe/Warsaw'))
     yesterday = now - timedelta(days=1)
@@ -116,7 +95,7 @@ class DamageReportsFilterView(FormView):
         return self.render_to_response(self.get_context_data(form=form, reports=reports))
 
 
-class DamageReportsCreateView(CreateView):
+class DamageReportsCreate(CreateView):
 
     model = models.DamageReport
     template_name = 'qa/DamageReports_create.html'
@@ -128,12 +107,39 @@ class DamageReportsCreateView(CreateView):
         return reverse('qa:damage_reports_view')
 
     def form_valid(self, form):
-        # form.cleaned_data['commmodity'] = models.Commodity.objects.filter(ean=form.cleaned_data['ean'])[:1].get()
-        # form.cleaned_data['user'] = self.request.user
         object = form.save(commit=False)
         object.user = self.request.user
         object.save()
-        return super(CreateView, self).form_valid(form)
+        return super(DamageReportsCreate, self).form_valid(form)
+
+
+class DamageReportsUpdate(UpdateView):
+
+    model = models.DamageReport
+    template_name = 'qa/DamageReports_update.html'
+    form_class = forms.AddDamageReportForm
+
+    def get_success_url(self):
+        return reverse('qa:damage_reports')
+
+    def get_initial(self):
+        initial = self.initial.copy()
+        initial['ean'] = self.get_object().commodity.ean
+        return initial
+
+
+class DamageReportsExportV(FormView):
+
+    template_name = 'qa/DamageReports_export.html'
+    form_class = forms.DamageReportsDateFilter
+
+    def form_valid(self, form):
+        data = damage_reports_export_to_csv(data=models.DamageReport.objects.filter(
+            date__range=(form.cleaned_data['date_from'], form.cleaned_data['date_to'])))
+        response = HttpResponse(data, content_type='application/csv')
+        response['content-disposition'] = 'attachment; filename="reports.csv.txt"'
+        return response
+
 
 class DamageReportsCharts(TemplateView):
 
@@ -182,47 +188,25 @@ class DamageReportsCharts(TemplateView):
         return reports
 
 
-class DamageReportsUpdateView(UpdateView):
-
-    model = models.DamageReport
-    template_name = 'qa/DamageReports_update.html'
-
-    def get_success_url(self):
-        return reverse('qa:damage_reports')
-
-
-class DamageReportsExportView(FormView):
-
-    template_name = 'qa/DamageReports_export.html'
-    form_class = forms.DamageReportsDateFilter
-
-    def form_valid(self, form):
-        data = damage_reports_export_to_csv(data=models.DamageReport.objects.filter(
-            date__range=(form.cleaned_data['date_from'], form.cleaned_data['date_to'])))
-        response = HttpResponse(data, content_type='application/csv')
-        response['content-disposition'] = 'attachment; filename="reports.csv.txt"'
-        return response
-
-
-class QuickCommodityListView(ListView):
+class QuickCommodityList(ListView):
 
     queryset = models.QuickCommodityList.objects.filter(closed=False).order_by('-date')
     template_name = 'qa/QuickCommodityList_list.html'
 
 
-class QuickCommodityListDetailView(DetailView):
+class QuickCommodityListDetail(DetailView):
 
     model = models.QuickCommodityList
     template_name = 'qa/QuickCommodityList_detail.html'
     context_object_name = 'list'
 
     def get_context_data(self, **kwargs):
-        context = super(QuickCommodityListDetailView, self).get_context_data(**kwargs)
+        context = super(QuickCommodityListDetail, self).get_context_data(**kwargs)
         context['commodities'] = models.CommodityInQuickList.objects.filter(list=self.object.pk)
         return context
 
 
-class QuickCommodityListUpdateView(UpdateView):
+class QuickCommodityListUpdate(UpdateView):
 
     model = models.QuickCommodityList
     template_name = 'qa/QuickCommodityList_update.html'
@@ -232,20 +216,8 @@ class QuickCommodityListUpdateView(UpdateView):
 
 
 @login_required(login_url='/qa/login/')
-def index(request):
-    page = Index(request, module=MODULE)
-    return page.show()
-
-
-@login_required(login_url='/qa/login/')
 def commodity_import(request):
     page = CommodityImport(request, module=MODULE)
-    return page.show()
-
-
-@login_required(login_url='/qa/login/')
-def add_damage_report(request):
-    page = AddDamageReport(request, module=MODULE)
     return page.show()
 
 

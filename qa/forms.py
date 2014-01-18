@@ -12,12 +12,12 @@ from qa import models
 from qa.tools.DataVerifier import validate_ean13
 
 
-class CommodityImportForm(forms.ModelForm):
+class CommodityImportSingleForm(forms.ModelForm):
     class Meta:
         model = models.Commodity
 
 
-class CommodityBatchImportForm(forms.Form):
+class CommodityImportBatchForm(forms.Form):
     file = forms.FileField(label="Wybierz plik z danymi...")
 
 
