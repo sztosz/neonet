@@ -12,54 +12,23 @@ from datetime import datetime, timedelta
 from pytz import timezone
 from django.contrib.auth import logout
 from django.shortcuts import redirect
-from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse
 from qa import models
 from qa import forms
 from qa.tools.parsers import ExcelParser, damage_reports_export_to_csv
-from neonet.views import AbstractView
-
-# from django.utils.datastructures import MultiValueDictKeyError
-
 from django.views.generic import DetailView, UpdateView, ListView, FormView, TemplateView, CreateView
 
 
-MODULE = __package__
+class LoggedInMixin(object):
+    """ A mixin requiring a user to be logged in. """
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated():
+            return redirect('/qa/login/?next={0}'.format(request.path))
+        return super(LoggedInMixin, self).dispatch(request, *args, **kwargs)
 
 
-class CommodityImport(AbstractView):
-    def _add(self):
-        form = forms.CommodityImportSingleForm(self.request.POST)
-        if form.is_valid():
-            commodity = form.save()
-            commodity.save()
-            self.context['messages'].append('Towar "{}" został dodany poprawnie do bazy danych'.format(commodity.name))
-            self.context['add_single_form'] = forms.CommodityImportSingleForm()
-        else:
-            self.context['add_single_form'] = form
-        self.context['batch_upload_file_form'] = forms.CommodityImportBatchForm()
-
-    def _import(self):
-        form = forms.CommodityImportBatchForm(self.request.POST, self.request.FILES)
-        if form.is_valid():
-            warnings, errors = ExcelParser.parse_commodity(self.request.FILES['file'])
-            for warning in warnings:
-                self.context['messages'].append(warning)
-            for error in errors:
-                self.context['errors'].append(error)
-            self.context['messages'].append('Dane bez błędów zostały dodane do bazy danych')
-        else:
-            self.context['errors'].append('Próba importu nie powiodła się, plik jest nieproprawny')
-        self.context['add_single_form'] = forms.CommodityImportSingleForm()
-        self.context['batch_upload_file_form'] = forms.CommodityImportBatchForm()
-
-    def _view(self):
-        self.context['batch_upload_file_form'] = forms.CommodityImportBatchForm()
-        self.context['add_single_form'] = forms.CommodityImportSingleForm()
-
-
-class CommodityImportSingle(CreateView):
+class CommodityImportSingle(LoggedInMixin, CreateView):
 
     template_name = 'qa/CommodityImport_single.html'
     form_class = forms.CommodityImportSingleForm
@@ -68,20 +37,20 @@ class CommodityImportSingle(CreateView):
         return reverse('qa:damage_reports_view')
 
 
-class CommodityImportBatch(FormView):
+class CommodityImportBatch(LoggedInMixin, FormView):
 
     template_name = 'qa/CommodityImport_batch.html'
     form_class = forms.CommodityImportBatchForm
 
     def form_valid(self, form):
-        warnings, errorrs = ExcelParser.parse_commodity(self.request.FILES['file'])
+        ExcelParser.parse_commodity(self.request.FILES['file'])
         return super(CommodityImportBatch, self).form_valid(form)
 
     def get_success_url(self):
         return reverse('qa:damage_reports_view')
 
 
-class DamageReports(FormView):
+class DamageReports(LoggedInMixin, FormView):
 
     template_name = 'qa/DamageReports_view.html'
     form_class = forms.DamageReportsDateFilter
@@ -95,7 +64,7 @@ class DamageReports(FormView):
         return self.render_to_response(self.get_context_data(form=form, reports=reports))
 
 
-class DamageReportsCreate(CreateView):
+class DamageReportsCreate(LoggedInMixin, CreateView):
 
     model = models.DamageReport
     template_name = 'qa/DamageReports_create.html'
@@ -113,7 +82,7 @@ class DamageReportsCreate(CreateView):
         return super(DamageReportsCreate, self).form_valid(form)
 
 
-class DamageReportsUpdate(UpdateView):
+class DamageReportsUpdate(LoggedInMixin, UpdateView):
 
     model = models.DamageReport
     template_name = 'qa/DamageReports_update.html'
@@ -128,7 +97,7 @@ class DamageReportsUpdate(UpdateView):
         return initial
 
 
-class DamageReportsExportV(FormView):
+class DamageReportsExportV(LoggedInMixin, FormView):
 
     template_name = 'qa/DamageReports_export.html'
     form_class = forms.DamageReportsDateFilter
@@ -141,7 +110,7 @@ class DamageReportsExportV(FormView):
         return response
 
 
-class DamageReportsCharts(TemplateView):
+class DamageReportsCharts(LoggedInMixin, TemplateView):
 
     template_name = 'qa/DamageReports_charts.html'
 
@@ -188,13 +157,13 @@ class DamageReportsCharts(TemplateView):
         return reports
 
 
-class QuickCommodityList(ListView):
+class QuickCommodityList(LoggedInMixin, ListView):
 
     queryset = models.QuickCommodityList.objects.filter(closed=False).order_by('-date')
     template_name = 'qa/QuickCommodityList_list.html'
 
 
-class QuickCommodityListDetail(DetailView):
+class QuickCommodityListDetail(LoggedInMixin, DetailView):
 
     model = models.QuickCommodityList
     template_name = 'qa/QuickCommodityList_detail.html'
@@ -206,19 +175,13 @@ class QuickCommodityListDetail(DetailView):
         return context
 
 
-class QuickCommodityListUpdate(UpdateView):
+class QuickCommodityListUpdate(LoggedInMixin, UpdateView):
 
     model = models.QuickCommodityList
     template_name = 'qa/QuickCommodityList_update.html'
 
     def get_success_url(self):
         return reverse('qa:quick_commodity_list')
-
-
-@login_required(login_url='/qa/login/')
-def commodity_import(request):
-    page = CommodityImport(request, module=MODULE)
-    return page.show()
 
 
 def logout_view(request):
