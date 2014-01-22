@@ -9,7 +9,7 @@ from __future__ import unicode_literals
 
 from django import forms
 from qa import models
-from qa.tools.DataVerifier import validate_ean13
+from qa.tools.parsers import validate_ean13
 from django.core.exceptions import ObjectDoesNotExist
 
 
