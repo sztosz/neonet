@@ -34,4 +34,4 @@ urlpatterns = patterns('',
                            name='login'),
                        url(r'^logout/', 'qa.views.logout_view',
                            name='logout'),
-)
+                       )

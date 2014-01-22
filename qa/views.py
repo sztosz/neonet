@@ -16,7 +16,7 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponse
 from qa import models
 from qa import forms
-from qa.tools.parsers import ExcelParser, damage_reports_export_to_csv
+from qa.tools.parsers import parse_commodity, damage_reports_export_to_csv
 from django.views.generic import DetailView, UpdateView, ListView, FormView, TemplateView, CreateView
 
 
@@ -43,7 +43,7 @@ class CommodityImportBatch(LoggedInMixin, FormView):
     form_class = forms.CommodityImportBatchForm
 
     def form_valid(self, form):
-        ExcelParser.parse_commodity(self.request.FILES['file'])
+        parse_commodity(self.request.FILES['file'])
         return super(CommodityImportBatch, self).form_valid(form)
 
     def get_success_url(self):
