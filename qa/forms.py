@@ -10,35 +10,22 @@ from __future__ import unicode_literals
 from django import forms
 from django.contrib.auth.models import User
 from qa import models
-from qa.tools.DataVerifier import DataVerifier
+from qa.tools.parsers import validate_ean13
 
 
-class CommodityImportForm(forms.ModelForm):
+class CommodityImportSingleForm(forms.ModelForm):
     class Meta:
         model = models.Commodity
 
 
-class CommodityBatchImportForm(forms.Form):
+class CommodityImportBatchForm(forms.Form):
     file = forms.FileField(label="Wybierz plik z danymi...")
-
-
-class EanForm(forms.ModelForm):
-    class Meta:
-        model = models.Commodity
-        fields = ('ean',)
-
-    def clean_ean(self):
-        data = self.cleaned_data['ean']
-        ean_is_invalid = DataVerifier.ean13(data)
-        if ean_is_invalid:
-            raise forms.ValidationError(ean_is_invalid)
-        return data
 
 
 class AddDamageReportForm(forms.ModelForm):
     class Meta:
         model = models.DamageReport
-        exclude = ('user', 'commodity',)
+        exclude = ('user',)
 
 
 class CommodityUpdateByEanForm(forms.ModelForm):
@@ -48,12 +35,18 @@ class CommodityUpdateByEanForm(forms.ModelForm):
 
     def clean_ean(self):
         data = self.cleaned_data['ean']
-        ean_is_invalid = DataVerifier.ean13(data)
+        ean_is_invalid = validate_ean13(data)
         if ean_is_invalid:
             raise forms.ValidationError(ean_is_invalid)
         return data
 
+    def clean_commodity(self):
+        ean = self.data['ean']
+        if not models.Commodity.objects.filter(ean=ean).exists():
+            raise forms.ValidationError('Brak towaru w bazie')
+        return models.Commodity.objects.get(ean=ean)
 
-class DamageReportViewFilter(forms.Form):
+
+class DamageReportsDateFilter(forms.Form):
     date_from = forms.SplitDateTimeField()
     date_to = forms.SplitDateTimeField()

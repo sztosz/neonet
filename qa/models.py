@@ -11,6 +11,7 @@ from __future__ import unicode_literals
 
 from django.db import models
 from django.contrib.auth.models import User
+from datetime import date
 
 
 class Commodity(models.Model):
@@ -70,6 +71,12 @@ class DamageReport(models.Model):
     def commodity_ean(self):
         return self.commodity.ean
 
+    def unique_id(self):
+        return self.date.strftime('%y%m%d%H%M%S')
+
+    def day_str(self):
+        return date(self.date.year, self.date.month, self.date.day).isoformat()
+
     def __unicode__(self):
         return self.commodity.name
 
@@ -78,7 +85,7 @@ class QuickCommodityList(models.Model):
     name = models.CharField(max_length=50, verbose_name='Nazwa paczki towarów')
     date = models.DateTimeField(verbose_name='Data utworzenia')
     comment = models.CharField(max_length=100, verbose_name='Opis paczki')
-    closed = models.BooleanField(verbose_name='Czy zamknięty')
+    closed = models.BooleanField(verbose_name='Czy zamknięta')
 
     def __unicode__(self):
         return self.name

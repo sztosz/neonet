@@ -1,0 +1,26 @@
+{% extends "qa/base.html" %}
+{% block title %}Zestawienie Raportów Uszkodzeń{% endblock %}
+{% block content %}
+<div class="container">
+  <div class="page-header">
+    <h1>Zestawienie raportów</h1>
+  </div>
+  <p class="lead">Lista raportów, proszę przefiltrować używając poniższego formularza</p>
+    <form method="post" action="{% url 'qa:damage_reports_view' %}">
+      {% csrf_token %}
+      {% for field in form %}
+        {{ field.errors }}
+        {{ field.help_text }}<br/>
+        {{ field }}<br/>
+      {% endfor %}
+      <button class="btn btn-primary" type="submit" name="submit">Filtruj</button>
+    </form>
+  {% for report in reports %}
+    <p>
+      <strong>ID:</strong> <a href="{% url 'qa:damage_report_update' report.id %}"> {{ report.unique_id }}</a>
+      <strong>Towar:</strong>  {{ report.commodity }}
+      <strong>S/N:</strong> {{ report.serial }}
+    </p>
+  {% endfor %}
+</div>
+{% endblock %}

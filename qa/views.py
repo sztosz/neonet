@@ -8,244 +8,180 @@
 
 from __future__ import unicode_literals
 
-from datetime import datetime, timedelta, date
+from datetime import datetime, timedelta
 from pytz import timezone
 from django.contrib.auth import logout
 from django.shortcuts import redirect
-from django.contrib.auth.decorators import login_required
+from django.core.urlresolvers import reverse
+from django.http import HttpResponse
 from qa import models
 from qa import forms
-from qa.tools.ExcelParser import ExcelParser
-from neonet.views import AbstractView
-
-from django.utils.datastructures import MultiValueDictKeyError
-
-MODULE = __package__
+from qa.tools.parsers import parse_commodity, damage_reports_export_to_csv
+from django.views.generic import DetailView, UpdateView, ListView, FormView, TemplateView, CreateView
 
 
-class Index(AbstractView):
-    pass
+class LoggedInMixin(object):
+    """ A mixin requiring a user to be logged in. """
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated():
+            return redirect('/qa/login/?next={0}'.format(request.path))
+        return super(LoggedInMixin, self).dispatch(request, *args, **kwargs)
 
 
-class CommodityImport(AbstractView):
-    def _add(self):
-        form = forms.CommodityImportForm(self.request.POST)
-        if form.is_valid():
-            commodity = form.save()
-            commodity.save()
-            self.context['messages'].append('Towar "{}" został dodany poprawnie do bazy danych'.format(commodity.name))
-            self.context['add_single_form'] = forms.CommodityImportForm()
-        else:
-            self.context['add_single_form'] = form
-        self.context['batch_upload_file_form'] = forms.CommodityBatchImportForm()
+class CommodityImportSingle(LoggedInMixin, CreateView):
 
-    def _import(self):
-        form = forms.CommodityBatchImportForm(self.request.POST, self.request.FILES)
-        if form.is_valid():
-            warnings, errors = ExcelParser.parse_commodity(self.request.FILES['file'])
-            for warning in warnings:
-                self.context['messages'].append(warning)
-            for error in errors:
-                self.context['errors'].append(error)
-            self.context['messages'].append('Dane bez błędów zostały dodane do bazy danych')
-        else:
-            self.context['errors'].append('Próba importu nie powiodła się, plik jest nieproprawny')
-        self.context['add_single_form'] = forms.CommodityImportForm()
-        self.context['batch_upload_file_form'] = forms.CommodityBatchImportForm()
+    template_name = 'qa/CommodityImport_single.html'
+    form_class = forms.CommodityImportSingleForm
 
-    def _view(self):
-        self.context['batch_upload_file_form'] = forms.CommodityBatchImportForm()
-        self.context['add_single_form'] = forms.CommodityImportForm()
+    def get_success_url(self):
+        return reverse('qa:damage_reports_view')
 
 
-class AddDamageReport(AbstractView):
-    def _check_ean(self):
-        form = forms.EanForm(self.request.POST)
-        try:
-            ean = self.request.POST['ean']
-        except KeyError:
-            ean = 'EAN NIE ZOSTAŁ PODANY!'
-        if form.is_valid():
-            try:
-                commodity = models.Commodity.objects.filter(ean=form.cleaned_data['ean'])[:1].get()
-            except models.Commodity.ObjectDoesNotExist:
-                commodity = models.Commodity(sku='BRAK_TOWARU_W_BAZIE', name='BRAK_TOWARU_W_BAZIE',
-                                             ean=form.cleaned_data['ean'])
-                commodity.save()
-            if commodity:
-                self.context['messages'].append('TOWAR: {}'.format(commodity.name))
-                self.context['messages'].append('SKU: {}'.format(commodity.sku))
-                self.request.session['commodity'] = commodity.pk
-                form = forms.AddDamageReportForm(initial={'date': datetime.now(timezone('Poland')),
-                                                          })
-                self.context['damage_report_form'] = form
-            else:
-                self.context['messages'].append('Brak towaru w bazie z EAN\'em {}'.format(ean))
-                self.context['ean_form'] = form
+class CommodityImportBatch(LoggedInMixin, FormView):
 
-        else:
-            self.context['messages'].append('EAN {} jest niepoprawny'.format(ean))
-            self.context['ean_form'] = form
+    template_name = 'qa/CommodityImport_batch.html'
+    form_class = forms.CommodityImportBatchForm
 
-    def _add_damage_report(self):
-        form = forms.AddDamageReportForm(self.request.POST)
-        if form.is_valid():
-            damage = form.save(commit=False)
-            damage.user = self.request.user
-            damage.commodity = models.Commodity.objects.get(pk=self.request.session.pop('commodity'))
-            damage.save()
-            self.context['messages'].append('Raport zapisany poprawnie')
-        else:
-            self.context['errors'].append('Niepoprawne dane w formularzu')
-            self.context['damage_report_form'] = form
+    def form_valid(self, form):
+        parse_commodity(self.request.FILES['file'])
+        return super(CommodityImportBatch, self).form_valid(form)
 
-    def _view(self):
-        self.context['ean_form'] = forms.EanForm()
+    def get_success_url(self):
+        return reverse('qa:damage_reports_view')
 
 
-class DamageReportExport(AbstractView):
-    def _export(self):
-        self.output = 'file'
-        self.content_type = 'text/plain'
-        self.filename = "damage_report.txt"
-        form = forms.DamageReportViewFilter(self.request.POST)
-        if form.is_valid():
-            date_from = form.cleaned_data['date_from']
-            date_to = form.cleaned_data['date_to']
-            reports = models.DamageReport.objects.filter(date__range=(date_from, date_to))
+class DamageReports(LoggedInMixin, FormView):
 
-            self.context['file_content'] = u''
-            for report in reports:
-                self.context['file_content'] += u'"{}";"{}";"{}";"{}";"{}";"{}";"{}";"{}";"{}";"";"";"{} {}";\r\n'.format(
-                    '', report.date, report.brand, report.commodity.__unicode__(), report.serial,
-                    report.detection_time.detection_time, report.category.category, report.comments,
-                    report.further_action.further_action, report.user.first_name,
-                    report.user.last_name,)
-        else:
-            self.output = 'html'
+    template_name = 'qa/DamageReports_view.html'
+    form_class = forms.DamageReportsDateFilter
+    now = datetime.now(timezone('Europe/Warsaw'))
+    yesterday = now - timedelta(days=1)
+    initial = {'date_from': yesterday, 'date_to': now}
+
+    def form_valid(self, form):
+        reports = models.DamageReport.objects.select_related('commodity').filter(date__range=(
+            form.cleaned_data['date_from'], form.cleaned_data['date_to']))
+        return self.render_to_response(self.get_context_data(form=form, reports=reports))
+
+
+class DamageReportsCreate(LoggedInMixin, CreateView):
+
+    model = models.DamageReport
+    template_name = 'qa/DamageReports_create.html'
+    form_class = forms.AddDamageReportForm
+    now = datetime.now(timezone('Europe/Warsaw'))
+    initial = {'date': now}
+
+    def get_success_url(self):
+        return reverse('qa:damage_reports_view')
+
+    def form_valid(self, form):
+        object = form.save(commit=False)
+        object.user = self.request.user
+        object.save()
+        return super(DamageReportsCreate, self).form_valid(form)
+
+
+class DamageReportsUpdate(LoggedInMixin, UpdateView):
+
+    model = models.DamageReport
+    template_name = 'qa/DamageReports_update.html'
+    form_class = forms.AddDamageReportForm
+
+    def get_success_url(self):
+        return reverse('qa:damage_reports')
+
+    def get_initial(self):
+        initial = self.initial.copy()
+        initial['ean'] = self.get_object().commodity.ean
+        return initial
+
+
+class DamageReportsExportV(LoggedInMixin, FormView):
+
+    template_name = 'qa/DamageReports_export.html'
+    form_class = forms.DamageReportsDateFilter
+
+    def form_valid(self, form):
+        data = damage_reports_export_to_csv(data=models.DamageReport.objects.filter(
+            date__range=(form.cleaned_data['date_from'], form.cleaned_data['date_to'])))
+        response = HttpResponse(data, content_type='application/csv')
+        response['content-disposition'] = 'attachment; filename="reports.csv.txt"'
+        return response
+
+
+class DamageReportsCharts(LoggedInMixin, TemplateView):
+
+    template_name = 'qa/DamageReports_charts.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(DamageReportsCharts, self).get_context_data(**kwargs)
+        context['chart'] = self._view()
+        return context
 
     def _view(self):
-        form = forms.DamageReportViewFilter(self.request.POST)
-        if form.is_valid():
-            date_from = form.cleaned_data['date_from']
-            date_to = form.cleaned_data['date_to']
-            reports = models.DamageReport.objects.filter(date__range=(date_from, date_to))
-        else:
-            now = datetime.now(timezone('Poland'))
-            from_yesterday = now - timedelta(days=1)
-            reports = models.DamageReport.objects.filter(date__range=(from_yesterday, now))
-            form = forms.DamageReportViewFilter(initial={'date_from': from_yesterday, 'date_to': now})
-        self.context['damage_reports'] = reports
-        self.context['damage_reports_filter'] = form
 
+        a, b, c = {}, {}, {}
 
-class CommodityUpdateByEan(AbstractView):
-    def _view(self):
-        self.context['commodity_list'] = models.Commodity.objects.filter(name='BRAK_TOWARU_W_BAZIE')
+        objects = models.DamageReport.objects.select_related('category').order_by('-date')
 
+        for report in objects:
+            _date = report.day_str()
+            if report.category.category == 'A':
+                if _date in a:
+                    a[_date] += 1
+                else:
+                    a[_date] = 1
+            if report.category.category == 'B':
+                if _date in b:
+                    b[_date] += 1
+                else:
+                    b[_date] = 1
+            if report.category.category == 'C':
+                if _date in c:
+                    c[_date] += 1
+                else:
+                    c[_date] = 1
 
-class QuickCommodityList(AbstractView):
-    def _view(self):
-        self.context['quick_commodity_lists'] = models.QuickCommodityList.objects.all()
-
-    def _list_details(self):
-        try:
-            list_id = self.request.POST['list_id']
-        except MultiValueDictKeyError:
-            self.context['messages'].append('Niepoprawnie wybrana lista, proszę zgłosić administratorowi')
-            return self._view()
-        self.context['quick_commodity_list'] = models.CommodityInQuickList.objects.filter(list=list_id)
-
-
-# class DamageReportCharts(ListView):
-#     model = models.DamageReport
-#     template_name = "qa/damagereportcharts.html"
-#     context_object_name = "chart"
-#
-#     def queryset(self):
-#         reports = []
-#         for report in models.DamageReport.objects.all():
-#             reports.append((report.detection_time, report.))
-#
-#
-# damage_report_charts = DamageReportCharts.as_view()
-
-
-class DamageReportCharts(AbstractView):
-    def _view(self):
         reports = [{'data': [], 'name': 'A'},
                    {'data': [], 'name': 'B'},
                    {'data': [], 'name': 'C'}]
-        A = {}
-        B = {}
-        C = {}
-        for report in models.DamageReport.objects.order_by('-date'):
-            _date = str(date(report.date.year, report.date.month, report.date.day))
-            if report.category.category == 'A':
-                if _date in A:
-                    A[_date] += 1
-                else:
-                    A[_date] = 1
-            if report.category.category == 'B':
-                if _date in B:
-                    B[_date] += 1
-                else:
-                    B[_date] = 1
-            if report.category.category == 'C':
-                if _date in C:
-                    C[_date] += 1
-                else:
-                    C[_date] = 1
-        for k, v in A.items():
+
+        for k, v in a.iteritems():
             reports[0]['data'].append([k, v])
-        for k, v in B.items():
+        for k, v in b.iteritems():
             reports[1]['data'].append([k, v])
-        for k, v in C.items():
+        for k, v in c.iteritems():
             reports[2]['data'].append([k, v])
 
-        self.context['chart'] = reports
+        return reports
 
 
-@login_required(login_url='/qa/login/')
-def index(request):
-    page = Index(request, module=MODULE)
-    return page.show()
+class QuickCommodityList(LoggedInMixin, ListView):
+
+    queryset = models.QuickCommodityList.objects.filter(closed=False).order_by('-date')
+    template_name = 'qa/QuickCommodityList_list.html'
 
 
-@login_required(login_url='/qa/login/')
-def commodity_import(request):
-    page = CommodityImport(request, module=MODULE)
-    return page.show()
+class QuickCommodityListDetail(LoggedInMixin, DetailView):
+
+    model = models.QuickCommodityList
+    template_name = 'qa/QuickCommodityList_detail.html'
+    context_object_name = 'list'
+
+    def get_context_data(self, **kwargs):
+        context = super(QuickCommodityListDetail, self).get_context_data(**kwargs)
+        context['commodities'] = models.CommodityInQuickList.objects.filter(list=self.object.pk)
+        return context
 
 
-@login_required(login_url='/qa/login/')
-def add_damage_report(request):
-    page = AddDamageReport(request, module=MODULE)
-    return page.show()
+class QuickCommodityListUpdate(LoggedInMixin, UpdateView):
 
+    model = models.QuickCommodityList
+    template_name = 'qa/QuickCommodityList_update.html'
 
-@login_required(login_url='/qa/login/')
-def damage_report_export(request):
-    page = DamageReportExport(request, module=MODULE)
-    return page.show()
-
-
-@login_required(login_url='/qa/login/')
-def commodity_update_by_ean(request):
-    page = CommodityUpdateByEan(request, module=MODULE)
-    return page.show()
-
-
-@login_required(login_url='/qa/login/')
-def quick_commodity_list(request):
-    page = QuickCommodityList(request, module=MODULE)
-    return page.show()
-
-
-@login_required(login_url='/qa/login/')
-def damage_report_charts(request):
-    page = DamageReportCharts(request, module=MODULE)
-    return page.show()
+    def get_success_url(self):
+        return reverse('qa:quick_commodity_list')
 
 
 def logout_view(request):

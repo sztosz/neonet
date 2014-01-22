@@ -1,0 +1,21 @@
+{% extends "qa/base.html" %}
+
+{% block title %}LISTY{% endblock %}
+{% block title_long %}Szybkie listy towarów{% endblock %}
+
+{% block content %}
+  <div class="container">
+    <div class="page-header">
+      <h1>Aktualizacja raportu</h1>
+    </div>
+
+    <p class="lead">Zaktualizuj dane raportu.</p>
+    <p><strong>Towar: </strong>{{ object.commodity }}</p>
+    <form action="" method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <input type="submit" value="Aktualizuj"/>
+    </form>
+
+  </div>
+{% endblock %}
