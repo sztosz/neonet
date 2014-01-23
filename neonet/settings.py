@@ -7,8 +7,8 @@
 
 # Django settings for neonet project.
 
-import os
 import django
+import os
 import chartkick
 
 DEBUG = True
@@ -124,7 +124,6 @@ ROOT_URLCONF = 'neonet.urls'
 # Python dotted path to the WSGI application used by Django's runserver.
 WSGI_APPLICATION = 'neonet.wsgi.application'
 
-import os
 TEMPLATE_DIRS = (os.path.join(SITE_ROOT, 'templates'),)
 
 INSTALLED_APPS = (

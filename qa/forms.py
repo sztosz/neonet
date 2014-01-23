@@ -8,7 +8,6 @@
 from __future__ import unicode_literals
 
 from django import forms
-from django.contrib.auth.models import User
 from qa import models
 from qa.tools.parsers import validate_ean13
 
@@ -23,15 +22,12 @@ class CommodityImportBatchForm(forms.Form):
 
 
 class AddDamageReportForm(forms.ModelForm):
+    ean = forms.CharField(max_length=13)
+    commodity = forms.CharField(widget=forms.HiddenInput(), required=False)
+
     class Meta:
         model = models.DamageReport
         exclude = ('user',)
-
-
-class CommodityUpdateByEanForm(forms.ModelForm):
-    class Meta:
-        model = models.Commodity
-        exclude = ('sku',)
 
     def clean_ean(self):
         data = self.cleaned_data['ean']
