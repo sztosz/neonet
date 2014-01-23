@@ -17,6 +17,7 @@
         <strong>Towar:</strong> {{ c.commodity }}
         <strong>Serial:</strong> {{ c.serial }}
         <strong>Komentarz:</strong> {{ c.comment }}
+        <a href="{% url 'qa:quick_commodity_list_detail_update' c.id %}"> AKTUALIZUJ</a>
       </p>
     {% endfor %}
 

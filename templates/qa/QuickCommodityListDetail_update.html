@@ -1,0 +1,20 @@
+{% extends "qa/base.html" %}
+
+{% block title %}LISTY{% endblock %}
+
+{% block content %}
+  <div class="container">
+    <div class="page-header">
+      <h1>Aktualizacja towaru w liście</h1>
+    </div>
+
+    <p class="lead">Zaktualizuj dane.</p>
+    <p><strong>Towar: </strong>{{ object.commodity }}</p>
+    <form action="" method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <input type="submit" value="Aktualizuj"/>
+    </form>
+
+  </div>
+{% endblock %}
