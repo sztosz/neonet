@@ -18,6 +18,7 @@
         <strong>Serial:</strong> {{ c.serial }}
         <strong>Komentarz:</strong> {{ c.comment }}
         <a href="{% url 'qa:quick_commodity_list_detail_update' c.id %}"> AKTUALIZUJ</a>
+        <a href="{% url 'qa:quick_commodity_list_detail_delete' c.id %}"> USUŃ</a>
       </p>
     {% endfor %}
 

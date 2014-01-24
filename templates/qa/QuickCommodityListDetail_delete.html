@@ -1,0 +1,21 @@
+{% extends "qa/base.html" %}
+
+{% block title %}LISTY{% endblock %}
+{% block title_long %}Szybkie listy towarów{% endblock %}
+
+{% block content %}
+  <div class="container">
+    <div class="page-header">
+      <h1>Zamknij listę</h1>
+    </div>
+
+    <p class="lead">Czy na pewno chcesz usunąć towar z listy?</p>
+
+    <p>{{ object.commodity }}</p>
+    <form action="" method="post">
+      {% csrf_token %}
+      <input type="submit" value="Usuń"/>
+    </form>
+
+  </div>
+{% endblock %}

@@ -54,7 +54,6 @@ class CommodityListDetail(forms.ModelForm):
 
     class Meta:
         model = models.CommodityInQuickList
-        # exclude = ('commodity',)
 
     def clean_ean(self):
         data = self.cleaned_data['ean']

@@ -25,7 +25,7 @@ class LoggedInMixin(object):
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_authenticated():
             return redirect('/qa/login/?next={0}'.format(request.path))
-        return super(LoggedInMixin, self).dispatch(request, *args, **kwargs)
+        return super(LoggedInMixin, self).  dispatch(request, *args, **kwargs)
 
 
 class CommodityImportSingle(LoggedInMixin, CreateView):
@@ -200,7 +200,12 @@ class QuickCommodityListDetailUpdate(LoggedInMixin, UpdateView):
 
 
 class QuickCommodityListDetailDelete(LoggedInMixin, DeleteView):
-    pass
+
+    model = models.CommodityInQuickList
+    template_name = 'qa/QuickCommodityListDetail_delete.html'
+
+    def get_success_url(self):
+        return reverse('qa:quick_commodity_list_detail', args=(self.object.list.pk,))
 
 
 def logout_view(request):
