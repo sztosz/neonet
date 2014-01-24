@@ -68,7 +68,7 @@ class DamageReportsCreate(LoggedInMixin, CreateView):
 
     model = models.DamageReport
     template_name = 'qa/DamageReports_create.html'
-    form_class = forms.AddDamageReportForm
+    form_class = forms.DamageReportForm
     now = datetime.now(timezone('Europe/Warsaw'))
     initial = {'date': now}
 
@@ -86,7 +86,7 @@ class DamageReportsUpdate(LoggedInMixin, UpdateView):
 
     model = models.DamageReport
     template_name = 'qa/DamageReports_update.html'
-    form_class = forms.AddDamageReportForm
+    form_class = forms.DamageReportForm
 
     def get_success_url(self):
         return reverse('qa:damage_reports')
@@ -188,9 +188,15 @@ class QuickCommodityListDetailUpdate(LoggedInMixin, UpdateView):
 
     model = models.CommodityInQuickList
     template_name = 'qa/QuickCommodityListDetail_update.html'
+    form_class = forms.CommodityListDetail
 
     def get_success_url(self):
         return reverse('qa:quick_commodity_list')
+
+    def get_initial(self):
+        initial = self.initial.copy()
+        initial['ean'] = self.get_object().commodity.ean
+        return initial
 
 
 class QuickCommodityListDetailDelete(LoggedInMixin, DeleteView):
