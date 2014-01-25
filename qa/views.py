@@ -122,37 +122,32 @@ class DamageReportsCharts(LoggedInMixin, TemplateView):
 
     def _view(self):
 
-        a, b, c = {}, {}, {}
+        self.a = {}
+        self.b = {}
+        self.c = {}
 
         objects = models.DamageReport.objects.select_related('category').order_by('-date')
 
         for report in objects:
             _date = report.day_str()
-            if report.category.category == 'A':
-                if _date in a:
-                    a[_date] += 1
-                else:
-                    a[_date] = 1
-            if report.category.category == 'B':
-                if _date in b:
-                    b[_date] += 1
-                else:
-                    b[_date] = 1
-            if report.category.category == 'C':
-                if _date in c:
-                    c[_date] += 1
-                else:
-                    c[_date] = 1
+
+            if _date not in self.a:
+                self.a[_date] = 0
+            if _date not in self.b:
+                self.b[_date] = 0
+            if _date not in self.c:
+                self.c[_date] = 0
+            getattr(self, report.category.category.lower())[_date] += 1
 
         reports = [{'data': [], 'name': 'A'},
                    {'data': [], 'name': 'B'},
                    {'data': [], 'name': 'C'}]
 
-        for k, v in a.iteritems():
+        for k, v in self.a.iteritems():
             reports[0]['data'].append([k, v])
-        for k, v in b.iteritems():
+        for k, v in self.b.iteritems():
             reports[1]['data'].append([k, v])
-        for k, v in c.iteritems():
+        for k, v in self.c.iteritems():
             reports[2]['data'].append([k, v])
 
         return reports
