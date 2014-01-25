@@ -19,6 +19,7 @@
         <strong>Data:</strong> {{ list.date }}
         <a href="{% url 'qa:quick_commodity_list_detail' list.id %}">WYŚWIETL</a>
         <a href="{% url 'qa:quick_commodity_list_update' list.id %}">AKTUALIZUJ</a>
+        <a href="{% url 'qa:quick_commodity_list_close' list.id %}" class="confirm">ZAMKNIJ</a>
       </p>
     {% endfor %}
 

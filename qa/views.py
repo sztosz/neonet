@@ -17,7 +17,8 @@ from django.http import HttpResponse
 from qa import models
 from qa import forms
 from qa.tools.parsers import parse_commodity, damage_reports_export_to_csv
-from django.views.generic import DetailView, UpdateView, ListView, FormView, TemplateView, CreateView, DeleteView
+from django.views.generic import DetailView, UpdateView, ListView, FormView,\
+    TemplateView, CreateView, DeleteView
 
 
 class LoggedInMixin(object):
@@ -170,6 +171,17 @@ class QuickCommodityListUpdate(LoggedInMixin, UpdateView):
 
     def get_success_url(self):
         return reverse('qa:quick_commodity_list')
+
+
+class QuickCommodityListClose(LoggedInMixin, DetailView):
+
+    model = models.QuickCommodityList
+
+    def get(self, request, *args, **kwargs):
+        obj = self.get_object()
+        obj.closed = True
+        obj.save()
+        return redirect('qa:quick_commodity_list')
 
 
 class QuickCommodityListDetail(LoggedInMixin, DetailView):
