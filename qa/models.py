@@ -75,7 +75,7 @@ class DamageReport(models.Model):
         return self.date.strftime('%y%m%d%H%M%S')
 
     def day_str(self):
-        return date(self.date.year, self.date.month, self.date.day).isoformat()
+        return self.date.strftime('%Y-%m-%d')
 
     def __unicode__(self):
         return self.commodity.name
