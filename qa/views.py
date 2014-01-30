@@ -103,6 +103,9 @@ class DamageReportsExportV(LoggedInMixin, FormView):
 
     template_name = 'qa/DamageReports_export.html'
     form_class = forms.DamageReportsDateFilter
+    now = datetime.now(timezone('Europe/Warsaw'))
+    yesterday = now - timedelta(days=1)
+    initial = {'date_from': yesterday, 'date_to': now}
 
     def form_valid(self, form):
         data = damage_reports_export_to_csv(data=models.DamageReport.objects.filter(
