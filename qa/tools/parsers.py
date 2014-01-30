@@ -81,7 +81,7 @@ def parse_commodity(excel_file):
 
 def damage_reports_export_to_csv(delimiter=';', data=None):
     if not data:
-        raise ObjectDoesNotExist
+        output = 'Nie znaleziono żadnych raportów'
     else:
         lines = []
         for report in data:
@@ -93,7 +93,8 @@ def damage_reports_export_to_csv(delimiter=';', data=None):
             line = delimiter.join(x for x in line).replace('\n', ' ').replace('\r', '')
 
             lines.append(line)
-        return '\r\n'.join(lines)
+        output = '\r\n'.join(lines)
+    return output
 
 
 
