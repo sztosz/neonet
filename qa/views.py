@@ -99,7 +99,7 @@ class DamageReportsUpdate(LoggedInMixin, UpdateView):
         return initial
 
 
-class DamageReportsExportV(LoggedInMixin, FormView):
+class DamageReportsExport(LoggedInMixin, FormView):
 
     template_name = 'qa/DamageReports_export.html'
     form_class = forms.DamageReportsDateFilter
