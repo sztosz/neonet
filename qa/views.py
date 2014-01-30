@@ -108,8 +108,10 @@ class DamageReportsExport(LoggedInMixin, FormView):
     initial = {'date_from': yesterday, 'date_to': now}
 
     def form_valid(self, form):
-        data = damage_reports_export_to_csv(data=models.DamageReport.objects.filter(
-            date__range=(form.cleaned_data['date_from'], form.cleaned_data['date_to'])))
+        query = models.DamageReport.objects.\
+            select_related('commodity', 'detection_time', 'category', 'further_action', 'user').\
+            filter(date__range=(form.cleaned_data['date_from'], form.cleaned_data['date_to']))
+        data = damage_reports_export_to_csv(data=query)
         response = HttpResponse(data, content_type='application/csv')
         response['content-disposition'] = 'attachment; filename="reports.csv.txt"'
         return response
