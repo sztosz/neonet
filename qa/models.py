@@ -109,7 +109,7 @@ class ReturnCarrier(models.Model):
 
 
 class Return(models.Model):
-    known_origin = models.BooleanField(verbose_name='Pochodzenie znane ')
+    known_origin = models.BooleanField(verbose_name='Pochodzenie znane')
     carrier = models.ForeignKey(ReturnCarrier, verbose_name='Przewoźnik')
     start_date = models.DateTimeField(auto_now_add=True, verbose_name='Czas Rozpoczęcia')
     end_date = models.DateTimeField(auto_now=True, verbose_name='Czas zakończenia')
@@ -120,7 +120,7 @@ class Return(models.Model):
         return self.id
 
 
-class CommoditiesInReturn(models.Model):
+class CommodityInReturn(models.Model):
     commodity = models.ForeignKey(Commodity, verbose_name='Towar')
     amount = models.IntegerField(verbose_name='Ilość')
     waybill = models.CharField(max_length=30, verbose_name='Numer listu przewozowego', blank=True)

@@ -86,3 +86,35 @@ class AddCommodityToQuickListForm(forms.ModelForm):
         if ean_is_invalid:
             raise forms.ValidationError(ean_is_invalid)
         return data
+
+
+class Return(forms.ModelForm):
+
+    class Meta:
+        model = models.Return
+        fields = ('known_origin', 'carrier',)
+
+
+class CommoditiesInReturn(forms.ModelForm):
+    ean = forms.CharField(max_length=13, label='EAN')
+    commodity = forms.CharField(widget=forms.HiddenInput(), required=False)
+
+    class Meta:
+        model = models.CommodityInReturn
+
+    def clean_ean(self, data=None):
+        if not data:
+            data = self.cleaned_data['ean']
+        ean_is_invalid = validate_ean13(data)
+        if ean_is_invalid:
+            raise forms.ValidationError(ean_is_invalid)
+        return data
+
+    def clean_commodity(self):
+        ean = self.data['ean']
+        if not models.Commodity.objects.filter(ean=ean).exists() and self.clean_ean(data=ean):
+            commodity = models.Commodity(sku='BRAK_TOWARU_W_BAZIE', name='BRAK_TOWARU_W_BAZIE',
+                                         ean=ean)
+            commodity.save()
+        return models.Commodity.objects.get(ean=ean)
+
