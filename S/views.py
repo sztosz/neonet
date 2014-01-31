@@ -3,7 +3,9 @@
 #
 # Created on 2013-10-21
 #
-# @author: sztosz@gmail.com
+# @author: Bartosz Nowak sztosz@gmail.com
+#
+# This file is licensed GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007
 
 from __future__ import unicode_literals
 
@@ -15,7 +17,6 @@ from qa import models
 from django.contrib.auth.decorators import login_required
 
 from django.utils.datastructures import MultiValueDictKeyError
-from django.shortcuts import render, redirect
 from django.core.exceptions import ObjectDoesNotExist
 
 MODULE = __package__

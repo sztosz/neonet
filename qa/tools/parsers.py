@@ -3,7 +3,9 @@
 #
 # Created on 2013-10-11
 #
-# @author: sztosz@gmail.com
+# @author: Bartosz Nowak sztosz@gmail.com
+#
+# This file is licensed GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007
 
 from __future__ import unicode_literals
 
@@ -79,7 +81,7 @@ def parse_commodity(excel_file):
 
 def damage_reports_export_to_csv(delimiter=';', data=None):
     if not data:
-        raise ObjectDoesNotExist
+        output = 'Nie znaleziono żadnych raportów'
     else:
         lines = []
         for report in data:
@@ -91,7 +93,8 @@ def damage_reports_export_to_csv(delimiter=';', data=None):
             line = delimiter.join(x for x in line).replace('\n', ' ').replace('\r', '')
 
             lines.append(line)
-        return '\r\n'.join(lines)
+        output = '\r\n'.join(lines)
+    return output
 
 
 

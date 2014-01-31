@@ -1,11 +1,18 @@
+<!--
+# -*- coding: utf-8 -*-
+#
+# Created on 2013-10-11
+#
+# @author: Bartosz Nowak sztosz@gmail.com
+#
+# This file is licensed GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007
+-->
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/html">
 <head>
     <title>Sprawdź SN</title>
     {% load staticfiles %}
-    <link type="text/css" rel="stylesheet" href="{{ STATIC_URL }}S/scanner.css" />
-    <script src="{{ STATIC_URL }}jquery-1.10.2.js"></script>
-    <script src="{{ STATIC_URL }}S/scanner.js"></script>
+    <link type="text/css" rel="stylesheet" href="{% static 'S/scanner.css' %}" />
 </head>
 <body>
 <div id="main_container">
