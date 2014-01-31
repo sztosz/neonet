@@ -1,11 +1,18 @@
+<!--
+# -*- coding: utf-8 -*-
+#
+# Created on 2013-10-11
+#
+# @author: Bartosz Nowak sztosz@gmail.com
+#
+# This file is licensed GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007
+-->
 <div class="header">
-    <p>
     <form><input type="button" value="RAPORT USZKODZEŃ" onClick="window.location.href='{% url 'S:damage_report' %}'"></form>
     <form><input type="button" value="SPRAWDŹ S/N" onClick="window.location.href='{% url 'S:check_sn' %}'"></form>
     <form><input type="button" value="SZYBKA LISTA TOWARÓW" onClick="window.location.href='{% url 'S:quick_commodity_list' %}'"></form>
     <hr>
     <form><input type="button" value="WYLOGUJ" onClick="window.location.href='{% url 'qa:logout' %}'"></form>
-    </p>
     <hr>
     <hr>
 

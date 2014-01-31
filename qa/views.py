@@ -3,8 +3,9 @@
 #
 # Created on 2013-10-11
 #
-# @author: sztosz@gmail.com
-# Create your views here.
+# @author: Bartosz Nowak sztosz@gmail.com
+#
+# This file is licensed GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007
 
 from __future__ import unicode_literals
 
@@ -98,14 +99,19 @@ class DamageReportsUpdate(LoggedInMixin, UpdateView):
         return initial
 
 
-class DamageReportsExportV(LoggedInMixin, FormView):
+class DamageReportsExport(LoggedInMixin, FormView):
 
     template_name = 'qa/DamageReports_export.html'
     form_class = forms.DamageReportsDateFilter
+    now = datetime.now(timezone('Europe/Warsaw'))
+    yesterday = now - timedelta(days=1)
+    initial = {'date_from': yesterday, 'date_to': now}
 
     def form_valid(self, form):
-        data = damage_reports_export_to_csv(data=models.DamageReport.objects.filter(
-            date__range=(form.cleaned_data['date_from'], form.cleaned_data['date_to'])))
+        query = models.DamageReport.objects.\
+            select_related('commodity', 'detection_time', 'category', 'further_action', 'user').\
+            filter(date__range=(form.cleaned_data['date_from'], form.cleaned_data['date_to']))
+        data = damage_reports_export_to_csv(data=query)
         response = HttpResponse(data, content_type='application/csv')
         response['content-disposition'] = 'attachment; filename="reports.csv.txt"'
         return response
