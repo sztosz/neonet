@@ -10,6 +10,9 @@
 from __future__ import unicode_literals
 
 from datetime import datetime
+from django.core.urlresolvers import reverse
+from django.shortcuts import redirect
+from django.views.generic import ListView, CreateView, FormView
 from pytz import timezone
 from S import forms
 from neonet.views import AbstractView
@@ -20,6 +23,14 @@ from django.utils.datastructures import MultiValueDictKeyError
 from django.core.exceptions import ObjectDoesNotExist
 
 MODULE = __package__
+
+
+class LoggedInMixin(object):
+    """ A mixin requiring a user to be logged in. """
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated():
+            return redirect('/S/login/?next={0}'.format(request.path))
+        return super(LoggedInMixin, self).  dispatch(request, *args, **kwargs)
 
 
 class AddDamageReport(AbstractView):
@@ -136,6 +147,45 @@ class Index(AbstractView):
     def _view(self):
         self.context['user'] = self.request.user.username
 
+
+class CommercialReturn(LoggedInMixin, ListView):
+
+    queryset = models.CommercialReturn.objects.filter(completed=False).order_by('-start_date')
+    template_name = 'S/CommercialReturn_list.html'
+
+
+class CommercialReturnCreate(LoggedInMixin, CreateView):
+
+    template_name = 'S/CommercialReturn_create.html'
+    form_class = forms.CommercialReturn
+
+    def get_success_url(self):
+        return reverse('S:commercial_returns')
+
+    def form_valid(self, form):
+        commercial_return = form.save(commit=False)
+        commercial_return.user = self.request.user
+        commercial_return.completed = False
+        commercial_return.save()
+        return super(CommercialReturnCreate, self).form_valid(form)
+
+
+class AddToCommercialReturn(LoggedInMixin, CreateView):
+
+    template_name = None  # TODO
+    form_class = forms.CommodityInCommercialReturn
+
+    def get_success_url(self):
+        return reverse('S:AddToCommercialReturn', commercial_return_pk=self.kwargs.get('commercial_return_pk'))
+
+    def form_valid(self, form):
+        pass
+
+    def get_initial(self):
+        commercial_return_pk = self.kwargs.get('commercial_return_pk')
+        return {
+            'commercial_return': commercial_return_pk,
+        }
 
 @login_required(login_url='/S/login/')
 def damage_report(request):

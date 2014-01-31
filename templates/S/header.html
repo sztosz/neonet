@@ -8,11 +8,12 @@
 # This file is licensed GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007
 -->
 <div class="header">
-    <form><input type="button" value="RAPORT USZKODZEŃ" onClick="window.location.href='{% url 'S:damage_report' %}'"></form>
-    <form><input type="button" value="SPRAWDŹ S/N" onClick="window.location.href='{% url 'S:check_sn' %}'"></form>
-    <form><input type="button" value="SZYBKA LISTA TOWARÓW" onClick="window.location.href='{% url 'S:quick_commodity_list' %}'"></form>
+    <input type="button" value="RAPORT USZKODZEŃ" onClick="window.location.href='{% url 'S:damage_report' %}'">
+    <input type="button" value="SPRAWDŹ S/N" onClick="window.location.href='{% url 'S:check_sn' %}'">
+    <input type="button" value="SZYBKA LISTA TOWARÓW" onClick="window.location.href='{% url 'S:quick_commodity_list' %}'">
+    <input type="button" value="ZWROTY KONTROLNE" onClick="window.location.href='{% url 'S:commercial_returns' %}'">
     <hr>
-    <form><input type="button" value="WYLOGUJ" onClick="window.location.href='{% url 'qa:logout' %}'"></form>
+    <input type="button" value="WYLOGUJ" onClick="window.location.href='{% url 'qa:logout' %}'">
     <hr>
     <hr>
 

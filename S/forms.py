@@ -88,33 +88,40 @@ class AddCommodityToQuickListForm(forms.ModelForm):
         return data
 
 
-class Return(forms.ModelForm):
+class CommercialReturn(forms.ModelForm):
 
     class Meta:
-        model = models.Return
-        fields = ('known_origin', 'carrier',)
+        model = models.CommercialReturn
+        fields = ('known_origin', 'carrier', 'carrier_comment')
 
 
-class CommoditiesInReturn(forms.ModelForm):
+class CommodityInCommercialReturn(forms.ModelForm):
     ean = forms.CharField(max_length=13, label='EAN')
     commodity = forms.CharField(widget=forms.HiddenInput(), required=False)
+    commercial_return = forms.CharField(widget=forms.HiddenInput())
 
     class Meta:
-        model = models.CommodityInReturn
+        model = models.CommodityInCommercialReturn
 
-    def clean_ean(self, data=None):
-        if not data:
-            data = self.cleaned_data['ean']
-        ean_is_invalid = validate_ean13(data)
+    def clean_ean(self, ean=None):
+        if not ean:
+            ean = self.cleaned_data['ean']
+        ean_is_invalid = validate_ean13(ean)
         if ean_is_invalid:
             raise forms.ValidationError(ean_is_invalid)
-        return data
+        return ean
 
     def clean_commodity(self):
         ean = self.data['ean']
-        if not models.Commodity.objects.filter(ean=ean).exists() and self.clean_ean(data=ean):
+        if not models.Commodity.objects.filter(ean=ean).exists() and self.clean_ean(ean=ean):
             commodity = models.Commodity(sku='BRAK_TOWARU_W_BAZIE', name='BRAK_TOWARU_W_BAZIE',
                                          ean=ean)
             commodity.save()
         return models.Commodity.objects.get(ean=ean)
+
+    def clean_commercial_return(self):
+        commercial_return = self.data['commercial_return']
+        if not models.CommercialReturn.objects.filter(pk=commercial_return).exists():
+            raise forms.ValidationError('Brak zwrotu w bazie, stwórz zwrot przed dodawaniem towaru')
+        return models.CommercialReturn.objects.get(pk=commercial_return)
 

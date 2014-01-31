@@ -46,6 +46,17 @@ class CommodityInQuickListAdmin(admin.ModelAdmin):
     list_display = ('__unicode__', 'list', 'commodity', 'serial', )
 
 
+class CommercialReturnCarrierAdmin(admin.ModelAdmin):
+    list_display = ('__unicode__',)
+
+
+class CommercialReturnAdmin(admin.ModelAdmin):
+    list_display = ('__unicode__', 'carrier', 'carrier_comment',)
+
+
+class CommodityInCommercialReturnAdmin(admin.ModelAdmin):
+    list_display = ('commercial_return', 'commodity', 'amount', 'waybill', 'document')
+
 admin.site.register(Commodity, CommodityAdmin)
 admin.site.register(DamageCategory, DamageCategoryAdmin)
 admin.site.register(DamageDetectionTime, DamageDetectionTimeAdmin)
@@ -54,3 +65,6 @@ admin.site.register(DamageKind, DamageKindAdmin)
 admin.site.register(DamageReport, DamageReportAdmin)
 admin.site.register(QuickCommodityList, QuickCommodityListAdmin)
 admin.site.register(CommodityInQuickList, CommodityInQuickListAdmin)
+admin.site.register(CommercialReturnCarrier, CommercialReturnCarrierAdmin)
+admin.site.register(CommercialReturn, CommercialReturnAdmin)
+admin.site.register(CommodityInCommercialReturn, CommodityInCommercialReturnAdmin)

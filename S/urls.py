@@ -8,6 +8,7 @@
 # This file is licensed GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007
 
 from django.conf.urls import patterns, url
+from S import views
 
 urlpatterns = patterns('',
                        url(r'^$', 'S.views.index', name='index'),
@@ -15,4 +16,8 @@ urlpatterns = patterns('',
                        url(r'^CS/', 'S.views.check_sn', name='check_sn'),
                        url(r'^QCL/', 'S.views.quick_commodity_list', name='quick_commodity_list'),
                        url(r'^login/$', 'django.contrib.auth.views.login', {'template_name': 'S/login_s.html'}),
+                       url(r'^CR/$', views.CommercialReturn.as_view(),
+                           name='commercial_returns'),
+                       url(r'^CR/create/$', views.CommercialReturnCreate.as_view(),
+                           name='create_commercial_returns'),
                        )

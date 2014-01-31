@@ -100,27 +100,28 @@ class CommodityInQuickList(models.Model):
         return self.serial
 
 
-class ReturnCarrier(models.Model):
+class CommercialReturnCarrier(models.Model):
     name = models.CharField(max_length=50, verbose_name='Przewoźnik')
-    comment = models.CharField(max_length=50, verbose_name='Komentarz', blank=True)
 
     def __unicode__(self):
-        return '{} {}'.format(self.name, self.comment)
+        return self.name
 
 
-class Return(models.Model):
+class CommercialReturn(models.Model):
     known_origin = models.BooleanField(verbose_name='Pochodzenie znane')
-    carrier = models.ForeignKey(ReturnCarrier, verbose_name='Przewoźnik')
+    carrier = models.ForeignKey(CommercialReturnCarrier, verbose_name='Przewoźnik')
+    carrier_comment = models.CharField(max_length=50, verbose_name='Komentarz do przewoźnika', blank=True)
     start_date = models.DateTimeField(auto_now_add=True, verbose_name='Czas Rozpoczęcia')
     end_date = models.DateTimeField(auto_now=True, verbose_name='Czas zakończenia')
     completed = models.BooleanField(verbose_name='Zakończona')
     user = models.ForeignKey(User, verbose_name='Użytkownik')
 
     def __unicode__(self):
-        return self.id
+        return str(self.id)
 
 
-class CommodityInReturn(models.Model):
+class CommodityInCommercialReturn(models.Model):
+    commercial_return = models.ForeignKey(CommercialReturn, verbose_name='Zwrot handlowy')
     commodity = models.ForeignKey(Commodity, verbose_name='Towar')
     amount = models.IntegerField(verbose_name='Ilość')
     waybill = models.CharField(max_length=30, verbose_name='Numer listu przewozowego', blank=True)
