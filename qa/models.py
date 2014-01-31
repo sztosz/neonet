@@ -99,3 +99,29 @@ class CommodityInQuickList(models.Model):
     def __unicode__(self):
         return self.serial
 
+
+class ReturnCarrier(models.Model):
+    name = models.CharField(max_length=50, verbose_name='Przewoźnik')
+    comment = models.CharField(max_length=50, verbose_name='Komentarz', blank=True)
+
+    def __unicode__(self):
+        return '{} {}'.format(self.name, self.comment)
+
+
+class Return(models.Model):
+    known_origin = models.BooleanField(verbose_name='Pochodzenie znane ')
+    carrier = models.ForeignKey(ReturnCarrier, verbose_name='Przewoźnik')
+    start_date = models.DateTimeField(auto_now_add=True, verbose_name='Czas Rozpoczęcia')
+    end_date = models.DateTimeField(auto_now=True, verbose_name='Czas zakończenia')
+    completed = models.BooleanField(verbose_name='Zakończona')
+    user = models.ForeignKey(User, verbose_name='Użytkownik')
+
+    def __unicode__(self):
+        return self.id
+
+
+class CommoditiesInReturn(models.Model):
+    commodity = models.ForeignKey(Commodity, verbose_name='Towar')
+    amount = models.IntegerField(verbose_name='Ilość')
+    waybill = models.CharField(max_length=30, verbose_name='Numer listu przewozowego', blank=True)
+    document = models.CharField(max_length=30, verbose_name='Dokument', blank=True)
