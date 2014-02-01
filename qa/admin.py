@@ -51,11 +51,11 @@ class CommercialReturnCarrierAdmin(admin.ModelAdmin):
 
 
 class CommercialReturnAdmin(admin.ModelAdmin):
-    list_display = ('__unicode__', 'carrier', 'carrier_comment',)
+    list_display = ('__unicode__', 'carrier', 'carrier_comment', 'completed',)
 
 
 class CommodityInCommercialReturnAdmin(admin.ModelAdmin):
-    list_display = ('commercial_return', 'commodity', 'amount', 'waybill', 'document')
+    list_display = ('commercial_return', 'commodity', 'amount', 'waybill', 'document',)
 
 admin.site.register(Commodity, CommodityAdmin)
 admin.site.register(DamageCategory, DamageCategoryAdmin)

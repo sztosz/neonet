@@ -30,3 +30,10 @@ $(document).ready(function() {
      alert('Form Submitted');
   });
 });
+
+function commercial_return_close(url) {
+    var confirmation = confirm("Are you sure want to delete?");
+    if (confirmation) {
+        window.location.replace(url);
+    }
+}

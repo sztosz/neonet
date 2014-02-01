@@ -10,9 +10,9 @@
 from __future__ import unicode_literals
 
 from datetime import datetime
-from django.core.urlresolvers import reverse
+from django.core.urlresolvers import reverse, reverse_lazy
 from django.shortcuts import redirect
-from django.views.generic import ListView, CreateView, FormView
+from django.views.generic import ListView, CreateView, RedirectView
 from pytz import timezone
 from S import forms
 from neonet.views import AbstractView
@@ -170,22 +170,29 @@ class CommercialReturnCreate(LoggedInMixin, CreateView):
         return super(CommercialReturnCreate, self).form_valid(form)
 
 
-class AddToCommercialReturn(LoggedInMixin, CreateView):
+class CommercialReturnAddCommodity(LoggedInMixin, CreateView):
 
-    template_name = None  # TODO
+    template_name = 'S/CommercialReturn_add_commodity.html'
     form_class = forms.CommodityInCommercialReturn
 
     def get_success_url(self):
-        return reverse('S:AddToCommercialReturn', commercial_return_pk=self.kwargs.get('commercial_return_pk'))
-
-    def form_valid(self, form):
-        pass
+        print(self.kwargs.get('pk'))
+        return reverse('S:add_commodity_to_commercial_return', kwargs={'pk': self.kwargs.get('pk')})
 
     def get_initial(self):
-        commercial_return_pk = self.kwargs.get('commercial_return_pk')
-        return {
-            'commercial_return': commercial_return_pk,
-        }
+        commercial_return_pk = self.kwargs.get('pk')
+        return {'commercial_return': commercial_return_pk}
+
+
+class CommercialReturnClose(LoggedInMixin, RedirectView):
+
+    url = reverse_lazy('S:commercial_returns')
+
+    def get_redirect_url(self, *args, **kwargs):
+        commercial_return = models.CommercialReturn.objects.get(pk=self.kwargs.get('pk'))
+        commercial_return.completed = True
+        commercial_return.save()
+        return super(CommercialReturnClose, self).get_redirect_url()
 
 @login_required(login_url='/S/login/')
 def damage_report(request):

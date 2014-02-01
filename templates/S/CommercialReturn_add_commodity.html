@@ -13,16 +13,20 @@
     <title>Zwroty Kontrolne</title>
     {% load staticfiles %}
     <link type="text/css" rel="stylesheet" href="{% static 'S/scanner.css' %}" />
+    <script src="{% static 'S/scanner.js' %}"></script>
 </head>
 <body>
 <div id="main_container">
     {% include 'S/header.html' %}
     {% include 'S/common_communication.html' %}
     <div id="content">
-      {% for list in object_list %}
-        <button onClick="window.location.href='{% url 'S:add_commodity_to_commercial_return' list.pk %}'">{{ list.carrier }}<br />{{ list.start_date }}<br />{{ list.carrier_comment }}</button>
-      {% endfor %}
-    <button onClick="window.location.href='{% url 'S:create_commercial_return' %}'"><strong>STWÓRZ<br />NOWY</strong></button>
+      <form action="" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Dodaj"/>
+        <hr>
+        <input type="button" value="ZAMKNIJ" onClick="commercial_return_close('{% url 'S:commercial_return_close' form.commercial_return.value %}')" class="confirm">
+      </form>
     </div>
 </div>
 </body>
