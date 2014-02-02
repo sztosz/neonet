@@ -108,7 +108,7 @@ class CommercialReturnCarrier(models.Model):
 
 
 class CommercialReturn(models.Model):
-    known_origin = models.BooleanField(verbose_name='Pochodzenie znane')
+    known_origin = models.BooleanField(verbose_name='Schenker Bezdokumentowy')  # TODO change model name before deploying
     carrier = models.ForeignKey(CommercialReturnCarrier, verbose_name='Przewoźnik')
     carrier_comment = models.CharField(max_length=50, verbose_name='Komentarz do przewoźnika', blank=True)
     start_date = models.DateTimeField(auto_now_add=True, verbose_name='Czas Rozpoczęcia')
@@ -126,3 +126,6 @@ class CommodityInCommercialReturn(models.Model):
     amount = models.IntegerField(verbose_name='Ilość')
     waybill = models.CharField(max_length=30, verbose_name='Numer listu przewozowego', blank=True)
     document = models.CharField(max_length=30, verbose_name='Dokument', blank=True)
+
+    def __unicode__(self):
+        return str(self.id)

@@ -13,13 +13,13 @@ from datetime import datetime, timedelta
 from pytz import timezone
 from django.contrib.auth import logout
 from django.shortcuts import redirect
-from django.core.urlresolvers import reverse
+from django.core.urlresolvers import reverse, reverse_lazy
 from django.http import HttpResponse
 from qa import models
 from qa import forms
 from qa.tools.parsers import parse_commodity, damage_reports_export_to_csv
 from django.views.generic import DetailView, UpdateView, ListView, FormView,\
-    TemplateView, CreateView, DeleteView
+    TemplateView, CreateView, DeleteView, RedirectView
 
 
 class LoggedInMixin(object):
@@ -185,23 +185,23 @@ class QuickCommodityListClose(LoggedInMixin, DetailView):
         return redirect('qa:quick_commodity_list')
 
 
-class QuickCommodityListDetail(LoggedInMixin, DetailView):
+class QuickCommodityListDetails(LoggedInMixin, DetailView):
 
     model = models.QuickCommodityList
     template_name = 'qa/QuickCommodityList_detail.html'
     context_object_name = 'list'
 
     def get_context_data(self, **kwargs):
-        context = super(QuickCommodityListDetail, self).get_context_data(**kwargs)
+        context = super(QuickCommodityListDetails, self).get_context_data(**kwargs)
         context['commodities'] = models.CommodityInQuickList.objects.filter(list=self.object.pk)
         return context
 
 
-class QuickCommodityListDetailUpdate(LoggedInMixin, UpdateView):
+class QuickCommodityListItemUpdate(LoggedInMixin, UpdateView):
 
     model = models.CommodityInQuickList
-    template_name = 'qa/QuickCommodityListDetail_update.html'
-    form_class = forms.CommodityListDetail
+    template_name = 'qa/QuickCommodityListItem_update.html'
+    form_class = forms.QuickCommodityListItem
 
     def get_success_url(self):
         return reverse('qa:quick_commodity_list')
@@ -212,13 +212,88 @@ class QuickCommodityListDetailUpdate(LoggedInMixin, UpdateView):
         return initial
 
 
-class QuickCommodityListDetailDelete(LoggedInMixin, DeleteView):
+class QuickCommodityListItemDelete(LoggedInMixin, DeleteView):
 
     model = models.CommodityInQuickList
-    template_name = 'qa/QuickCommodityListDetail_delete.html'
+    template_name = 'qa/QuickCommodityListItem_delete.html'
 
     def get_success_url(self):
         return reverse('qa:quick_commodity_list_detail', args=(self.object.list.pk,))
+
+
+class CommercialReturns(LoggedInMixin, ListView):
+
+    queryset = models.CommercialReturn.objects.order_by('-start_date')
+    template_name = 'qa/CommercialReturn_list.html'
+
+
+class CommercialReturnDetail(LoggedInMixin, DetailView):
+
+    model = models.CommercialReturn
+    template_name = 'qa/CommercialReturn_detail.html'
+    context_object_name = 'commercial_return'
+
+    def get_context_data(self, **kwargs):
+        context = super(CommercialReturnDetail, self).get_context_data(**kwargs)
+        context['commodities'] = models.CommodityInCommercialReturn.objects.filter(commercial_return=self.object.pk)
+        return context
+
+
+class CommercialReturnPrint(CommercialReturnDetail):
+
+    template_name = None  # TODO
+
+
+class CommercialReturnUpdate(LoggedInMixin, UpdateView):
+
+    model = models.CommercialReturn
+    template_name = 'qa/CommercialReturn_update.html'
+
+    def get_success_url(self):
+        return reverse('qa:commercial_returns')
+
+
+class CommercialReturnClose(LoggedInMixin, RedirectView):
+
+    url = reverse_lazy('qa:commercial_returns')
+
+    def get_redirect_url(self, *args, **kwargs):
+        commercial_return = models.CommercialReturn.objects.get(pk=self.kwargs.get('pk'))
+        commercial_return.completed = True
+        commercial_return.save()
+        return super(CommercialReturnClose, self).get_redirect_url()
+
+
+class CommercialReturnItemUpdate(LoggedInMixin, UpdateView):
+
+    model = models.CommodityInCommercialReturn
+    template_name = 'qa/CommercialReturnItem_update.html'
+    form_class = forms.CommercialReturnItem
+
+    def get_success_url(self):
+        return reverse('qa:commercial_return_detail', args=(self.object.commercial_return.pk,))
+
+    def get_initial(self):
+        initial = self.initial.copy()
+        initial['ean'] = self.get_object().commodity.ean
+        initial['commercial_return'] = self.get_object().commercial_return.id
+        return initial
+
+    def form_valid(self, form):
+        commercial_return = models.CommercialReturn.objects.get(pk=form.cleaned_data['commercial_return'])
+        item = form.save(commit=False)
+        item.commercial_return = commercial_return
+        item.save()
+        return super(CommercialReturnItemUpdate, self).form_valid(form)
+
+
+class CommercialReturnItemDelete(LoggedInMixin, DeleteView):
+
+    model = models.CommodityInCommercialReturn
+    template_name = None  # TODO
+
+    def get_success_url(self):
+        return reverse('qa:commercial_return_detail', args=(self.object.list.pk,))
 
 
 def logout_view(request):
