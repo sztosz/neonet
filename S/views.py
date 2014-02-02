@@ -148,7 +148,7 @@ class Index(AbstractView):
         self.context['user'] = self.request.user.username
 
 
-class CommercialReturn(LoggedInMixin, ListView):
+class CommercialReturns(LoggedInMixin, ListView):
 
     queryset = models.CommercialReturn.objects.filter(completed=False).order_by('-start_date')
     template_name = 'S/CommercialReturn_list.html'
