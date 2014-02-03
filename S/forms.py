@@ -119,13 +119,14 @@ class CommodityInCommercialReturn(forms.ModelForm):
         ean = self.cleaned_data.get('ean', None)
         if ean:
             print('EAN: ' + ean)
-            commodity = models.Commodity.objects.filter(ean=ean).get()
-            if not commodity:
+            try:
+                commodity = models.Commodity.objects.get(ean=ean)
+            except models.Commodity.DoesNotExist:
                 commodity = models.Commodity(sku='BRAK_TOWARU_W_BAZIE', name='BRAK_TOWARU_W_BAZIE',
                                              ean=ean)
                 commodity.save()
             return commodity
-        raise forms.ValidationError('')  # TODO Revwirte views, so only visible fields errors are show
+        raise forms.ValidationError('')  # TODO Rewrite views, so only visible fields errors are show
 
     def clean_commercial_return(self):
         commercial_return = self.data['commercial_return']
