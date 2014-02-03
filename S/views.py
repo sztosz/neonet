@@ -181,7 +181,7 @@ class CommercialReturnAddCommodity(LoggedInMixin, CreateView):
 
     def get_initial(self):
         commercial_return_pk = self.kwargs.get('pk')
-        return {'commercial_return': commercial_return_pk}
+        return {'commercial_return': commercial_return_pk, 'amount': 1}
 
 
 class CommercialReturnClose(LoggedInMixin, RedirectView):

@@ -100,24 +100,31 @@ class CommodityInCommercialReturn(forms.ModelForm):
     commodity = forms.CharField(widget=forms.HiddenInput(), required=False)
     commercial_return = forms.CharField(widget=forms.HiddenInput())
 
+    def __init__(self, *args, **kwargs):
+        super(CommodityInCommercialReturn, self).__init__(*args, **kwargs)
+        self.fields.keyOrder = ['ean', 'commercial_return', 'commodity', 'document', 'waybill', 'amount']
+
     class Meta:
         model = models.CommodityInCommercialReturn
 
-    def clean_ean(self, ean=None):
-        if not ean:
-            ean = self.cleaned_data['ean']
+    def clean_ean(self):
+        ean = self.cleaned_data['ean']
         ean_is_invalid = validate_ean13(ean)
         if ean_is_invalid:
             raise forms.ValidationError(ean_is_invalid)
         return ean
 
     def clean_commodity(self):
-        ean = self.data['ean']
-        if not models.Commodity.objects.filter(ean=ean).exists() and self.clean_ean(ean=ean):
-            commodity = models.Commodity(sku='BRAK_TOWARU_W_BAZIE', name='BRAK_TOWARU_W_BAZIE',
-                                         ean=ean)
-            commodity.save()
-        return models.Commodity.objects.get(ean=ean)
+        ean = self.cleaned_data.get('ean', None)
+        if ean:
+            print('EAN: ' + ean)
+            commodity = models.Commodity.objects.filter(ean=ean).get()
+            if not commodity:
+                commodity = models.Commodity(sku='BRAK_TOWARU_W_BAZIE', name='BRAK_TOWARU_W_BAZIE',
+                                             ean=ean)
+                commodity.save()
+            return commodity
+        raise forms.ValidationError('')  # TODO Revwirte views, so only visible fields errors are show
 
     def clean_commercial_return(self):
         commercial_return = self.data['commercial_return']
