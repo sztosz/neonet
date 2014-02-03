@@ -92,7 +92,7 @@ class CommercialReturn(forms.ModelForm):
 
     class Meta:
         model = models.CommercialReturn
-        fields = ('known_origin', 'carrier', 'carrier_comment')
+        fields = ('carrier', 'carrier_comment')
 
 
 class CommodityInCommercialReturn(forms.ModelForm):
@@ -102,7 +102,8 @@ class CommodityInCommercialReturn(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(CommodityInCommercialReturn, self).__init__(*args, **kwargs)
-        self.fields.keyOrder = ['ean', 'commercial_return', 'commodity', 'document', 'waybill', 'amount']
+        self.fields.keyOrder = ['ean', 'commercial_return', 'commodity', 'document', 'waybill', 'unknown_origin',
+                                'amount']
 
     class Meta:
         model = models.CommodityInCommercialReturn
