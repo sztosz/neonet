@@ -125,7 +125,7 @@ class CommodityInCommercialReturn(models.Model):
     amount = models.IntegerField(verbose_name='Ilość')
     waybill = models.CharField(max_length=30, verbose_name='Numer listu przewozowego', blank=True)
     document = models.CharField(max_length=30, verbose_name='Dokument', blank=True)
-    unknown_origin = models.BooleanField(verbose_name='Schenker Bezdokumentowy')  # TODO change model name before deploying
+    unknown_origin = models.BooleanField(verbose_name='Schenker Bezdokumentowy')
 
     def __unicode__(self):
         return str(self.id)
