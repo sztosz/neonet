@@ -40,7 +40,7 @@ urlpatterns = patterns(
         name='quick_commodity_list_detail_update'),
     url(r'^quick_commodity_list/item/delete/(?P<pk>\d+)/$', views.QuickCommodityListItemDelete.as_view(),
         name='quick_commodity_list_detail_delete'),
-    url(r'^commercial_returns/$', views.CommercialReturns.as_view(),
+    url(r'^commercial_return/$', views.CommercialReturns.as_view(),
         name='commercial_returns'),
     url(r'^commercial_return/(?P<pk>\d+)/$', views.CommercialReturnDetail.as_view(),
         name='commercial_return_detail'),
