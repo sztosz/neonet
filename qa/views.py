@@ -241,7 +241,7 @@ class CommercialReturnDetail(LoggedInMixin, DetailView):
 
 class CommercialReturnPrint(CommercialReturnDetail):
 
-    template_name = None  # TODO
+    template_name = 'qa/CommercialReturn_print.html'
 
 
 class CommercialReturnUpdate(LoggedInMixin, UpdateView):

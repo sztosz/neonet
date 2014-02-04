@@ -1,0 +1,91 @@
+<!--
+# -*- coding: utf-8 -*-
+#
+# Created on 2013-10-11
+#
+# @author: Bartosz Nowak sztosz@gmail.com
+#
+# This file is licensed GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007
+-->
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="charset=utf-8"/>
+  <meta http-equiv="Content-Language" content="pl-PL"/>
+  <meta name="author" content="Bartosz Nowak <sztosz['at']gmail['dot']com>"/>
+  <meta name="description" content="Set of helper tools for Neonet Quality Assurance Division."/>
+  <meta name="copyright" content="This file is licensed GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007"/>
+  <link href="{% static 'css/commercial_return_screen.css' %}" rel="stylesheet" media="screen">
+  <link href="{% static 'css/commercial_return_print.css' %}" rel="stylesheet" media="print">
+  <link href="{% static 'css/commercial_return.css' %}" rel="stylesheet" media="all">
+
+  <title>Zwrot Kontrolny</title>
+
+</head>
+<body>
+<div id="return">
+  <div id="return-header"><img alt="Logo Neonet" class="logo screen" src="{% static 'img/logo_neonet.jpg' %}" />
+    <!-- hCard microformat -->
+    <div class="vcard" id="company-address">
+      <div class="fn org"><strong>NEONET SA<br />Dział Kontroli Jakości</strong></div>
+      <div class="adr">
+        <div class="street-address">Ryszarda Chomicza 11-13A</div>
+        <!-- street-address -->
+        <div class="locality"><span class="postal-code">55-080</span> Nowa Wieś Wrocławska</div>
+
+      </div>
+      <!-- adr -->
+    <div id="sales-tax-reg-number">NIP: 895-00-21-311</div>
+    </div>
+    <!-- company-address vcard -->
+  </div>
+  <!-- #return-header -->
+  <div id="return-info">
+    <h2>Zwrot Kontolny<strong> {{ commercial_return.return_number }}</strong></h2>
+    <p id="dates">Utworzony: {{ commercial_return.start_date }}</p>
+    <p id="dates">Zakończony: {{ commercial_return.end_date }}</p>
+    <p id="user-data">Kontroler: {{ commercial_return.user.first_name }} {{ commercial_return.user.last_name }}</p>
+    <p id="carrier">Przewoźnik: <strong>{{ commercial_return.carrier.name }}</strong> {{ commercial_return.carrier_comment }}</p>
+  </div>
+  <!-- #return-info -->
+  <table id="return-amount">
+    <thead>
+      <tr id="header_row">
+        <th class="amount_th">Ilość</th>
+        <th class="commodity_th">Towar</th>
+        <th class="barcode_th">Kod Kreskowy</th>
+        <th class="waybill_th">List Przewozowy</th>
+        <th class="document_th">MMW/FS</th>
+        <th class="unknown_origin_th">SCH BD</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for c in commodities %}
+      <tr class="item">
+        <td class="item_l">{{ c.amount }}</td>
+        <td class="item_l">{{ c.commodity }}</td>
+        <td class="item_l">KOD KRS.</td>
+        <td class="item_l">{{ c.waybill }}</td>
+        <td class="item_l">{{ c.document }}</td>
+        <td class="item_l">{% if c.unknown_origin %}&#x2714;{% endif %}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  <!-- return-amount -->
+  <div id="controller-signature">
+    <h2>Podpis Kontrolera</h2>
+    <p><br /><br /><br />{{ commercial_return.user.first_name }} {{ commercial_return.user.last_name }}<br />.............................</p>
+  </div>
+  <!-- controler-signature -->
+  <div id="warehouseman-signature">
+    <h2>Podpis magazyniera</h2>
+    <p><br /><br /><br /><br />.............................</p>
+  </div>
+  <!-- warehouseman-signature -->
+  <div id="comments"><strong>DOKUMENT TESTOWY TYLKO DO UŻYTKU WEWNĘTRZNEGO W DZIALE KONTOLI JAKOŚCI</strong></div>
+  <!-- comments -->
+</div>
+</body>
+</html>
