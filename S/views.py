@@ -160,13 +160,13 @@ class CommercialReturnCreate(LoggedInMixin, CreateView):
     form_class = forms.CommercialReturn
 
     def get_success_url(self):
-        return reverse('S:commercial_returns')
+        return reverse('S:add_commodity_to_commercial_return', kwargs={'pk': self.commercial_return.id})
 
     def form_valid(self, form):
-        commercial_return = form.save(commit=False)
-        commercial_return.user = self.request.user
-        commercial_return.completed = False
-        commercial_return.save()
+        self.commercial_return = form.save(commit=False)
+        self.commercial_return.user = self.request.user
+        self.commercial_return.completed = False
+        self.commercial_return.save()
         return super(CommercialReturnCreate, self).form_valid(form)
 
 
