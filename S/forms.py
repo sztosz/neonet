@@ -102,8 +102,8 @@ class CommodityInCommercialReturn(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(CommodityInCommercialReturn, self).__init__(*args, **kwargs)
-        self.fields.keyOrder = ['ean', 'commercial_return', 'commodity', 'document', 'waybill', 'unknown_origin',
-                                'amount']
+        self.fields.keyOrder = ['waybill', 'document', 'ean', 'amount', 'commercial_return', 'commodity',
+                                'unknown_origin']
 
     class Meta:
         model = models.CommodityInCommercialReturn
@@ -118,7 +118,6 @@ class CommodityInCommercialReturn(forms.ModelForm):
     def clean_commodity(self):
         ean = self.cleaned_data.get('ean', None)
         if ean:
-            print('EAN: ' + ean)
             try:
                 commodity = models.Commodity.objects.get(ean=ean)
             except models.Commodity.DoesNotExist:
