@@ -118,6 +118,9 @@ class CommercialReturn(models.Model):
     def __unicode__(self):
         return str(self.id)
 
+    def return_number(self):
+        return str(self.id).zfill(10)
+
 
 class CommodityInCommercialReturn(models.Model):
     commercial_return = models.ForeignKey(CommercialReturn, verbose_name='Zwrot handlowy')
