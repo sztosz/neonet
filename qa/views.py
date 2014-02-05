@@ -250,12 +250,13 @@ class CommercialReturnExport(CommercialReturnDetail):
 
         writer = unicodecsv.writer(response, delimiter=b';')
         try:
-            writer.writerow(['Numer: {}'.format(context['list'].return_number)])
-            writer.writerow(['Przewoźnik: {}'.format(context['list'].carrier.name)])
-            writer.writerow(['Komentarz do przewoźnika: {}'.format(context['list'].carrier_comment)])
-            writer.writerow(['Czas trwania: {} - {}'.format(context['list'].start_date, context['list'].end_date)])
-            writer.writerow(['Kontroler: {} {}'.format(context['list'].user.first_name,
-                                                       context['list'].user.last_name)])
+            writer.writerow(['Numer: {}'.format(context['commercial_return'].return_number)])
+            writer.writerow(['Przewoźnik: {}'.format(context['commercial_return'].carrier.name)])
+            writer.writerow(['Komentarz do przewoźnika: {}'.format(context['commercial_return'].carrier_comment)])
+            writer.writerow(['Czas trwania: {} - {}'.format(context['commercial_return'].start_date,
+                                                            context['commercial_return'].end_date)])
+            writer.writerow(['Kontroler: {} {}'.format(context['commercial_return'].user.first_name,
+                                                       context['commercial_return'].user.last_name)])
             writer.writerow([''])
             writer.writerow(['Ilość', 'Towar', 'ean', 'List przewozowy', 'Dokument'])
             for row in context['commodities']:
