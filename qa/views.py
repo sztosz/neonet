@@ -8,6 +8,7 @@
 # This file is licensed GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007
 
 from __future__ import unicode_literals
+import unicodecsv
 
 from datetime import datetime, timedelta
 from pytz import timezone
@@ -195,6 +196,28 @@ class QuickCommodityListDetail(LoggedInMixin, DetailView):
         context = super(QuickCommodityListDetail, self).get_context_data(**kwargs)
         context['commodities'] = models.CommodityInQuickList.objects.filter(list=self.object.pk)
         return context
+
+
+class QuickCommodityListDetailExport(QuickCommodityListDetail):
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        context = self.get_context_data(object=self.object)
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="quick_list.csv.txt"'
+
+        writer = unicodecsv.writer(response, delimiter=b';')
+        try:
+            writer.writerow(['Nazwa: {}'.format(context['list'].name)])
+            writer.writerow(['Data: {}'.format(context['list'].date)])
+            writer.writerow(['Komentarz: {}'.format(context['list'].comment)])
+            writer.writerow([''])
+            writer.writerow(['Towar', 'Numer seryjny', 'Komentarz'])
+            for row in context['commodities']:
+                writer.writerow([row.commodity, row.serial, row.comment])
+        except KeyError:
+            writer.writerow(['Nastąpił bład parsowania danych: brak towarów w liście'])
+        return response
 
 
 class QuickCommodityListDetailUpdate(LoggedInMixin, UpdateView):
