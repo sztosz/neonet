@@ -119,7 +119,7 @@ class CommercialReturn(models.Model):
         return str(self.id)
 
     def return_number(self):
-        return str(self.id).zfill(10)
+        return format(str(self.id).zfill(8))
 
 
 class CommodityInCommercialReturn(models.Model):

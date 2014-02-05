@@ -8,6 +8,7 @@
 # This file is licensed GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007
 
 from __future__ import unicode_literals
+import unicodecsv
 
 from datetime import datetime, timedelta
 from pytz import timezone
@@ -237,6 +238,32 @@ class CommercialReturnDetail(LoggedInMixin, DetailView):
         context = super(CommercialReturnDetail, self).get_context_data(**kwargs)
         context['commodities'] = models.CommodityInCommercialReturn.objects.filter(commercial_return=self.object.pk)
         return context
+
+
+class CommercialReturnExport(CommercialReturnDetail):
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        context = self.get_context_data(object=self.object)
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="commercial_return.csv.txt"'
+
+        writer = unicodecsv.writer(response, delimiter=b';')
+        try:
+            writer.writerow(['Numer: {}'.format(context['list'].return_number)])
+            writer.writerow(['Przewoźnik: {}'.format(context['list'].carrier.name)])
+            writer.writerow(['Komentarz do przewoźnika: {}'.format(context['list'].carrier_comment)])
+            writer.writerow(['Czas trwania: {} - {}'.format(context['list'].start_date, context['list'].end_date)])
+            writer.writerow(['Kontroler: {} {}'.format(context['list'].user.first_name,
+                                                       context['list'].user.last_name)])
+            writer.writerow([''])
+            writer.writerow(['Ilość', 'Towar', 'ean', 'List przewozowy', 'Dokument'])
+            for row in context['commodities']:
+                writer.writerow([row.amount, row.commodity, row.commodity.ean, row.waybill,
+                                 'bezdokumentowy' if row.unknown_origin else row.document])
+        except KeyError:
+            writer.writerow(['Nastąpił bład parsowania danych: brak towarów w liście'])
+        return response
 
 
 class CommercialReturnPrint(CommercialReturnDetail):

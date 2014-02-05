@@ -46,6 +46,8 @@ urlpatterns = patterns(
         name='commercial_return_detail'),
     url(r'^commercial_return/print/(?P<pk>\d+)/$', views.CommercialReturnPrint.as_view(),
         name='commercial_return_print'),
+    url(r'^commercial_return/export/(?P<pk>\d+)/$', views.CommercialReturnExport.as_view(),
+        name='commercial_return_export'),
     url(r'^commercial_return/update/(?P<pk>\d+)/$', views.CommercialReturnUpdate.as_view(),
         name='commercial_return_update'),
     url(r'^commercial_return/close/(?P<pk>\d+)/$', views.CommercialReturnClose.as_view(),
