@@ -21,6 +21,7 @@
     <p class="lead">{{ list.name }} {{ list.date|date }} {{ list.comment }}</p>
 
     <p>Czy aktualizować listę? <a href="{% url 'qa:quick_commodity_list_update' list.id %}">AKTUALIZUJ</a></p>
+    <p>Czy eksportować listę? <a href="{% url 'qa:quick_commodity_list_detail_export' list.id %}">EKSPORTUJ</a></p>
     {% for c in commodities %}
       <p>
         <strong>Towar:</strong> {{ c.commodity }}
