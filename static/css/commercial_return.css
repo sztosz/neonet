@@ -151,6 +151,7 @@
 
 #return table {
     border-collapse:collapse;
+    border: 1px solid #C9C9C9;
     width:100%;
     clear:both;
 }
@@ -161,7 +162,7 @@
 #return #header_row th{
     background: #000000;
     color: #C9C9C9;
-    border-top: 1px solid #000000
+    border: 1px solid #000000
 }
 #return td.action {
     border-bottom:0
