@@ -41,7 +41,7 @@ urlpatterns = patterns(
     url(r'^quick_commodity_list/item/delete/(?P<pk>\d+)/$', views.QuickCommodityListItemDelete.as_view(),
         name='quick_commodity_list_detail_delete'),
     url(r'^commercial_return/$', views.CommercialReturns.as_view(),
-        name='commercial_returns'),
+        name='commercial_return'),
     url(r'^commercial_return/(?P<pk>\d+)/$', views.CommercialReturnDetail.as_view(),
         name='commercial_return_detail'),
     url(r'^commercial_return/print/(?P<pk>\d+)/$', views.CommercialReturnPrint.as_view(),

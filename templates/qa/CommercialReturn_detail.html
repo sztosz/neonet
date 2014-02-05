@@ -25,6 +25,8 @@
     </p>
 
     <p>Czy aktualizować listę? <a href="{% url 'qa:commercial_return_update' commercial_return.id %}">AKTUALIZUJ</a></p>
+    <p>Czy wydrukować listę? <a href="{% url 'qa:commercial_return_update' commercial_return.id %}">DRUKUJ</a></p>
+    <p>Czy eksportować listę? <a href="{% url 'qa:commercial_return_export' commercial_return.id %}">EKSPORTUJ</a></p>
     {% for c in commodities %}
       <p>
         <strong>Towar:</strong> {{ c.commodity }}
