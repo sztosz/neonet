@@ -42,11 +42,12 @@
   </div>
   <!-- #return-header -->
   <div id="return-info">
-    <h2>Zwrot Kontolny<strong> {{ commercial_return.return_number }}</strong></h2>
+    <p id="carrier">Przewoźnik: <strong>{{ commercial_return.carrier.name }}</strong> {{ commercial_return.carrier_comment }}</p>
+    <p id="doc-num">Zwrot Kontolny <strong>{{ commercial_return.return_number }}</strong></p>
     <p id="dates">Utworzony: {{ commercial_return.start_date }}</p>
     <p id="dates">Zakończony: {{ commercial_return.end_date }}</p>
     <p id="user-data">Kontroler: {{ commercial_return.user.first_name }} {{ commercial_return.user.last_name }}</p>
-    <p id="carrier">Przewoźnik: <strong>{{ commercial_return.carrier.name }}</strong> {{ commercial_return.carrier_comment }}</p>
+
   </div>
   <!-- #return-info -->
   <table id="return-amount">
@@ -57,7 +58,6 @@
         <th class="barcode_th">Kod Kreskowy</th>
         <th class="waybill_th">List Przewozowy</th>
         <th class="document_th">MMW/FS</th>
-        <th class="unknown_origin_th">SCH BD</th>
       </tr>
     </thead>
     <tbody>
@@ -67,8 +67,7 @@
         <td class="item_l">{{ c.commodity }}</td>
         <td class="item_l">KOD KRS.</td>
         <td class="item_l">{{ c.waybill }}</td>
-        <td class="item_l">{{ c.document }}</td>
-        <td class="item_l">{% if c.unknown_origin %}&#x2714;{% endif %}</td>
+        <td class="item_l">{{ c.document_name }}</td>
       </tr>
     {% endfor %}
     </tbody>
@@ -76,12 +75,14 @@
   <!-- return-amount -->
   <div id="controller-signature">
     <h2>Podpis Kontrolera</h2>
-    <p><br /><br /><br />{{ commercial_return.user.first_name }} {{ commercial_return.user.last_name }}<br />.............................</p>
+    <p><br /><br /><br />{{ commercial_return.user.first_name }} {{ commercial_return.user.last_name }}<br />
+      ...........................................<br /><br />
+      Data przekazania: ...........................................</p>
   </div>
   <!-- controler-signature -->
   <div id="warehouseman-signature">
     <h2>Podpis magazyniera</h2>
-    <p><br /><br /><br /><br />.............................</p>
+    <p><br /><br /><br /><br />...........................................</p>
   </div>
   <!-- warehouseman-signature -->
   <div id="comments"><strong>DOKUMENT TESTOWY TYLKO DO UŻYTKU WEWNĘTRZNEGO W DZIALE KONTOLI JAKOŚCI</strong></div>

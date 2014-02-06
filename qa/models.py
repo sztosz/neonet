@@ -119,7 +119,7 @@ class CommercialReturn(models.Model):
         return str(self.id)
 
     def return_number(self):
-        return format(str(self.id).zfill(8))
+        return 'DKJ {}'.format(str(self.id).zfill(8))
 
 
 class CommodityInCommercialReturn(models.Model):
@@ -134,4 +134,4 @@ class CommodityInCommercialReturn(models.Model):
         return str(self.id)
 
     def document_name(self):
-        return 'bezdokumentowy' if self.unknown_origin else self.document
+        return 'Bezdokumentowy' if self.unknown_origin else self.document

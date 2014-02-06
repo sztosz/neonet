@@ -250,7 +250,7 @@ class CommercialReturnExport(CommercialReturnDetail):
 
         writer = unicodecsv.writer(response, delimiter=b';')
         try:
-            writer.writerow(['Numer: {}'.format(context['commercial_return'].return_number)])
+            writer.writerow(['Numer: {}'.format(context['commercial_return'].return_number())])
             writer.writerow(['Przewoźnik: {}'.format(context['commercial_return'].carrier.name)])
             writer.writerow(['Komentarz do przewoźnika: {}'.format(context['commercial_return'].carrier_comment)])
             writer.writerow(['Czas trwania: {} - {}'.format(context['commercial_return'].start_date,
@@ -260,10 +260,9 @@ class CommercialReturnExport(CommercialReturnDetail):
             writer.writerow([''])
             writer.writerow(['Ilość', 'Towar', 'ean', 'List przewozowy', 'Dokument'])
             for row in context['commodities']:
-                writer.writerow([row.amount, row.commodity, row.commodity.ean, row.waybill,
-                                 'bezdokumentowy' if row.unknown_origin else row.document])
+                writer.writerow([row.amount, row.commodity, row.commodity.ean, row.waybill, row.document_name()])
         except KeyError:
-            writer.writerow(['Nastąpił bład parsowania danych: brak towarów w liście'])
+            writer.writerow(['Nastąpił błąd parsowania danych: brak towarów w liście'])
         return response
 
 
