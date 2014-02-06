@@ -1,0 +1,33 @@
+<!--
+# -*- coding: utf-8 -*-
+#
+# Created on 2013-10-11
+#
+# @author: Bartosz Nowak sztosz@gmail.com
+#
+# This file is licensed GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/html">
+<head>
+    <title>Zwroty Kontrolne</title>
+    {% load staticfiles %}
+    <link type="text/css" rel="stylesheet" href="{% static 'S/scanner.css' %}" />
+    <script src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
+    <script src="{% static 'S/scanner.js' %}"></script>
+</head>
+<body>
+<div id="main_container">
+    {% include 'S/header.html' %}
+    {% include 'S/common_communication.html' %}
+    <div id="content">
+      <form action="" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Dodaj"/>
+        <hr>
+        <input type="button" value="ZAMKNIJ" onClick="commercial_return_close('{% url 'S:commercial_return_close' form.commercial_return.value %}')" class="confirm">
+      </form>
+    </div>
+</div>
+</body>

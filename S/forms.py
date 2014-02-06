@@ -86,3 +86,49 @@ class AddCommodityToQuickListForm(forms.ModelForm):
         if ean_is_invalid:
             raise forms.ValidationError(ean_is_invalid)
         return data
+
+
+class CommercialReturn(forms.ModelForm):
+
+    class Meta:
+        model = models.CommercialReturn
+        fields = ('carrier', 'carrier_comment', 'driver_name', 'car_plates')
+
+
+class CommodityInCommercialReturn(forms.ModelForm):
+    ean = forms.CharField(max_length=13, label='EAN')
+    commodity = forms.CharField(widget=forms.HiddenInput(), required=False)
+    commercial_return = forms.CharField(widget=forms.HiddenInput())
+
+    def __init__(self, *args, **kwargs):
+        super(CommodityInCommercialReturn, self).__init__(*args, **kwargs)
+        self.fields.keyOrder = ['waybill', 'document', 'unknown_origin', 'ean', 'amount', 'commercial_return', 'commodity',]
+
+    class Meta:
+        model = models.CommodityInCommercialReturn
+
+    def clean_ean(self):
+        ean = self.cleaned_data['ean']
+        ean_is_invalid = validate_ean13(ean)
+        if ean_is_invalid:
+            raise forms.ValidationError(ean_is_invalid)
+        return ean
+
+    def clean_commodity(self):
+        ean = self.cleaned_data.get('ean', None)
+        if ean:
+            try:
+                commodity = models.Commodity.objects.get(ean=ean)
+            except models.Commodity.DoesNotExist:
+                commodity = models.Commodity(sku='BRAK_TOWARU_W_BAZIE', name='BRAK_TOWARU_W_BAZIE',
+                                             ean=ean)
+                commodity.save()
+            return commodity
+        raise forms.ValidationError('')  # TODO Rewrite views, so only visible fields errors are show
+
+    def clean_commercial_return(self):
+        commercial_return = self.data['commercial_return']
+        if not models.CommercialReturn.objects.filter(pk=commercial_return).exists():
+            raise forms.ValidationError('Brak zwrotu w bazie, stwórz zwrot przed dodawaniem towaru')
+        return models.CommercialReturn.objects.get(pk=commercial_return)
+

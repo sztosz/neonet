@@ -10,6 +10,9 @@
 from __future__ import unicode_literals
 
 from datetime import datetime
+from django.core.urlresolvers import reverse, reverse_lazy
+from django.shortcuts import redirect
+from django.views.generic import ListView, CreateView, RedirectView
 from pytz import timezone
 from S import forms
 from neonet.views import AbstractView
@@ -20,6 +23,14 @@ from django.utils.datastructures import MultiValueDictKeyError
 from django.core.exceptions import ObjectDoesNotExist
 
 MODULE = __package__
+
+
+class LoggedInMixin(object):
+    """ A mixin requiring a user to be logged in. """
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated():
+            return redirect('/S/login/?next={0}'.format(request.path))
+        return super(LoggedInMixin, self).  dispatch(request, *args, **kwargs)
 
 
 class AddDamageReport(AbstractView):
@@ -136,6 +147,52 @@ class Index(AbstractView):
     def _view(self):
         self.context['user'] = self.request.user.username
 
+
+class CommercialReturns(LoggedInMixin, ListView):
+
+    queryset = models.CommercialReturn.objects.filter(completed=False).order_by('-start_date')
+    template_name = 'S/CommercialReturn_list.html'
+
+
+class CommercialReturnCreate(LoggedInMixin, CreateView):
+
+    template_name = 'S/CommercialReturn_create.html'
+    form_class = forms.CommercialReturn
+
+    def get_success_url(self):
+        return reverse('S:add_commodity_to_commercial_return', kwargs={'pk': self.commercial_return.id})
+
+    def form_valid(self, form):
+        self.commercial_return = form.save(commit=False)
+        self.commercial_return.user = self.request.user
+        self.commercial_return.completed = False
+        self.commercial_return.save()
+        return super(CommercialReturnCreate, self).form_valid(form)
+
+
+class CommercialReturnAddCommodity(LoggedInMixin, CreateView):
+
+    template_name = 'S/CommercialReturn_add_commodity.html'
+    form_class = forms.CommodityInCommercialReturn
+
+    def get_success_url(self):
+        print(self.kwargs.get('pk'))
+        return reverse('S:add_commodity_to_commercial_return', kwargs={'pk': self.kwargs.get('pk')})
+
+    def get_initial(self):
+        commercial_return_pk = self.kwargs.get('pk')
+        return {'commercial_return': commercial_return_pk, 'amount': 1}
+
+
+class CommercialReturnClose(LoggedInMixin, RedirectView):
+
+    url = reverse_lazy('S:commercial_returns')
+
+    def get_redirect_url(self, *args, **kwargs):
+        commercial_return = models.CommercialReturn.objects.get(pk=self.kwargs.get('pk'))
+        commercial_return.completed = True
+        commercial_return.save()
+        return super(CommercialReturnClose, self).get_redirect_url()
 
 @login_required(login_url='/S/login/')
 def damage_report(request):

@@ -1,0 +1,42 @@
+<!--
+# -*- coding: utf-8 -*-
+#
+# Created on 2013-10-11
+#
+# @author: Bartosz Nowak sztosz@gmail.com
+#
+# This file is licensed GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007
+-->
+{% extends "qa/base.html" %}
+
+{% block title %}ZWROTY{% endblock %}
+
+
+{% block content %}
+  <div class="container">
+    <div class="page-header">
+      <h1>Zwroty</h1>
+    </div>
+
+    <p class="lead">
+      {{ commercial_return }} {{ commercial_return.start_date|date }} : {{ commercial_return.end_date|date }}<br />
+      {{ commercial_return.carrier }} {{ commercial_return.carrier_comment }}<br />
+      {{ commercial_return.driver_name }} {{ commercial_return.car_plates }}<br />
+    </p>
+
+    <p>Czy aktualizować listę? <a href="{% url 'qa:commercial_return_update' commercial_return.id %}">AKTUALIZUJ</a></p>
+    <p>Czy wydrukować listę? <a href="{% url 'qa:commercial_return_print' commercial_return.id %}">DRUKUJ</a></p>
+    <p>Czy eksportować listę? <a href="{% url 'qa:commercial_return_export' commercial_return.id %}">EKSPORTUJ</a></p>
+    {% for c in commodities %}
+      <p>
+        <strong>Towar:</strong> {{ c.commodity }}
+        <strong>Ilość:</strong> {{ c.amount }}
+        <strong>Numer LP:</strong> {{ c.waybill }}
+        <strong>Dokument:</strong> {{ c.document_name }}
+        <a href="{% url 'qa:commercial_return_item_update' c.id %}"> AKTUALIZUJ</a>
+        <a href="{% url 'qa:commercial_return_item_delete' c.id %}"> USUŃ</a>
+      </p>
+    {% endfor %}
+
+  </div>
+{% endblock %}

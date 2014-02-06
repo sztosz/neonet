@@ -1,0 +1,17 @@
+@page {
+    margin:0;
+}
+#return-document {
+    padding:1cm; background:#fff
+}
+body {
+    background:#fff
+}
+#return-document{
+    padding-bottom:0
+}
+
+table#return-amount td, div{
+    border-width:0.05mm !important
+}
+

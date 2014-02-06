@@ -1,0 +1,239 @@
+/*=========================== TYPOGRAPHY =========================*/
+
+#return p, #return h2, #return h3 {
+    margin:0
+}
+#return {
+    font-family: Verdana, Tahoma, sans-serif;
+    color: #888;
+    line-height:1.5
+}
+#return h1 {
+    margin: 0;
+    color: #000;
+    text-transform: uppercase;
+}
+#return h2, #return h3 {
+    color:#000;
+    text-transform: none;
+    line-height:1.2;
+    margin-top:10px
+}
+
+#return #return-info h3, #dates {
+    margin:0;
+    font-size:9pt;
+    font-weight:normal;
+    font-style:italic;
+    color:#888
+}
+#return #return-info h3 {
+    padding-right:8px
+}
+/*#payment-due:before{content:"("}*/
+/*#payment-due:after{content:")"}*/
+#return-info #doc-num {
+    margin:0 0 3px 0;
+    color:#000;
+    font-size:15pt;
+    /*font-weight:bold*/
+}
+#return-info #carrier {
+    font-size:12pt;
+    color: #000000;
+    /*font-weight:bold;*/
+    line-height:1.3
+}
+#return-info #driver {
+    font-size:12pt;
+    color: #000000;
+    /*font-weight:bold;*/
+    line-height:1.3
+}
+#return-info #plates {
+    font-size:12pt;
+    color: #000000;
+    /*font-weight:bold;*/
+    line-height:1.3
+}
+#return-info #user-data {
+    font-size:10pt;
+    color: #b60009;
+    font-weight:bold;
+    line-height:1.3
+}
+#return h2 {
+    font-size:12pt
+}
+
+#company-address, #warehouseman-signature, #controller-signature, #return-amount td, th, #return-info {
+    font-size:9pt
+}
+#company-address {
+    text-align:right
+}
+#return .fn, #return .org {
+    color:#000
+}
+#comments {
+    font-style:italic;
+    margin-top:15px;
+    line-height:1.2;
+    color:#646464;
+    font-size:10pt;
+}
+#controller-signature {
+    text-align:right
+}
+#warehouseman-signature strong, #controller-signature strong{
+    font-weight:normal
+}
+/*=========================== LAYOUT =========================*/
+
+#return {
+    padding:0 1cm 1cm 1cm;background:#fff
+}
+#return-header #company-address {
+    float:right;
+    width:250px;
+    clear:right;
+    margin-top:10px
+}
+#return-header h1 {
+    float:left;
+    width:350px;
+    color:#000;
+    margin:5px 0 0 0
+}
+#return-header {
+    padding-top:1cm;
+}
+#return-header .logo {
+    float:right;
+}
+#invoice-blank-header {
+    margin-top: 1.6cm;
+}
+/*#client-details {*/
+    /*float:left;*/
+    /*width:330px;*/
+    /*margin-top:0.6cm;*/
+    /*margin-bottom:20px */
+/*}*/
+#return-info {
+    width:360px;
+    padding:10px;
+    background:#F1FAE3;
+    border:1px solid #BECEA5;
+    z-index:10
+}
+#return-info th{
+    text-align:right
+}
+#return-amount {
+    margin: 2em 0 2em 0;
+    clear: both;
+}
+#warehouseman-signature {
+    width:300px;
+    float:left;
+    margin-bottom:5mm
+}
+#controller-signature {
+    width:330px;
+    clear:both;
+    float:right;
+    margin-bottom:5mm
+}
+#controller-signature h2, #warehouseman-signature h2 {
+    margin-bottom: 1mm;
+}
+
+#comments{
+    clear:both;
+    padding:9px 0.4cm 9px 0.4cm;
+    background:#F2F2F2;
+    border:1px solid #ccc;
+    vertical-align:bottom;
+    line-height:1.2;
+    zoom:1
+}
+
+/*=========================== TABLES =========================*/
+
+#return table {
+    border-collapse:collapse;
+    border: 1px solid #C9C9C9;
+    width:100%;
+    clear:both;
+}
+#return table th {
+    text-align:left;
+    /*padding:3px 4px*/
+}
+#return #header_row th{
+    background: #000000;
+    color: #C9C9C9;
+    border: 1px solid #000000
+}
+#return td.action {
+    border-bottom:0
+}
+#return-amount .amount_th {
+    border-left:1px solid #000000
+}
+#return-amount .document_th{
+    border-right:1px solid #000000
+}
+#return-amount tbody{
+    border-right:1px solid #C9C9C9
+}
+#return-amount tbody td {
+    white-space: nowrap;
+    margin: 0;
+    vertical-align: middle;
+    border-bottom:1px solid #C9C9C9;
+    border-left:1px solid #C9C9C9
+}
+#return-amount td {
+    margin: 0;
+    padding: 5px;
+    vertical-align: top;
+}
+#return-amount td.item_r{
+    text-align: right;
+}
+#return-amount td.item_l{
+    text-align: left;
+    white-space: normal;
+}
+#return-amount td.total{
+    text-align: right;
+    font-weight: bold;
+    font-size:12pt;
+    color:#65A900
+}
+
+#return-amount tfoot td{
+    padding:3px 4px;
+    color:#000
+}
+
+#return-amount .amount_th{
+    width:2%
+}
+#return-amount .commodity_th{
+    width:35%
+}
+#return-amount .barcode_th{
+    width:20%
+}
+#return-amount .waybill_th{
+    width:19%;
+}
+#return-amount .document_th{
+    width:24%;
+}
+/*#return-amount .unknown_origin_th{*/
+    /*width:5%;*/
+/*}*/

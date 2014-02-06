@@ -1,0 +1,28 @@
+<!--
+# -*- coding: utf-8 -*-
+#
+# Created on 2013-10-11
+#
+# @author: Bartosz Nowak sztosz@gmail.com
+#
+# This file is licensed GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/html">
+<head>
+    <title>Zwroty Kontrolne</title>
+    {% load staticfiles %}
+    <link type="text/css" rel="stylesheet" href="{% static 'S/scanner.css' %}" />
+</head>
+<body>
+<div id="main_container">
+    {% include 'S/header.html' %}
+    {% include 'S/common_communication.html' %}
+    <div id="content">
+      {% for list in object_list %}
+        <button onClick="window.location.href='{% url 'S:add_commodity_to_commercial_return' list.pk %}'">{{ list.carrier }}<br />{{ list.start_date }}<br />{{ list.carrier_comment }}</button>
+      {% endfor %}
+    <button onClick="window.location.href='{% url 'S:create_commercial_return' %}'"><strong>STWÓRZ<br />NOWY</strong></button>
+    </div>
+</div>
+</body>
