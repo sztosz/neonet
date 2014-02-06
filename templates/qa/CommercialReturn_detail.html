@@ -32,7 +32,7 @@
         <strong>Towar:</strong> {{ c.commodity }}
         <strong>Ilość:</strong> {{ c.amount }}
         <strong>Numer LP:</strong> {{ c.waybill }}
-        <strong>Dokument:</strong> {{ c.document }}
+        <strong>Dokument:</strong> {{ c.document_name }}
         <a href="{% url 'qa:commercial_return_item_update' c.id %}"> AKTUALIZUJ</a>
         <a href="{% url 'qa:commercial_return_item_delete' c.id %}"> USUŃ</a>
       </p>
