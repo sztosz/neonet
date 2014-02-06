@@ -21,11 +21,11 @@
     <p class="lead">
       {{ commercial_return }} {{ commercial_return.start_date|date }} : {{ commercial_return.end_date|date }}<br />
       {{ commercial_return.carrier }} {{ commercial_return.carrier_comment }}<br />
-      {% if commercial_return.known_origin %}Schenker bezdokumentowy{% endif %}
+      {{ commercial_return.driver_name }} {{ commercial_return.car_plates }}<br />
     </p>
 
     <p>Czy aktualizować listę? <a href="{% url 'qa:commercial_return_update' commercial_return.id %}">AKTUALIZUJ</a></p>
-    <p>Czy wydrukować listę? <a href="{% url 'qa:commercial_return_update' commercial_return.id %}">DRUKUJ</a></p>
+    <p>Czy wydrukować listę? <a href="{% url 'qa:commercial_return_print' commercial_return.id %}">DRUKUJ</a></p>
     <p>Czy eksportować listę? <a href="{% url 'qa:commercial_return_export' commercial_return.id %}">EKSPORTUJ</a></p>
     {% for c in commodities %}
       <p>

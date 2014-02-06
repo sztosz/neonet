@@ -43,6 +43,8 @@
   <!-- #return-header -->
   <div id="return-info">
     <p id="carrier">Przewoźnik: <strong>{{ commercial_return.carrier.name }}</strong> {{ commercial_return.carrier_comment }}</p>
+    <p id="driver">Kierowca: <strong>{{ commercial_return.driver_name }}</strong></p>
+    <p id="plates">Nr Rej.: <strong>{{ commercial_return.car_plates }}</strong></p>
     <p id="doc-num">Zwrot Kontolny <strong>{{ commercial_return.return_number }}</strong></p>
     <p id="dates">Utworzony: {{ commercial_return.start_date }}</p>
     <p id="dates">Zakończony: {{ commercial_return.end_date }}</p>
@@ -85,7 +87,7 @@
     <p><br /><br /><br /><br />...........................................</p>
   </div>
   <!-- warehouseman-signature -->
-  <div id="comments"><strong>DOKUMENT TESTOWY TYLKO DO UŻYTKU WEWNĘTRZNEGO W DZIALE KONTOLI JAKOŚCI</strong></div>
+  <div id="comments"><strong>DOKUMENT TESTOWY TYLKO DO UŻYTKU WEWNĘTRZNEGO W DZIALE KONTROLI JAKOŚCI</strong></div>
   <!-- comments -->
 </div>
 </body>

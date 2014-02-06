@@ -110,6 +110,8 @@ class CommercialReturnCarrier(models.Model):
 class CommercialReturn(models.Model):
     carrier = models.ForeignKey(CommercialReturnCarrier, verbose_name='Przewoźnik')
     carrier_comment = models.CharField(max_length=50, verbose_name='Komentarz do przewoźnika', blank=True)
+    driver_name = models.CharField(max_length=50, verbose_name='Nazwisko kierowcy', blank=True)
+    car_plates = models.CharField(max_length=10, verbose_name='Nr rejestracyjny', blank=True)
     start_date = models.DateTimeField(auto_now_add=True, verbose_name='Czas Rozpoczęcia')
     end_date = models.DateTimeField(auto_now=True, verbose_name='Czas zakończenia')
     completed = models.BooleanField(verbose_name='Zakończona')

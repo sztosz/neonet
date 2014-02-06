@@ -23,6 +23,8 @@
       <p>
         <strong>Numer:</strong> {{ list }}
         <strong>Przewoźnik:</strong> {{ list.carrier }}
+        <strong>Kierowca:</strong> {{ list.driver_name }}
+        <strong>Nr rejestracyjny:</strong> {{ list.car_plates }}
         <strong>Data:</strong> {{ list.start_date }}
         <a href="{% url 'qa:commercial_return_detail' list.id %}"><strong>WYŚWIETL</strong></a>
         <a href="{% url 'qa:commercial_return_print' list.id %}"><strong>DRUKUJ</strong></a>

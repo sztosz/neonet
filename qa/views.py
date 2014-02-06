@@ -252,6 +252,8 @@ class CommercialReturnExport(CommercialReturnDetail):
         try:
             writer.writerow(['Numer: {}'.format(context['commercial_return'].return_number())])
             writer.writerow(['Przewoźnik: {}'.format(context['commercial_return'].carrier.name)])
+            writer.writerow(['Nazwisko kierowcy: {}'.format(context['commercial_return'].driver_name)])
+            writer.writerow(['Nr rejestracyjny samochodu: {}'.format(context['commercial_return'].car_plates)])
             writer.writerow(['Komentarz do przewoźnika: {}'.format(context['commercial_return'].carrier_comment)])
             writer.writerow(['Czas trwania: {} - {}'.format(context['commercial_return'].start_date,
                                                             context['commercial_return'].end_date)])
