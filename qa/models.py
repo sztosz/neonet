@@ -132,3 +132,6 @@ class CommodityInCommercialReturn(models.Model):
 
     def __unicode__(self):
         return str(self.id)
+
+    def document_name(self):
+        return 'bezdokumentowy' if self.unknown_origin else self.document
