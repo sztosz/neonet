@@ -318,10 +318,10 @@ class CommercialReturnItemUpdate(LoggedInMixin, UpdateView):
 class CommercialReturnItemDelete(LoggedInMixin, DeleteView):
 
     model = models.CommodityInCommercialReturn
-    template_name = None  # TODO
+    template_name = 'qa/CommercialReturnItem_delete.html'
 
     def get_success_url(self):
-        return reverse('qa:commercial_return_detail', args=(self.object.list.pk,))
+        return reverse('qa:commercial_return_detail', args=(self.object.commercial_return.pk,))
 
 
 def logout_view(request):
