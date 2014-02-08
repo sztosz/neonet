@@ -67,7 +67,7 @@
       <tr class="item">
         <td class="item_l">{{ c.amount }}</td>
         <td class="item_l">{{ c.commodity }}</td>
-        <td class="item_l">KOD KRS.</td>
+        <td class="item_l"><img src="{% url 'tools:svg_barcode' c.commodity.ean %}"></td>
         <td class="item_l">{{ c.waybill }}</td>
         <td class="item_l">{{ c.document_name }}</td>
       </tr>
