@@ -194,6 +194,7 @@ class CommercialReturnClose(LoggedInMixin, RedirectView):
         commercial_return.save()
         return super(CommercialReturnClose, self).get_redirect_url()
 
+
 @login_required(login_url='/S/login/')
 def damage_report(request):
     page = AddDamageReport(request, module=MODULE)

@@ -10,12 +10,12 @@
 from __future__ import unicode_literals
 from django.http import HttpResponse
 from django.shortcuts import redirect
-from qa.tools import parsers
+from .tools import validate_ean13
 
 
 def sgv_ean_barcode(request, ean=None):
 
-    if parsers.validate_ean13(ean):
+    if validate_ean13(ean):
         return redirect('/static/img/ean_error.svg')
     else:
         import barcode

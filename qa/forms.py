@@ -11,7 +11,7 @@ from __future__ import unicode_literals
 
 from django import forms
 from qa import models
-from qa.tools.parsers import validate_ean13
+from tools import tools
 
 
 class CommodityImportSingleForm(forms.ModelForm):
@@ -33,7 +33,7 @@ class DamageReportForm(forms.ModelForm):
 
     def clean_ean(self):
         data = self.cleaned_data['ean']
-        ean_is_invalid = validate_ean13(data)
+        ean_is_invalid = tools.validate_ean13(data)
         if ean_is_invalid:
             raise forms.ValidationError(ean_is_invalid)
         return data
@@ -59,7 +59,7 @@ class QuickCommodityListItem(forms.ModelForm):
 
     def clean_ean(self):
         data = self.cleaned_data['ean']
-        ean_is_invalid = validate_ean13(data)
+        ean_is_invalid = tools.validate_ean13(data)
         if ean_is_invalid:
             raise forms.ValidationError(ean_is_invalid)
         return data
@@ -82,7 +82,7 @@ class CommercialReturnItem(forms.ModelForm):
 
     def clean_ean(self):
         data = self.cleaned_data['ean']
-        ean_is_invalid = validate_ean13(data)
+        ean_is_invalid = tools.validate_ean13(data)
         if ean_is_invalid:
             raise forms.ValidationError(ean_is_invalid)
         return data

@@ -11,7 +11,7 @@ from __future__ import unicode_literals
 
 from django import forms
 from qa import models
-from qa.tools.parsers import validate_ean13
+from tools import tools
 from django.core.exceptions import ObjectDoesNotExist
 
 
@@ -28,7 +28,7 @@ class AddDamageReportForm(forms.ModelForm):
 
     def clean_ean(self):
         data = self.cleaned_data['ean']
-        ean_is_invalid = validate_ean13(data)
+        ean_is_invalid = tools.validate_ean13(data)
         if ean_is_invalid:
             raise forms.ValidationError(ean_is_invalid)
         return data
@@ -82,7 +82,7 @@ class AddCommodityToQuickListForm(forms.ModelForm):
 
     def clean_ean(self):
         data = self.cleaned_data['ean']
-        ean_is_invalid = validate_ean13(data)
+        ean_is_invalid = tools.validate_ean13(data)
         if ean_is_invalid:
             raise forms.ValidationError(ean_is_invalid)
         return data
@@ -102,14 +102,16 @@ class CommodityInCommercialReturn(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(CommodityInCommercialReturn, self).__init__(*args, **kwargs)
-        self.fields.keyOrder = ['waybill', 'document', 'unknown_origin', 'ean', 'amount', 'commercial_return', 'commodity',]
+        self.fields.keyOrder = ['waybill', 'document', 'unknown_origin',
+                                'ean', 'amount', 'commercial_return', 'commodity',
+                                ]
 
     class Meta:
         model = models.CommodityInCommercialReturn
 
     def clean_ean(self):
         ean = self.cleaned_data['ean']
-        ean_is_invalid = validate_ean13(ean)
+        ean_is_invalid = tools.validate_ean13(ean)
         if ean_is_invalid:
             raise forms.ValidationError(ean_is_invalid)
         return ean

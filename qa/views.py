@@ -18,7 +18,7 @@ from django.core.urlresolvers import reverse, reverse_lazy
 from django.http import HttpResponse
 from qa import models
 from qa import forms
-from qa.tools.parsers import parse_commodity, damage_reports_export_to_csv
+from tools import tools
 from django.views.generic import DetailView, UpdateView, ListView, FormView,\
     TemplateView, CreateView, DeleteView, RedirectView
 
@@ -46,7 +46,7 @@ class CommodityImportBatch(LoggedInMixin, FormView):
     form_class = forms.CommodityImportBatchForm
 
     def form_valid(self, form):
-        parse_commodity(self.request.FILES['file'])
+        tools.parse_commodity(self.request.FILES['file'])
         return super(CommodityImportBatch, self).form_valid(form)
 
     def get_success_url(self):
@@ -79,9 +79,9 @@ class DamageReportsCreate(LoggedInMixin, CreateView):
         return reverse('qa:damage_reports_view')
 
     def form_valid(self, form):
-        object = form.save(commit=False)
-        object.user = self.request.user
-        object.save()
+        report = form.save(commit=False)
+        report.user = self.request.user
+        report.save()
         return super(DamageReportsCreate, self).form_valid(form)
 
 
