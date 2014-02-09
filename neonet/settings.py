@@ -143,7 +143,10 @@ INSTALLED_APPS = (
     'debug_toolbar',
 
     # Apps
-    'qa',
+    'CommercialReturns',
+    'Commodities',
+    'DamageReports',
+    'QuickCommodityLists',
     'S',
 )
 

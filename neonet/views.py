@@ -7,9 +7,18 @@
 #
 # This file is licensed GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007
 
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.utils.datastructures import MultiValueDictKeyError
 from django.http import HttpResponse
+from django.contrib.auth import logout
+
+
+class LoggedInMixin(object):
+    """ A mixin requiring a user to be logged in. """
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated():
+            return redirect('/DamageReports/login/?next={0}'.format(request.path))
+        return super(LoggedInMixin, self).  dispatch(request, *args, **kwargs)
 
 
 class AbstractView():
@@ -68,3 +77,8 @@ class AbstractView():
 
 def index(request):
     return render(request, 'neonet/index.html', None)
+
+
+def logout_view(request):
+    logout(request)
+    return redirect('DamageReports:index')

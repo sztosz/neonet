@@ -26,8 +26,16 @@ urlpatterns = patterns(
     url(r'^admin/', include(admin.site.urls)),
 
     url(r'^$', 'neonet.views.index', name='index'),
-    url(r'^qa/', include('qa.urls', namespace='qa')),
     url(r'^S/', include('S.urls', namespace='S')),
     url(r'^tools/', include('tools.urls', namespace='tools')),
+    url(r'^returns/', include('CommercialReturns.urls', namespace='returns')),
+    url(r'^commodities/', include('Commodities.urls', namespace='commodities')),
+    url(r'^reports/', include('DamageReports.urls', namespace='reports')),
+    url(r'^lists/', include('QuickCommodityLists.urls', namespace='lists')),
+
+    url(r'^login/$', 'django.contrib.auth.login', {'template_name': 'qa/../templates/neonet/login.html'},
+        name='login'),
+    url(r'^logout/', 'neonet.views.logout_view',
+        name='logout'),
 )
 

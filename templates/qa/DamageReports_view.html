@@ -7,7 +7,7 @@
 #
 # This file is licensed GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007
 -->
-{% extends "qa/base.html" %}
+{% extends "qa/../neonet/base.html" %}
 {% block title %}Zestawienie Raportów Uszkodzeń{% endblock %}
 {% block content %}
 <div class="container">
@@ -15,7 +15,7 @@
     <h1>Zestawienie raportów</h1>
   </div>
   <p class="lead">Lista raportów, proszę przefiltrować używając poniższego formularza</p>
-    <form method="post" action="{% url 'qa:damage_reports_view' %}">
+    <form method="post" action="{% url 'DamageReports:damage_reports_view' %}">
       {% csrf_token %}
       {% for field in form %}
         {{ field.errors }}
@@ -26,7 +26,7 @@
     </form>
   {% for report in reports %}
     <p>
-      <strong>ID:</strong> <a href="{% url 'qa:damage_report_update' report.id %}"> {{ report.unique_id }}</a>
+      <strong>ID:</strong> <a href="{% url 'DamageReports:damage_report_update' report.id %}"> {{ report.unique_id }}</a>
       <strong>Towar:</strong>  {{ report.commodity }}
       <strong>S/N:</strong> {{ report.serial }}
     </p>

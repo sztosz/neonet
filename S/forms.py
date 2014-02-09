@@ -10,9 +10,13 @@
 from __future__ import unicode_literals
 
 from django import forms
-from qa import models
-from tools import tools
 from django.core.exceptions import ObjectDoesNotExist
+
+from DamageReports import models as dr_models
+from QuickCommodityLists import models as qc_models
+from CommercialReturns import models as cr_models
+from tools import tools
+
 
 
 class AddDamageReportForm(forms.ModelForm):
@@ -23,7 +27,7 @@ class AddDamageReportForm(forms.ModelForm):
     further_action = forms.CharField(max_length=30, label='Dalsze Postępowanie')
 
     class Meta:
-        model = models.DamageReport
+        model = dr_models.DamageReport
         fields = ('ean', 'serial', 'brand', 'category', 'further_action', 'comments')
 
     def clean_ean(self):
@@ -36,7 +40,7 @@ class AddDamageReportForm(forms.ModelForm):
     def clean_category(self):
         data = self.cleaned_data['category']
         try:
-            category = models.DamageCategory.objects.filter(category=data)[:1].get()
+            category = dr_models.DamageCategory.objects.filter(category=data)[:1].get()
             return category
         except ObjectDoesNotExist:
             raise forms.ValidationError('Wpisano niepoprawną kategorię')
@@ -44,7 +48,7 @@ class AddDamageReportForm(forms.ModelForm):
     def clean_further_action(self):
         data = self.cleaned_data['further_action']
         try:
-            category = models.DamageFurtherAction.objects.filter(further_action=data)[:1].get()
+            category = dr_models.DamageFurtherAction.objects.filter(further_action=data)[:1].get()
             return category
         except ObjectDoesNotExist:
             raise forms.ValidationError('Wpisano niepoprawne dalsze postępowanie')
@@ -52,12 +56,12 @@ class AddDamageReportForm(forms.ModelForm):
 
 class DamageDetectionTimeForm(forms.ModelForm):
     class Meta:
-        model = models.DamageDetectionTime
+        model = dr_models.DamageDetectionTime
 
     def clean_detection_time(self):
         data = self.cleaned_data['detection_time']
         try:
-            detection_time = models.DamageDetectionTime.objects.filter(detection_time=data)[:1].get()
+            detection_time = dr_models.DamageDetectionTime.objects.filter(detection_time=data)[:1].get()
             return detection_time
         except ObjectDoesNotExist:
             raise forms.ValidationError('Niepoprawny moment wykrycia')
@@ -69,7 +73,7 @@ class CheckSNForm(forms.Form):
 
 class NewQuickCommodityListForm(forms.ModelForm):
     class Meta:
-        model = models.QuickCommodityList
+        model = qc_models.QuickCommodityList
         exclude = ('date', 'closed',)
 
 
@@ -77,7 +81,7 @@ class AddCommodityToQuickListForm(forms.ModelForm):
     ean = forms.CharField(max_length=13, label='EAN')
 
     class Meta:
-        model = models.CommodityInQuickList
+        model = qc_models.CommodityInQuickList
         fields = ('ean', 'serial', 'comment')
 
     def clean_ean(self):
@@ -91,7 +95,7 @@ class AddCommodityToQuickListForm(forms.ModelForm):
 class CommercialReturn(forms.ModelForm):
 
     class Meta:
-        model = models.CommercialReturn
+        model = cr_models.CommercialReturn
         fields = ('carrier', 'carrier_comment', 'driver_name', 'car_plates')
 
 
@@ -107,7 +111,7 @@ class CommodityInCommercialReturn(forms.ModelForm):
                                 ]
 
     class Meta:
-        model = models.CommodityInCommercialReturn
+        model = cr_models.CommodityInCommercialReturn
 
     def clean_ean(self):
         ean = self.cleaned_data['ean']
@@ -120,9 +124,9 @@ class CommodityInCommercialReturn(forms.ModelForm):
         ean = self.cleaned_data.get('ean', None)
         if ean:
             try:
-                commodity = models.Commodity.objects.get(ean=ean)
-            except models.Commodity.DoesNotExist:
-                commodity = models.Commodity(sku='BRAK_TOWARU_W_BAZIE', name='BRAK_TOWARU_W_BAZIE',
+                commodity = cr_models.Commodity.objects.get(ean=ean)
+            except cr_models.Commodity.DoesNotExist:
+                commodity = cr_models.Commodity(sku='BRAK_TOWARU_W_BAZIE', name='BRAK_TOWARU_W_BAZIE',
                                              ean=ean)
                 commodity.save()
             return commodity
@@ -130,7 +134,7 @@ class CommodityInCommercialReturn(forms.ModelForm):
 
     def clean_commercial_return(self):
         commercial_return = self.data['commercial_return']
-        if not models.CommercialReturn.objects.filter(pk=commercial_return).exists():
+        if not cr_models.CommercialReturn.objects.filter(pk=commercial_return).exists():
             raise forms.ValidationError('Brak zwrotu w bazie, stwórz zwrot przed dodawaniem towaru')
-        return models.CommercialReturn.objects.get(pk=commercial_return)
+        return cr_models.CommercialReturn.objects.get(pk=commercial_return)
 

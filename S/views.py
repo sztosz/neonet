@@ -11,26 +11,20 @@ from __future__ import unicode_literals
 
 from datetime import datetime
 from django.core.urlresolvers import reverse, reverse_lazy
-from django.shortcuts import redirect
 from django.views.generic import ListView, CreateView, RedirectView
 from pytz import timezone
-from S import forms
-from neonet.views import AbstractView
-from qa import models
 from django.contrib.auth.decorators import login_required
-
 from django.utils.datastructures import MultiValueDictKeyError
 from django.core.exceptions import ObjectDoesNotExist
 
+from neonet.views import AbstractView, LoggedInMixin
+
+from S import forms
+from DamageReports import models as dr_models
+from QuickCommodityLists import models as qc_models
+from CommercialReturns import models as cr_models
+
 MODULE = __package__
-
-
-class LoggedInMixin(object):
-    """ A mixin requiring a user to be logged in. """
-    def dispatch(self, request, *args, **kwargs):
-        if not request.user.is_authenticated():
-            return redirect('/S/login/?next={0}'.format(request.path))
-        return super(LoggedInMixin, self).  dispatch(request, *args, **kwargs)
 
 
 class AddDamageReport(AbstractView):
@@ -49,19 +43,19 @@ class AddDamageReport(AbstractView):
             damage.user = self.request.user
             damage.date = datetime.now(timezone('Europe/Warsaw'))
             try:
-                commodity = models.Commodity.objects.filter(ean=form.cleaned_data['ean'])[:1].get()
+                commodity = dr_models.Commodity.objects.filter(ean=form.cleaned_data['ean'])[:1].get()
                 damage.commodity = commodity
             except ObjectDoesNotExist:
-                commodity = models.Commodity(sku='BRAK_TOWARU_W_BAZIE', name='BRAK_TOWARU_W_BAZIE',
+                commodity = dr_models.Commodity(sku='BRAK_TOWARU_W_BAZIE', name='BRAK_TOWARU_W_BAZIE',
                                              ean=form.cleaned_data['ean'])
                 commodity.save()
             damage.commodity = commodity
             detection_time = self.request.session['report_detection_time']
             try:
-                damage.detection_time = models.DamageDetectionTime.objects.get(detection_time=detection_time)
+                damage.detection_time = dr_models.DamageDetectionTime.objects.get(detection_time=detection_time)
             except ObjectDoesNotExist:
                 raise KeyError('No DETECTION_TIME in session, please contact developer')
-            damage_kind = models.DamageKind.objects.get(pk=1)
+            damage_kind = dr_models.DamageKind.objects.get(pk=1)
             damage.damage_kind = damage_kind
             damage.net_value = 0
 
@@ -82,7 +76,7 @@ class CheckSN(AbstractView):
         if form.is_valid():
             serial = form.cleaned_data['serial']
             try:
-                data = models.DamageReport.objects.filter(serial=serial)
+                data = dr_models.DamageReport.objects.filter(serial=serial)
                 if not data:
                     self.context['messages'].append('Serial nie został wcześniej zarejestrowany')
                 else:
@@ -109,7 +103,7 @@ class QuickCommodityList(AbstractView):
             self.context['new_quick_commodity_list_form'] = forms.NewQuickCommodityListForm()
         else:
             self.context['new_quick_commodity_list_form'] = form
-        self.context['quick_commodity_list'] = models.QuickCommodityList.objects.filter(closed=False)
+        self.context['quick_commodity_list'] = qc_models.QuickCommodityList.objects.filter(closed=False)
 
     def _add_commodity_to_list(self):
         form = forms.AddCommodityToQuickListForm(self.request.POST)
@@ -124,11 +118,11 @@ class QuickCommodityList(AbstractView):
                 return self._view()
         if form.is_valid():
             commodity_in_list = form.save(commit=False)
-            commodity_in_list.list = models.QuickCommodityList.objects.get(id=list_id)
+            commodity_in_list.list = qc_models.QuickCommodityList.objects.get(id=list_id)
             try:
-                commodity = models.Commodity.objects.get(ean=form.cleaned_data['ean'])
+                commodity = qc_models.Commodity.objects.get(ean=form.cleaned_data['ean'])
             except ObjectDoesNotExist:
-                commodity = models.Commodity(sku='BRAK_TOWARU_W_BAZIE', name='BRAK_TOWARU_W_BAZIE',
+                commodity = qc_models.Commodity(sku='BRAK_TOWARU_W_BAZIE', name='BRAK_TOWARU_W_BAZIE',
                                              ean=form.cleaned_data['ean'])
                 commodity.save()
             commodity_in_list.commodity = commodity
@@ -136,10 +130,10 @@ class QuickCommodityList(AbstractView):
             self.context['commodity_to_quick_list_form'] = forms.AddCommodityToQuickListForm()
         else:
             self.context['commodity_to_quick_list_form'] = form
-        self.context['commodity_in_quick_list'] = models.CommodityInQuickList.objects.filter(list=list_id)
+        self.context['commodity_in_quick_list'] = qc_models.CommodityInQuickList.objects.filter(list=list_id)
 
     def _view(self):
-        self.context['quick_commodity_list'] = models.QuickCommodityList.objects.filter(closed=False)
+        self.context['quick_commodity_list'] = qc_models.QuickCommodityList.objects.filter(closed=False)
         self.context['new_quick_commodity_list_form'] = forms.NewQuickCommodityListForm()
 
 
@@ -150,7 +144,7 @@ class Index(AbstractView):
 
 class CommercialReturns(LoggedInMixin, ListView):
 
-    queryset = models.CommercialReturn.objects.filter(completed=False).order_by('-start_date')
+    queryset = cr_models.CommercialReturn.objects.filter(completed=False).order_by('-start_date')
     template_name = 'S/CommercialReturn_list.html'
 
 
@@ -189,7 +183,7 @@ class CommercialReturnClose(LoggedInMixin, RedirectView):
     url = reverse_lazy('S:commercial_returns')
 
     def get_redirect_url(self, *args, **kwargs):
-        commercial_return = models.CommercialReturn.objects.get(pk=self.kwargs.get('pk'))
+        commercial_return = cr_models.CommercialReturn.objects.get(pk=self.kwargs.get('pk'))
         commercial_return.completed = True
         commercial_return.save()
         return super(CommercialReturnClose, self).get_redirect_url()

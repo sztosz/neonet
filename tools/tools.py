@@ -10,7 +10,7 @@
 from __future__ import unicode_literals
 
 from xlrd import XLRDError, open_workbook
-from qa.models import Commodity
+from DamageReports.models import Commodity
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 
 

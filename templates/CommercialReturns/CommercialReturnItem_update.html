@@ -7,18 +7,18 @@
 #
 # This file is licensed GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007
 -->
-{% extends "qa/base.html" %}
+{% extends "qa/../neonet/base.html" %}
 
 {% block title %}ZWROTY{% endblock %}
 
 {% block content %}
   <div class="container">
     <div class="page-header">
-      <h1>Zwroty</h1>
+      <h1>Aktualizacja danych zwrotu</h1>
     </div>
 
-    <p class="lead">Zaktualizuj dane poniżej</p>
-
+    <p class="lead">Zaktualizuj dane.</p>
+    <p><strong>Towar: </strong>{{ object.commodity }}</p>
     <form action="" method="post">
       {% csrf_token %}
       {{ form.as_p }}

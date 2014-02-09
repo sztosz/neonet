@@ -7,7 +7,7 @@
 #
 # This file is licensed GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007
 -->
-{% extends "qa/base.html" %}
+{% extends "qa/../neonet/base.html" %}
 
 {% block title %}LISTY{% endblock %}
 
@@ -25,9 +25,9 @@
         <strong>Nazwa:</strong> {{ list.name }}
         <strong>Komentarz:</strong> {{ list.comment }}
         <strong>Data:</strong> {{ list.date }}
-        <a href="{% url 'qa:quick_commodity_list_detail' list.id %}">WYŚWIETL</a>
-        <a href="{% url 'qa:quick_commodity_list_update' list.id %}">AKTUALIZUJ</a>
-        <a href="{% url 'qa:quick_commodity_list_close' list.id %}" class="confirm">ZAMKNIJ</a>
+        <a href="{% url 'DamageReports:quick_commodity_list_detail' list.id %}">WYŚWIETL</a>
+        <a href="{% url 'DamageReports:quick_commodity_list_update' list.id %}">AKTUALIZUJ</a>
+        <a href="{% url 'DamageReports:quick_commodity_list_close' list.id %}" class="confirm">ZAMKNIJ</a>
       </p>
     {% endfor %}
 

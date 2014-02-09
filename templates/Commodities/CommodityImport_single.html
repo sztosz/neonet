@@ -7,7 +7,7 @@
 #
 # This file is licensed GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007
 -->
-{% extends "qa/base.html" %}
+{% extends "qa/../neonet/base.html" %}
 
 {% block title %}TOWARY{% endblock %}
 {% block title_long %}Importowanie towarów{% endblock %}
@@ -19,7 +19,7 @@
     </div>
     <p class="lead">Pojedyńczy Towar można wpisywać pojedyńczo używając poniższego formularza</p>
 
-    <form method="post" action="{% url 'qa:commodity_import' %}">
+    <form method="post" action="{% url 'DamageReports:commodity_import' %}">
       {% csrf_token %}
       <p>
         {{ form.as_p }}

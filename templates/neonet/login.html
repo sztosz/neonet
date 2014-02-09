@@ -7,14 +7,14 @@
 #
 # This file is licensed GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007
 -->
-{% extends "qa/base.html" %}
+{% extends "neonet/base.html" %}
 {% block title %}RAPORTY{% endblock %}
 {% block content %}
 <div class="container">
   <div class="page-header">
     <h1>Logowanie</h1>
   </div>
-    <form class="form-signin span4" id="login_form" method="post" action="/qa/login/">
+    <form class="form-signin span4" id="login_form" method="post" action="{% url login %}">
         <h2 class="form-signin-heading">Podaj login i hasło</h2>
         {% csrf_token %}
 

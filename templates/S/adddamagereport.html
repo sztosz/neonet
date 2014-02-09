@@ -18,7 +18,7 @@
 <div id="main_container">
     {% include 'S/header.html' %}
     {% include 'S/common_communication.html' %}
-{#    {% include 'qa/menu.html' %}#}
+{#    {% include 'DamageReports/menu.html' %}#}
     <div id="content">
         {% if damage_detection_time_form %}
         <form method="post" action="{% url 'S:damage_report' %}">
