@@ -109,12 +109,23 @@ class DamageReportsExport(LoggedInMixin, FormView):
     initial = {'date_from': yesterday, 'date_to': now}
 
     def form_valid(self, form):
-        query = models.DamageReport.objects.\
+        response = HttpResponse(content_type='text/csv')
+        response['content-disposition'] = 'attachment; filename="reports.csv.txt"'
+        data = models.DamageReport.objects.\
             select_related('commodity', 'detection_time', 'category', 'further_action', 'user').\
             filter(date__range=(form.cleaned_data['date_from'], form.cleaned_data['date_to']))
-        data = damage_reports_export_to_csv(data=query)
-        response = HttpResponse(data, content_type='application/csv')
-        response['content-disposition'] = 'attachment; filename="reports.csv.txt"'
+        writer = unicodecsv.writer(response, delimiter=b';')
+        if not data:
+            writer.writerow('Nie znaleziono żadnych raportów')
+        else:
+            for report in data:
+                row = ['', unicode(report.date), report.brand, report.commodity.__unicode__(), report.serial,
+                       report.detection_time.detection_time, report.category.category, report.comments,
+                       report.further_action.further_action, '', '',
+                       (report.user.first_name + ' ' + report.user.last_name)
+                       ]
+                row = [element.strip() for element in row]
+                writer.writerow(row)
         return response
 
 
