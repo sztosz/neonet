@@ -27,6 +27,6 @@ urlpatterns = patterns('',
     url(r'^$', 'neonet.views.index', name='index'),
     url(r'^qa/', include('qa.urls', namespace='qa')),
     url(r'^S/', include('S.urls', namespace='S')),
-    url(r'^tools/', include('barcode_gen.urls', namespace='tools')),
+    url(r'^tools/', include('tools.urls', namespace='tools')),
 )
 

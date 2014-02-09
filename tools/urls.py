@@ -11,5 +11,5 @@ from django.conf.urls import patterns, url
 
 urlpatterns = patterns(
     '',
-    url(r'^svg_barcode/(?P<ean>\d+)/$', 'barcode_gen.views.sgv_ean_barcode', name='svg_barcode'),
+    url(r'^svg_barcode/(?P<ean>\d+)/$', 'tools.views.sgv_ean_barcode', name='svg_barcode'),
 )
