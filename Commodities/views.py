@@ -20,16 +20,16 @@ from tools import tools
 
 class CommodityImportSingle(LoggedInMixin, CreateView):
 
-    template_name = 'Commodities/../templates/Commodities/CommodityImport_single.html'
+    template_name = 'Commodities/import_single.html'
     form_class = forms.CommodityImportSingleForm
 
     def get_success_url(self):
-        return reverse('DamageReports:damage_reports_view')
+        return reverse('DamageReports:list')
 
 
 class CommodityImportBatch(LoggedInMixin, FormView):
 
-    template_name = 'qa/../templates/Commodities/CommodityImport_batch.html'
+    template_name = 'Commodities/import_batch.html'
     form_class = forms.CommodityImportBatchForm
 
     def form_valid(self, form):
@@ -37,4 +37,4 @@ class CommodityImportBatch(LoggedInMixin, FormView):
         return super(CommodityImportBatch, self).form_valid(form)
 
     def get_success_url(self):
-        return reverse('DamageReports:damage_reports_view')
+        return reverse('DamageReports:list')

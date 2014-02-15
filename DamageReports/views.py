@@ -12,7 +12,7 @@ import unicodecsv
 
 from datetime import datetime, timedelta
 from pytz import timezone
-from django.core.urlresolvers import reverse, reverse_lazy
+from django.core.urlresolvers import reverse
 from django.http import HttpResponse
 from django.views.generic import UpdateView, FormView, TemplateView, CreateView
 
@@ -23,7 +23,7 @@ from DamageReports import forms
 
 class DamageReports(LoggedInMixin, FormView):
 
-    template_name = 'qa/DamageReports_view.html'
+    template_name = 'DamageReports/list.html'
     form_class = forms.DamageReportsDateFilter
     now = datetime.now(timezone('Europe/Warsaw'))
     yesterday = now - timedelta(days=1)
@@ -38,7 +38,7 @@ class DamageReports(LoggedInMixin, FormView):
 class DamageReportsCreate(LoggedInMixin, CreateView):
 
     model = models.DamageReport
-    template_name = 'qa/DamageReports_create.html'
+    template_name = 'DamageReports/create.html'
     form_class = forms.DamageReportForm
     now = datetime.now(timezone('Europe/Warsaw'))
     initial = {'date': now}
@@ -56,11 +56,11 @@ class DamageReportsCreate(LoggedInMixin, CreateView):
 class DamageReportsUpdate(LoggedInMixin, UpdateView):
 
     model = models.DamageReport
-    template_name = 'qa/DamageReports_update.html'
+    template_name = 'DamageReports/update.html'
     form_class = forms.DamageReportForm
 
     def get_success_url(self):
-        return reverse('DamageReports:damage_reports')
+        return reverse('DamageReports:list')
 
     def get_initial(self):
         initial = self.initial.copy()
@@ -70,7 +70,7 @@ class DamageReportsUpdate(LoggedInMixin, UpdateView):
 
 class DamageReportsExport(LoggedInMixin, FormView):
 
-    template_name = 'qa/DamageReports_export.html'
+    template_name = 'DamageReports/export.html'
     form_class = forms.DamageReportsDateFilter
     now = datetime.now(timezone('Europe/Warsaw'))
     yesterday = now - timedelta(days=1)
@@ -99,7 +99,7 @@ class DamageReportsExport(LoggedInMixin, FormView):
 
 class DamageReportsCharts(LoggedInMixin, TemplateView):
 
-    template_name = 'qa/DamageReports_charts.html'
+    template_name = 'DamageReports/charts.html'
 
     def get_context_data(self, **kwargs):
         context = super(DamageReportsCharts, self).get_context_data(**kwargs)

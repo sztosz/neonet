@@ -18,7 +18,6 @@ from CommercialReturns import models as cr_models
 from tools import tools
 
 
-
 class AddDamageReportForm(forms.ModelForm):
     ean = forms.CharField(max_length=13, label='EAN')
     serial = forms.CharField(max_length=50, label='Numer seryjny')
@@ -126,8 +125,7 @@ class CommodityInCommercialReturn(forms.ModelForm):
             try:
                 commodity = cr_models.Commodity.objects.get(ean=ean)
             except cr_models.Commodity.DoesNotExist:
-                commodity = cr_models.Commodity(sku='BRAK_TOWARU_W_BAZIE', name='BRAK_TOWARU_W_BAZIE',
-                                             ean=ean)
+                commodity = cr_models.Commodity(sku='BRAK_TOWARU_W_BAZIE', name='BRAK_TOWARU_W_BAZIE', ean=ean)
                 commodity.save()
             return commodity
         raise forms.ValidationError('')  # TODO Rewrite views, so only visible fields errors are show

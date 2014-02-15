@@ -23,33 +23,33 @@ import forms
 class QuickCommodityList(LoggedInMixin, ListView):
 
     queryset = models.QuickCommodityList.objects.filter(closed=False).order_by('-date')
-    template_name = 'QuickCommodityList/../templates/QuickCommodityList/QuickCommodityList_list.html'
+    template_name = 'QuickCommodityLists/list.html'
 
 
 class QuickCommodityListUpdate(LoggedInMixin, UpdateView):
 
-    model = QuickCommodityList
-    template_name = 'QuickCommodityList/../templates/QuickCommodityList/QuickCommodityList_update.html'
+    model = models.QuickCommodityList
+    template_name = 'QuickCommodityLists/update.html'
 
     def get_success_url(self):
-        return reverse('DamageReports:quick_commodity_list')
+        return reverse('QuickCommodityLists:detail', args=(self.object.pk,))
 
 
 class QuickCommodityListClose(LoggedInMixin, DetailView):
 
-    model = QuickCommodityList
+    model = models.QuickCommodityList
 
     def get(self, request, *args, **kwargs):
         obj = self.get_object()
         obj.closed = True
         obj.save()
-        return redirect('DamageReports:quick_commodity_list')
+        return redirect('QuickCommodityLists:list')
 
 
 class QuickCommodityListDetails(LoggedInMixin, DetailView):
 
-    model = QuickCommodityList
-    template_name = 'qa/../templates/QuickCommodityList/QuickCommodityList_detail.html'
+    model = models.QuickCommodityList
+    template_name = 'QuickCommodityLists/detail.html'
     context_object_name = 'list'
 
     def get_context_data(self, **kwargs):
@@ -83,11 +83,11 @@ class QuickCommodityListDetailsExport(QuickCommodityListDetails):
 class QuickCommodityListItemUpdate(LoggedInMixin, UpdateView):
 
     model = models.CommodityInQuickList
-    template_name = 'qa/../templates/QuickCommodityList/QuickCommodityListItem_update.html'
+    template_name = 'QuickCommodityLists/item_update.html'
     form_class = forms.QuickCommodityListItem
 
     def get_success_url(self):
-        return reverse('DamageReports:quick_commodity_list')
+        return reverse('QuickCommodityLists:detail', args=(self.object.list.pk,))
 
     def get_initial(self):
         initial = self.initial.copy()
@@ -98,8 +98,8 @@ class QuickCommodityListItemUpdate(LoggedInMixin, UpdateView):
 class QuickCommodityListItemDelete(LoggedInMixin, DeleteView):
 
     model = models.CommodityInQuickList
-    template_name = 'qa/../templates/QuickCommodityList/QuickCommodityListItem_delete.html'
+    template_name = 'QuickCommodityLists/delete.html'
 
     def get_success_url(self):
-        return reverse('DamageReports:quick_commodity_list_detail', args=(self.object.list.pk,))
+        return reverse('QuickCommodityLists:detail', args=(self.object.list.pk,))
 

@@ -7,7 +7,7 @@
 #
 # This file is licensed GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007
 -->
-{% extends "qa/../neonet/base.html" %}
+{% extends "neonet/base.html" %}
 
 {% block title %}ZWROTY{% endblock %}
 
@@ -26,11 +26,11 @@
         <strong>Kierowca:</strong> {{ list.driver_name }}
         <strong>Nr rejestracyjny:</strong> {{ list.car_plates }}
         <strong>Data:</strong> {{ list.start_date }}
-        <a href="{% url 'DamageReports:commercial_return_detail' list.id %}"><strong>WYŚWIETL</strong></a>
-        <a href="{% url 'DamageReports:commercial_return_print' list.id %}"><strong>DRUKUJ</strong></a>
-        <a href="{% url 'DamageReports:commercial_return_export' list.id %}"><strong>EKSPORTUJ</strong></a>
-        <a href="{% url 'DamageReports:commercial_return_update' list.id %}">AKTUALIZUJ</a>
-        <a href="{% url 'DamageReports:commercial_return_close' list.id %}">ZAMKNIJ</a>
+        <a href="{% url 'CommercialReturns:detail' list.id %}"><strong>WYŚWIETL</strong></a>
+        <a href="{% url 'CommercialReturns:print' list.id %}"><strong>DRUKUJ</strong></a>
+        <a href="{% url 'CommercialReturns:export' list.id %}"><strong>EKSPORTUJ</strong></a>
+        <a href="{% url 'CommercialReturns:update' list.id %}">AKTUALIZUJ</a>
+        <a href="{% url 'CommercialReturns:close' list.id %}">ZAMKNIJ</a>
       </p>
     {% endfor %}
 

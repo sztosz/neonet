@@ -12,7 +12,7 @@ $(document).ready(function() {
 });
 
 function commercial_return_close(url) {
-    var confirmation = confirm("Are you sure want to delete?");
+    var confirmation = confirm("Na pewno chcesz zamknąć?");
     if (confirmation) {
         window.location.replace(url);
     }

@@ -12,8 +12,9 @@ from django.conf.urls import patterns, url
 from Commodities.views import *
 
 urlpatterns = patterns(
+    '',
     url(r'^import/single/$', CommodityImportSingle.as_view(),
-        name='single'),
+        name='import_single'),
     url(r'^import/batch/$', CommodityImportBatch.as_view(),
-        name='batch'),
+        name='import_batch'),
 )

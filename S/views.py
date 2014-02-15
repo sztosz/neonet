@@ -46,8 +46,10 @@ class AddDamageReport(AbstractView):
                 commodity = dr_models.Commodity.objects.filter(ean=form.cleaned_data['ean'])[:1].get()
                 damage.commodity = commodity
             except ObjectDoesNotExist:
-                commodity = dr_models.Commodity(sku='BRAK_TOWARU_W_BAZIE', name='BRAK_TOWARU_W_BAZIE',
-                                             ean=form.cleaned_data['ean'])
+                commodity = dr_models.Commodity(sku='BRAK_TOWARU_W_BAZIE',
+                                                name='BRAK_TOWARU_W_BAZIE',
+                                                ean=form.cleaned_data['ean']
+                                                )
                 commodity.save()
             damage.commodity = commodity
             detection_time = self.request.session['report_detection_time']
@@ -103,7 +105,8 @@ class QuickCommodityList(AbstractView):
             self.context['new_quick_commodity_list_form'] = forms.NewQuickCommodityListForm()
         else:
             self.context['new_quick_commodity_list_form'] = form
-        self.context['quick_commodity_list'] = qc_models.QuickCommodityList.objects.filter(closed=False)
+        self.context['quick_commodity_list'] = \
+            qc_models.QuickCommodityList.objects.filter(closed=False).order_by('-date')
 
     def _add_commodity_to_list(self):
         form = forms.AddCommodityToQuickListForm(self.request.POST)
@@ -122,8 +125,10 @@ class QuickCommodityList(AbstractView):
             try:
                 commodity = qc_models.Commodity.objects.get(ean=form.cleaned_data['ean'])
             except ObjectDoesNotExist:
-                commodity = qc_models.Commodity(sku='BRAK_TOWARU_W_BAZIE', name='BRAK_TOWARU_W_BAZIE',
-                                             ean=form.cleaned_data['ean'])
+                commodity = qc_models.Commodity(sku='BRAK_TOWARU_W_BAZIE',
+                                                name='BRAK_TOWARU_W_BAZIE',
+                                                ean=form.cleaned_data['ean']
+                                                )
                 commodity.save()
             commodity_in_list.commodity = commodity
             commodity_in_list.save()
@@ -133,7 +138,8 @@ class QuickCommodityList(AbstractView):
         self.context['commodity_in_quick_list'] = qc_models.CommodityInQuickList.objects.filter(list=list_id)
 
     def _view(self):
-        self.context['quick_commodity_list'] = qc_models.QuickCommodityList.objects.filter(closed=False)
+        self.context['quick_commodity_list'] = \
+            qc_models.QuickCommodityList.objects.filter(closed=False).order_by('-date')
         self.context['new_quick_commodity_list_form'] = forms.NewQuickCommodityListForm()
 
 

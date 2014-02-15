@@ -7,7 +7,7 @@
 #
 # This file is licensed GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007
 -->
-{% extends "qa/../neonet/base.html" %}
+{% extends "neonet/base.html" %}
 
 {% block title %}ZWROTY{% endblock %}
 
@@ -24,17 +24,17 @@
       {{ commercial_return.driver_name }} {{ commercial_return.car_plates }}<br />
     </p>
 
-    <p>Czy aktualizować listę? <a href="{% url 'DamageReports:commercial_return_update' commercial_return.id %}">AKTUALIZUJ</a></p>
-    <p>Czy wydrukować listę? <a href="{% url 'DamageReports:commercial_return_print' commercial_return.id %}">DRUKUJ</a></p>
-    <p>Czy eksportować listę? <a href="{% url 'DamageReports:commercial_return_export' commercial_return.id %}">EKSPORTUJ</a></p>
+    <p>Czy aktualizować listę? <a href="{% url 'CommercialReturns:update' commercial_return.id %}">AKTUALIZUJ</a></p>
+    <p>Czy wydrukować listę? <a href="{% url 'CommercialReturns:print' commercial_return.id %}">DRUKUJ</a></p>
+    <p>Czy eksportować listę? <a href="{% url 'CommercialReturns:export' commercial_return.id %}">EKSPORTUJ</a></p>
     {% for c in commodities %}
       <p>
         <strong>Towar:</strong> {{ c.commodity }}
         <strong>Ilość:</strong> {{ c.amount }}
         <strong>Numer LP:</strong> {{ c.waybill }}
         <strong>Dokument:</strong> {{ c.document_name }}
-        <a href="{% url 'DamageReports:commercial_return_item_update' c.id %}"> AKTUALIZUJ</a>
-        <a href="{% url 'DamageReports:commercial_return_item_delete' c.id %}"> USUŃ</a>
+        <a href="{% url 'CommercialReturns:item_update' c.id %}"> AKTUALIZUJ</a>
+        <a href="{% url 'CommercialReturns:item_delete' c.id %}"> USUŃ</a>
       </p>
     {% endfor %}
 

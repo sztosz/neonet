@@ -7,7 +7,7 @@
 #
 # This file is licensed GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007
 -->
-{% extends "qa/../neonet/base.html" %}
+{% extends "neonet/base.html" %}
 
 {% block title %}TOWARY{% endblock %}
 {% block title_long %}Importowanie towarów{% endblock %}
@@ -21,7 +21,7 @@
       to być arkusz excela, EAN powienien znajdować się w pierwszej kolumnie, INDEX w drugiej, a NAZWA w trzeciej
       kolumnie. Obecnie brakuje systemu powiadomień o błędach w importowanym pliku...</p>
 
-    <form method="post" enctype="multipart/form-data" action="{% url 'DamageReports:commodity_import_batch' %}">
+    <form method="post" enctype="multipart/form-data" action="{% url 'Commodities:import_batch' %}">
       {% csrf_token %}
       <p>
         {{ form.as_p }}
