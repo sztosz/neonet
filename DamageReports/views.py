@@ -44,7 +44,7 @@ class DamageReportsCreate(LoggedInMixin, CreateView):
     initial = {'date': now}
 
     def get_success_url(self):
-        return reverse('DamageReports:damage_reports_view')
+        return reverse('DamageReports:list')
 
     def form_valid(self, form):
         report = form.save(commit=False)
