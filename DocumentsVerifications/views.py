@@ -11,7 +11,7 @@
 from __future__ import unicode_literals
 
 import unicodecsv
-from django.views.generic import ListView, DetailView, CreateView, FormView
+from django.views.generic import ListView, DetailView, CreateView, FormView, UpdateView
 
 from neonet.views import LoggedInMixin
 import models
@@ -35,7 +35,7 @@ class Details(LoggedInMixin, DetailView):
         return context
 
 
-class DocumentCreate(LoggedInMixin, FormView):
+class ImportDocumentFromCsv(LoggedInMixin, FormView):
 
     model = models.Document
     template_name = None  # TODO add template
@@ -68,5 +68,12 @@ class DocumentCreate(LoggedInMixin, FormView):
                     pass  # TODO correct way for handling items on documents that are not present in database
         except Exception as e:
             raise e  # TODO catch any errors, and maybe later deal with them gracefully
-        return super(DocumentCreate, self).form_valid(form)
+        return super(ImportDocumentFromCsv, self).form_valid(form)
 
+
+class AddCommodityToDocument(LoggedInMixin, CreateView):
+    pass
+
+
+class CloseDocument(LoggedInMixin, UpdateView):
+    pass
