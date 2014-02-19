@@ -99,7 +99,7 @@ class CommercialReturnItemUpdate(LoggedInMixin, UpdateView):
     form_class = forms.CommercialReturnItem
 
     def get_success_url(self):
-        return reverse('CommercialReturns:commercial_return_detail', args=(self.object.commercial_return.pk,))
+        return reverse('CommercialReturns:detail', args=(self.object.commercial_return.pk,))
 
     def get_initial(self):
         initial = self.initial.copy()
