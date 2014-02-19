@@ -78,12 +78,12 @@ class CommercialReturnUpdate(LoggedInMixin, UpdateView):
     template_name = 'CommercialReturns/update.html'
 
     def get_success_url(self):
-        return reverse('DamageReports:list')
+        return reverse('CommercialReturns:list')
 
 
 class CommercialReturnClose(LoggedInMixin, RedirectView):
 
-    url = reverse_lazy('DamageReports:list')
+    url = reverse_lazy('CommercialReturns:list')
 
     def get_redirect_url(self, *args, **kwargs):
         commercial_return = models.CommercialReturn.objects.get(pk=self.kwargs.get('pk'))
@@ -99,7 +99,7 @@ class CommercialReturnItemUpdate(LoggedInMixin, UpdateView):
     form_class = forms.CommercialReturnItem
 
     def get_success_url(self):
-        return reverse('DamageReports:commercial_return_detail', args=(self.object.commercial_return.pk,))
+        return reverse('CommercialReturns:commercial_return_detail', args=(self.object.commercial_return.pk,))
 
     def get_initial(self):
         initial = self.initial.copy()
@@ -121,9 +121,9 @@ class CommercialReturnItemDelete(LoggedInMixin, DeleteView):
     template_name = 'CommercialReturns/item_delete.html'
 
     def get_success_url(self):
-        return reverse('DamageReports:detail', args=(self.object.commercial_return.pk,))
+        return reverse('CommercialReturns:detail', args=(self.object.commercial_return.pk,))
 
 
 def logout_view(request):
     logout(request)
-    return redirect('DamageReports:charts')
+    return redirect('CommercialReturns:charts')
