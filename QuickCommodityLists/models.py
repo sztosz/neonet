@@ -27,8 +27,8 @@ class QuickCommodityList(models.Model):
 class CommodityInQuickList(models.Model):
     list = models.ForeignKey(QuickCommodityList, verbose_name='Lista')
     commodity = models.ForeignKey(Commodity, verbose_name='Towar')
-    serial = models.CharField(max_length=50, verbose_name='Numer seryjny')
-    comment = models.CharField(max_length=100, verbose_name='Opis towaru')
+    serial = models.CharField(max_length=50, verbose_name='Numer seryjny', null=True)
+    comment = models.CharField(max_length=100, verbose_name='Opis towaru', null=True)
 
     def __unicode__(self):
         return self.serial
